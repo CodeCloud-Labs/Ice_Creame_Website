@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Frost & Bloom — Ice Cream Parlor & Café</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --cream:      #FFF8EF;
+      --blush:      #F7C5A0;
+      --coral:      #E8735A;
+      --berry:      #C0435A;
+      --mint:       #6EC6A8;
+      --vanilla:    #F5E6C8;
+      --choco:      #3D1F0D;
+      --sky:        #B8E4F0;
+      --soft-pink:  #FADADD;
+      --gold:       #D4A853;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--choco);
+      overflow-x: hidden;
+    }
+
+    /* ─── CURSOR ─────────────────────────────────────── */
+    .cursor-dot {
+      width:10px; height:10px; background:var(--coral);
+      border-radius:50%; position:fixed; pointer-events:none;
+      z-index:9999; transform:translate(-50%,-50%);
+      transition: transform .1s;
+    }
+    .cursor-ring {
+      width:36px; height:36px;
+      border:2px solid var(--berry);
+      border-radius:50%; position:fixed; pointer-events:none;
+      z-index:9998; transform:translate(-50%,-50%);
+      transition: all .18s ease;
+      opacity:.6;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────── */
+    #mainNav {
+      position: fixed; top:0; width:100%; z-index:1000;
+      transition: all .4s ease;
+      padding: 20px 0;
+    }
+    #mainNav.scrolled {
+      background: rgba(255,248,239,.97);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 2px 30px rgba(61,31,13,.1);
+      padding: 10px 0;
+    }
+    .navbar-brand .brand-script {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: var(--berry);
+      line-height:1;
+    }
+    .navbar-brand .brand-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size:.65rem;
+      letter-spacing:.25em;
+      text-transform:uppercase;
+      color: var(--coral);
+      display:block;
+      margin-top:-4px;
+    }
+    .nav-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size:.85rem;
+      font-weight:500;
+      letter-spacing:.06em;
+      color: var(--choco) !important;
+      text-transform: uppercase;
+      padding: 6px 16px !important;
+      position:relative;
+    }
+    .nav-link::after {
+      content:''; position:absolute; bottom:0; left:50%; right:50%;
+      height:2px; background:var(--coral);
+      transition: left .3s, right .3s;
+    }
+    .nav-link:hover::after { left:16px; right:16px; }
+    .nav-cta {
+      background: var(--berry); color:#fff !important;
+      border-radius:50px; padding:8px 24px !important;
+      font-size:.82rem !important;
+      transition: background .3s, transform .2s;
+    }
+    .nav-cta:hover { background:var(--coral); transform:translateY(-2px); }
+    .nav-cta::after { display:none; }
+
+    /* ─── HERO ───────────────────────────────────────── */
+    #hero {
+      min-height:100vh;
+      background: linear-gradient(135deg, #FFF0E6 0%, #FFD9C8 40%, #FADADD 100%);
+      position:relative;
+      display:flex; align-items:center;
+      overflow:hidden;
+    }
+    .hero-blobs {
+      position:absolute; inset:0; pointer-events:none;
+    }
+    .blob {
+      position:absolute; border-radius:50%;
+      filter: blur(70px); opacity:.45;
+      animation: blobFloat 8s ease-in-out infinite alternate;
+    }
+    .blob-1 { width:500px;height:500px; background:var(--blush); top:-100px;left:-100px; animation-delay:0s; }
+    .blob-2 { width:400px;height:400px; background:var(--soft-pink); top:30%;right:-80px; animation-delay:2s; }
+    .blob-3 { width:300px;height:300px; background:var(--sky); bottom:-80px;left:30%; animation-delay:4s; }
+    @keyframes blobFloat {
+      0%   { transform: translate(0,0) scale(1); }
+      100% { transform: translate(30px,20px) scale(1.05); }
+    }
+
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,.7); backdrop-filter:blur(8px);
+      border:1px solid rgba(232,115,90,.3);
+      border-radius:50px; padding:8px 20px;
+      font-size:.78rem; font-weight:600; letter-spacing:.12em;
+      text-transform:uppercase; color:var(--berry);
+      margin-bottom:24px;
+      animation: fadeSlideUp .8s ease both;
+    }
+    .hero-badge i { color:var(--coral); }
+    .hero-h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem,7vw,6rem);
+      font-weight:900; line-height:1.05;
+      color: var(--choco);
+      animation: fadeSlideUp .9s .1s ease both;
+    }
+    .hero-h1 em {
+      font-style:italic; color:var(--berry);
+    }
+    .hero-h1 .accent {
+      color:var(--coral);
+      display:inline-block;
+      position:relative;
+    }
+    .hero-h1 .accent::after {
+      content:''; position:absolute; left:0; bottom:-4px;
+      width:100%; height:6px;
+      background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 8 Q50 0 100 8 Q150 16 200 8' stroke='%23E8735A' fill='none' stroke-width='3'/%3E%3C/svg%3E") center/cover no-repeat;
+    }
+    .hero-desc {
+      font-size:1.1rem; font-weight:300; color:#6b4c3b;
+      max-width:480px; line-height:1.8;
+      animation: fadeSlideUp 1s .2s ease both;
+    }
+    .hero-btns { animation: fadeSlideUp 1s .35s ease both; }
+    .btn-berry {
+      background:var(--berry); color:#fff;
+      border:none; border-radius:50px;
+      padding:14px 36px; font-size:.92rem; font-weight:600;
+      letter-spacing:.04em;
+      box-shadow: 0 8px 28px rgba(192,67,90,.35);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .btn-berry:hover {
+      background:var(--coral); color:#fff;
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(232,115,90,.4);
+    }
+    .btn-outline-choco {
+      background:transparent; border:2px solid var(--choco);
+      color:var(--choco); border-radius:50px;
+      padding:13px 32px; font-size:.92rem; font-weight:600;
+      transition: all .25s;
+    }
+    .btn-outline-choco:hover {
+      background:var(--choco); color:var(--cream);
+      transform:translateY(-3px);
+    }
+
+    .hero-stats {
+      display:flex; gap:36px; margin-top:48px;
+      animation: fadeSlideUp 1s .5s ease both;
+    }
+    .stat-item .stat-num {
+      font-family:'Playfair Display',serif;
+      font-size:2.4rem; font-weight:900; color:var(--berry);
+      line-height:1;
+    }
+    .stat-item .stat-label {
+      font-size:.75rem; letter-spacing:.1em; text-transform:uppercase;
+      color:#8c6050; margin-top:2px;
+    }
+    .stat-divider { width:1px; background:rgba(192,67,90,.2); }
+
+    .hero-img-wrap {
+      position:relative;
+      animation: fadeSlideRight 1.1s .2s ease both;
+    }
+    .hero-main-img {
+      width:100%; max-width:540px;
+      border-radius:40% 60% 55% 45% / 45% 40% 60% 55%;
+      object-fit:cover; height:540px;
+      box-shadow: 0 30px 80px rgba(192,67,90,.25);
+      animation: morphBlob 10s ease-in-out infinite alternate;
+    }
+    @keyframes morphBlob {
+      0%   { border-radius:40% 60% 55% 45% / 45% 40% 60% 55%; }
+      50%  { border-radius:60% 40% 40% 60% / 55% 60% 40% 45%; }
+      100% { border-radius:45% 55% 65% 35% / 40% 55% 45% 60%; }
+    }
+
+    .float-card {
+      position:absolute; background:rgba(255,255,255,.92);
+      backdrop-filter:blur(12px);
+      border-radius:20px; padding:14px 20px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.12);
+      display:flex; align-items:center; gap:12px;
+      animation: cardFloat 4s ease-in-out infinite alternate;
+    }
+    .float-card-1 { bottom:60px; left:-40px; animation-delay:0s; }
+    .float-card-2 { top:60px; right:-30px; animation-delay:1.5s; }
+    @keyframes cardFloat {
+      0%   { transform:translateY(0); }
+      100% { transform:translateY(-12px); }
+    }
+    .fc-icon {
+      width:42px; height:42px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem;
+    }
+    .fc-icon-berry { background:var(--soft-pink); color:var(--berry); }
+    .fc-icon-mint  { background:#d4f4eb; color:#2a8a6a; }
+    .fc-label { font-size:.7rem; color:#888; }
+    .fc-value { font-size:.92rem; font-weight:700; color:var(--choco); }
+
+    /* ─── SECTION HEADERS ────────────────────────────── */
+    .section-eyebrow {
+      font-size:.72rem; letter-spacing:.22em;
+      text-transform:uppercase; font-weight:700;
+      color:var(--coral); margin-bottom:10px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .section-eyebrow::before, .section-eyebrow::after {
+      content:''; flex:1; height:1px; background:currentColor; opacity:.4;
+      max-width:40px;
+    }
+    .section-title {
+      font-family:'Playfair Display',serif;
+      font-size: clamp(2rem,4vw,3rem);
+      font-weight:900; line-height:1.15; color:var(--choco);
+    }
+    .section-title em { font-style:italic; color:var(--berry); }
+
+    /* ─── MARQUEE TICKER ─────────────────────────────── */
+    .ticker-wrap {
+      background: var(--berry);
+      padding:14px 0; overflow:hidden;
+      position:relative;
+    }
+    .ticker-inner {
+      display:flex; gap:0;
+      animation: tickerScroll 28s linear infinite;
+      white-space:nowrap;
+    }
+    .ticker-item {
+      display:inline-flex; align-items:center; gap:16px;
+      font-size:.82rem; font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:#fff;
+      padding:0 40px;
+    }
+    .ticker-item i { color:var(--blush); }
+    @keyframes tickerScroll {
+      0%   { transform:translateX(0); }
+      100% { transform:translateX(-50%); }
+    }
+
+    /* ─── FLAVORS CAROUSEL ───────────────────────────── */
+    #flavors { padding:100px 0; background:var(--cream); }
+
+    .flavor-card {
+      border-radius:28px; overflow:hidden;
+      position:relative; cursor:pointer;
+      transition: transform .35s cubic-bezier(.25,.46,.45,.94);
+    }
+    .flavor-card:hover { transform: translateY(-10px) scale(1.02); }
+    .flavor-card img {
+      width:100%; height:320px; object-fit:cover;
+      transition: transform .5s ease;
+    }
+    .flavor-card:hover img { transform: scale(1.08); }
+    .flavor-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(61,31,13,.8) 0%, transparent 55%);
+      padding:24px;
+      display:flex; flex-direction:column; justify-content:flex-end;
+    }
+    .flavor-tag {
+      display:inline-block; padding:4px 14px;
+      border-radius:50px; font-size:.68rem; font-weight:700;
+      letter-spacing:.1em; text-transform:uppercase;
+      margin-bottom:8px; width:fit-content;
+    }
+    .tag-classic  { background:var(--vanilla); color:var(--choco); }
+    .tag-fruity   { background:var(--soft-pink); color:var(--berry); }
+    .tag-special  { background:var(--mint); color:#fff; }
+    .tag-new      { background:var(--coral); color:#fff; }
+    .flavor-name {
+      font-family:'Playfair Display',serif;
+      font-size:1.45rem; font-weight:800; color:#fff;
+      margin-bottom:4px;
+    }
+    .flavor-price {
+      font-size:.88rem; font-weight:600;
+      color:var(--blush);
+    }
+    .flavor-btn {
+      position:absolute; top:18px; right:18px;
+      width:36px; height:36px;
+      background:rgba(255,255,255,.9);
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      color:var(--berry); font-size:.85rem;
+      opacity:0; transform:scale(.8);
+      transition: all .3s;
+    }
+    .flavor-card:hover .flavor-btn { opacity:1; transform:scale(1); }
+
+    /* ─── EXPERIENCE SECTION ─────────────────────────── */
+    #experience {
+      padding:120px 0;
+      background:linear-gradient(160deg, var(--choco) 0%, #5a2e18 100%);
+      position:relative; overflow:hidden;
+    }
+    #experience::before {
+      content:''; position:absolute; inset:0;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .exp-title {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(2.2rem,5vw,3.8rem);
+      font-weight:900; color:#fff; line-height:1.1;
+    }
+    .exp-title em { color:var(--blush); font-style:italic; }
+    .exp-desc { color:rgba(255,255,255,.65); font-size:1.05rem; line-height:1.9; }
+
+    .exp-feature {
+      display:flex; gap:18px; align-items:flex-start;
+      padding:28px; border-radius:20px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      transition: background .3s, transform .3s;
+      margin-bottom:16px;
+    }
+    .exp-feature:hover {
+      background:rgba(255,255,255,.1);
+      transform:translateX(6px);
+    }
+    .exp-feature-icon {
+      width:52px; height:52px; border-radius:16px;
+      background:var(--berry); color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.3rem; flex-shrink:0;
+    }
+    .exp-feature-title {
+      font-weight:700; color:#fff; font-size:1rem; margin-bottom:4px;
+    }
+    .exp-feature-desc {
+      font-size:.85rem; color:rgba(255,255,255,.55); line-height:1.7;
+    }
+
+    .exp-img-collage {
+      position:relative; height:500px;
+    }
+    .collage-img {
+      position:absolute; object-fit:cover;
+      border:4px solid rgba(255,255,255,.1);
+      box-shadow:0 20px 60px rgba(0,0,0,.4);
+    }
+    .collage-img-1 {
+      width:58%; height:58%;
+      top:0; left:0; border-radius:24px;
+      animation: parallaxFloat 6s ease-in-out infinite alternate;
+    }
+    .collage-img-2 {
+      width:46%; height:52%;
+      top:10%; right:0; border-radius:20px;
+      animation: parallaxFloat 7s ease-in-out infinite alternate-reverse;
+    }
+    .collage-img-3 {
+      width:52%; height:48%;
+      bottom:0; left:8%; border-radius:20px;
+      animation: parallaxFloat 5s ease-in-out infinite alternate;
+    }
+    @keyframes parallaxFloat {
+      0%   { transform:translateY(0); }
+      100% { transform:translateY(-14px); }
+    }
+
+    /* ─── MENU TABS ──────────────────────────────────── */
+    #menu { padding:110px 0; background:var(--vanilla); }
+
+    .menu-tabs {
+      display:flex; gap:8px; flex-wrap:wrap;
+      justify-content:center; margin-bottom:50px;
+    }
+    .menu-tab-btn {
+      background:#fff; border:2px solid transparent;
+      border-radius:50px; padding:10px 26px;
+      font-size:.84rem; font-weight:600;
+      color:var(--choco); cursor:pointer;
+      transition: all .25s;
+    }
+    .menu-tab-btn.active, .menu-tab-btn:hover {
+      background:var(--berry); color:#fff;
+      border-color:var(--berry);
+      box-shadow:0 6px 20px rgba(192,67,90,.3);
+    }
+
+    .menu-grid { display:none; }
+    .menu-grid.active { display:flex; flex-wrap:wrap; }
+
+    .menu-item-card {
+      background:#fff; border-radius:20px;
+      padding:24px; display:flex; gap:18px; align-items:center;
+      box-shadow:0 4px 20px rgba(61,31,13,.06);
+      transition:transform .3s, box-shadow .3s;
+    }
+    .menu-item-card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 12px 40px rgba(61,31,13,.12);
+    }
+    .menu-item-img {
+      width:80px; height:80px; border-radius:16px;
+      object-fit:cover; flex-shrink:0;
+    }
+    .menu-item-name {
+      font-family:'Playfair Display',serif;
+      font-weight:700; font-size:1.05rem;
+      color:var(--choco); margin-bottom:4px;
+    }
+    .menu-item-desc { font-size:.8rem; color:#8c6050; line-height:1.5; }
+    .menu-item-price {
+      font-size:1.1rem; font-weight:800;
+      color:var(--berry); margin-top:6px;
+    }
+    .add-btn {
+      margin-left:auto; flex-shrink:0;
+      width:36px; height:36px;
+      background:var(--soft-pink); color:var(--berry);
+      border:none; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1rem; cursor:pointer;
+      transition:background .25s, transform .2s;
+    }
+    .add-btn:hover { background:var(--berry); color:#fff; transform:rotate(90deg); }
+
+    /* ─── TESTIMONIALS ───────────────────────────────── */
+    #testimonials {
+      padding:110px 0;
+      background:linear-gradient(135deg, var(--soft-pink) 0%, var(--cream) 60%, var(--sky) 100%);
+      position:relative;
+    }
+    .testimonial-card {
+      background:#fff; border-radius:28px;
+      padding:36px 32px;
+      box-shadow:0 6px 40px rgba(192,67,90,.1);
+      height:100%;
+      transition:transform .3s;
+    }
+    .testimonial-card:hover { transform:translateY(-6px); }
+    .stars { color:var(--gold); margin-bottom:14px; }
+    .testimonial-text {
+      font-size:.95rem; line-height:1.8; color:#6b4c3b;
+      font-style:italic; margin-bottom:24px;
+    }
+    .testimonial-author { display:flex; align-items:center; gap:14px; }
+    .t-avatar {
+      width:48px; height:48px; border-radius:50%;
+      object-fit:cover; border:3px solid var(--soft-pink);
+    }
+    .t-name { font-weight:700; color:var(--choco); font-size:.92rem; }
+    .t-role { font-size:.76rem; color:#9c7060; }
+    .quote-icon {
+      font-size:2.5rem; color:var(--soft-pink);
+      line-height:1; margin-bottom:12px;
+      font-family:'Georgia',serif;
+    }
+
+    /* ─── GALLERY ────────────────────────────────────── */
+    #gallery { padding:100px 0; background:var(--cream); }
+
+    .gallery-grid {
+      display:grid;
+      grid-template-columns: repeat(4,1fr);
+      grid-template-rows: 220px 220px;
+      gap:16px;
+    }
+    .gallery-item {
+      border-radius:20px; overflow:hidden;
+      position:relative; cursor:pointer;
+    }
+    .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+    .gallery-item:nth-child(5) { grid-column: span 2; }
+
+    .gallery-item img {
+      width:100%; height:100%; object-fit:cover;
+      transition:transform .5s ease;
+    }
+    .gallery-item:hover img { transform:scale(1.08); }
+    .gallery-overlay {
+      position:absolute; inset:0;
+      background:rgba(192,67,90,.5);
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; transition:opacity .35s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity:1; }
+    .gallery-overlay i { color:#fff; font-size:2rem; }
+
+    /* ─── CTA BANNER ─────────────────────────────────── */
+    #cta {
+      padding:100px 0;
+      background:var(--berry);
+      position:relative; overflow:hidden;
+      text-align:center;
+    }
+    #cta::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse at 30% 50%, rgba(232,115,90,.4), transparent 60%),
+                 radial-gradient(ellipse at 70% 50%, rgba(110,198,168,.2), transparent 60%);
+    }
+    .cta-title {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(2.2rem,5vw,3.8rem);
+      font-weight:900; color:#fff; line-height:1.1;
+      margin-bottom:18px;
+    }
+    .cta-title em { color:var(--blush); font-style:italic; }
+    .cta-desc { color:rgba(255,255,255,.75); font-size:1.05rem; margin-bottom:36px; }
+    .btn-white {
+      background:#fff; color:var(--berry);
+      border:none; border-radius:50px;
+      padding:16px 44px; font-size:1rem; font-weight:700;
+      box-shadow:0 8px 30px rgba(0,0,0,.2);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .btn-white:hover {
+      transform:translateY(-3px);
+      box-shadow:0 16px 44px rgba(0,0,0,.25);
+      color:var(--coral);
+    }
+    .btn-outline-white {
+      background:transparent; border:2px solid rgba(255,255,255,.6);
+      color:#fff; border-radius:50px;
+      padding:15px 40px; font-size:1rem; font-weight:700;
+      transition:all .25s;
+    }
+    .btn-outline-white:hover {
+      background:rgba(255,255,255,.15);
+      border-color:#fff; color:#fff;
+      transform:translateY(-3px);
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    #footer {
+      background:var(--choco);
+      padding:80px 0 36px;
+      color:rgba(255,255,255,.7);
+    }
+    .footer-brand {
+      font-family:'Great Vibes',cursive;
+      font-size:2.4rem; color:var(--blush);
+    }
+    .footer-desc {
+      font-size:.88rem; line-height:1.8;
+      color:rgba(255,255,255,.5); margin-top:12px;
+    }
+    .footer-heading {
+      font-size:.72rem; letter-spacing:.2em;
+      text-transform:uppercase; font-weight:700;
+      color:var(--coral); margin-bottom:20px;
+    }
+    .footer-link {
+      display:block; color:rgba(255,255,255,.6);
+      text-decoration:none; font-size:.88rem;
+      margin-bottom:10px;
+      transition:color .25s, padding-left .25s;
+    }
+    .footer-link:hover { color:var(--blush); padding-left:6px; }
+    .social-icon {
+      width:40px; height:40px; border-radius:50%;
+      background:rgba(255,255,255,.08);
+      display:inline-flex; align-items:center; justify-content:center;
+      color:rgba(255,255,255,.7); font-size:.9rem;
+      margin-right:8px; margin-bottom:8px;
+      transition:background .25s, color .25s, transform .2s;
+      text-decoration:none;
+    }
+    .social-icon:hover {
+      background:var(--berry); color:#fff;
+      transform:translateY(-3px);
+    }
+    .newsletter-form {
+      display:flex; gap:0;
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:50px; overflow:hidden;
+      background:rgba(255,255,255,.06);
+    }
+    .newsletter-input {
+      flex:1; background:transparent; border:none;
+      padding:12px 20px; color:#fff; font-size:.88rem;
+      outline:none;
+    }
+    .newsletter-input::placeholder { color:rgba(255,255,255,.35); }
+    .newsletter-btn {
+      background:var(--berry); border:none;
+      padding:10px 22px; color:#fff;
+      font-size:.82rem; font-weight:600; cursor:pointer;
+      transition:background .25s;
+    }
+    .newsletter-btn:hover { background:var(--coral); }
+    .footer-divider { border-color:rgba(255,255,255,.1); margin:40px 0 24px; }
+    .footer-bottom {
+      display:flex; justify-content:space-between; align-items:center;
+      flex-wrap:wrap; gap:12px;
+      font-size:.78rem; color:rgba(255,255,255,.35);
+    }
+    .footer-bottom a { color:rgba(255,255,255,.45); text-decoration:none; }
+    .footer-bottom a:hover { color:var(--blush); }
+
+    /* ─── SCROLL ANIMATIONS ──────────────────────────── */
+    @keyframes fadeSlideUp {
+      0%   { opacity:0; transform:translateY(30px); }
+      100% { opacity:1; transform:translateY(0); }
+    }
+    @keyframes fadeSlideRight {
+      0%   { opacity:0; transform:translateX(50px); }
+      100% { opacity:1; transform:translateX(0); }
+    }
+
+    .reveal {
+      opacity:0; transform:translateY(40px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal.visible {
+      opacity:1; transform:translateY(0);
+    }
+    .reveal-left {
+      opacity:0; transform:translateX(-40px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal-left.visible {
+      opacity:1; transform:translateX(0);
+    }
+    .reveal-right {
+      opacity:0; transform:translateX(40px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal-right.visible {
+      opacity:1; transform:translateX(0);
+    }
+
+    /* ─── SCOOP LOADER ───────────────────────────────── */
+    #pageLoader {
+      position:fixed; inset:0; z-index:9999;
+      background:var(--cream);
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      transition:opacity .5s ease, visibility .5s ease;
+    }
+    #pageLoader.hidden { opacity:0; visibility:hidden; }
+    .loader-icon {
+      font-size:3rem; color:var(--berry);
+      animation:spin .8s linear infinite;
+      margin-bottom:16px;
+    }
+    @keyframes spin {
+      0%   { transform:rotate(0); }
+      100% { transform:rotate(360deg); }
+    }
+    .loader-text {
+      font-family:'Playfair Display',serif;
+      font-size:1.4rem; color:var(--choco);
+      letter-spacing:.04em;
+    }
+
+    /* ─── SCROLL TO TOP ──────────────────────────────── */
+    #scrollTop {
+      position:fixed; bottom:32px; right:32px;
+      width:46px; height:46px;
+      background:var(--berry); color:#fff;
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-size:1rem; cursor:pointer;
+      box-shadow:0 6px 20px rgba(192,67,90,.4);
+      z-index:900;
+      opacity:0; transform:scale(.7);
+      transition:opacity .3s, transform .3s;
+      border:none;
+    }
+    #scrollTop.show { opacity:1; transform:scale(1); }
+    #scrollTop:hover { background:var(--coral); transform:scale(1.1) !important; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media(max-width:991px) {
+      .hero-img-wrap { margin-top:50px; text-align:center; }
+      .hero-main-img { max-width:380px; height:380px; }
+      .gallery-grid {
+        grid-template-columns:repeat(2,1fr);
+        grid-template-rows:repeat(3,200px);
+      }
+      .gallery-item:nth-child(1) { grid-column:span 2; grid-row:span 1; }
+      .gallery-item:nth-child(5) { grid-column:span 2; }
+    }
+    @media(max-width:575px) {
+      .hero-stats { gap:20px; }
+      .float-card-1 { display:none; }
+      .gallery-grid {
+        grid-template-columns:1fr 1fr;
+        grid-template-rows:repeat(4,160px);
+      }
+      .gallery-item:nth-child(1) { grid-column:span 2; }
+      .gallery-item:nth-child(5) { grid-column:span 2; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PAGE LOADER -->
+<div id="pageLoader">
+  <i class="fa-solid fa-ice-cream loader-icon"></i>
+  <div class="loader-text">Frost & Bloom</div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- SCROLL TO TOP -->
+<button id="scrollTop"><i class="fa-solid fa-arrow-up"></i></button>
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<nav id="mainNav" class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <div class="brand-script">Frost & Bloom</div>
+      <span class="brand-sub">Ice Cream Parlor &amp; Café</span>
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+      <span><i class="fa-solid fa-bars" style="color:var(--berry);font-size:1.3rem;"></i></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="#flavors">Flavors</a></li>
+        <li class="nav-item"><a class="nav-link" href="#menu">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
+        <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="#testimonials">Reviews</a></li>
+        <li class="nav-item ms-2">
+          <a class="nav-link nav-cta" href="#cta"><i class="fa-solid fa-location-dot me-1"></i>Visit Us</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ════════════════════ -->
+<section id="hero">
+  <div class="hero-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="container py-5 mt-5">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="hero-badge">
+          <i class="fa-solid fa-star"></i> Lucknow's Favourite Scoop Since 2010
+        </div>
+        <h1 class="hero-h1">
+          Every Scoop<br>
+          Tells a <em>Sweet</em><br>
+          <span class="accent">Story</span>
+        </h1>
+        <p class="hero-desc mt-4">
+          Handcrafted ice creams, artisan coffees & dreamy desserts — 
+          made with love, served with joy. Step into a world where every 
+          bite is a memory.
+        </p>
+        <div class="hero-btns d-flex gap-3 flex-wrap mt-4">
+          <a href="#flavors" class="btn btn-berry">
+            <i class="fa-solid fa-ice-cream me-2"></i>Explore Flavors
+          </a>
+          <a href="#menu" class="btn btn-outline-choco">
+            View Full Menu
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">80+</div>
+            <div class="stat-label">Flavors</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">14</div>
+            <div class="stat-label">Years</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">50K+</div>
+            <div class="stat-label">Happy Guests</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 d-flex justify-content-center">
+        <div class="hero-img-wrap">
+          <img class="hero-main-img"
+            src="https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=800&q=80"
+            alt="Ice cream scoop"/>
+          <!-- Float cards -->
+          <div class="float-card float-card-1">
+            <div class="fc-icon fc-icon-berry"><i class="fa-solid fa-fire"></i></div>
+            <div>
+              <div class="fc-label">Today's Special</div>
+              <div class="fc-value">Mango Sorbet</div>
+            </div>
+          </div>
+          <div class="float-card float-card-2">
+            <div class="fc-icon fc-icon-mint"><i class="fa-solid fa-leaf"></i></div>
+            <div>
+              <div class="fc-label">100% Natural</div>
+              <div class="fc-value">Fresh Ingredients</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ TICKER ═══════════════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner">
+    <span class="ticker-item"><i class="fa-solid fa-ice-cream"></i> Belgian Waffle Sundae</span>
+    <span class="ticker-item"><i class="fa-solid fa-mug-hot"></i> Cold Brew Coffee</span>
+    <span class="ticker-item"><i class="fa-solid fa-star"></i> Award-Winning Flavors</span>
+    <span class="ticker-item"><i class="fa-solid fa-cake-candles"></i> Custom Ice Cream Cakes</span>
+    <span class="ticker-item"><i class="fa-solid fa-leaf"></i> Vegan Options Available</span>
+    <span class="ticker-item"><i class="fa-solid fa-snowflake"></i> Nitrogen Ice Cream Live</span>
+    <span class="ticker-item"><i class="fa-solid fa-fire"></i> New: Gulab Jamun Gelato</span>
+    <span class="ticker-item"><i class="fa-solid fa-ice-cream"></i> Belgian Waffle Sundae</span>
+    <span class="ticker-item"><i class="fa-solid fa-mug-hot"></i> Cold Brew Coffee</span>
+    <span class="ticker-item"><i class="fa-solid fa-star"></i> Award-Winning Flavors</span>
+    <span class="ticker-item"><i class="fa-solid fa-cake-candles"></i> Custom Ice Cream Cakes</span>
+    <span class="ticker-item"><i class="fa-solid fa-leaf"></i> Vegan Options Available</span>
+    <span class="ticker-item"><i class="fa-solid fa-snowflake"></i> Nitrogen Ice Cream Live</span>
+    <span class="ticker-item"><i class="fa-solid fa-fire"></i> New: Gulab Jamun Gelato</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ FLAVORS ══════════════════ -->
+<section id="flavors">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="section-eyebrow justify-content-center">Our Signature Creations</div>
+      <h2 class="section-title">Flavors That <em>Melt</em> Hearts</h2>
+      <p class="mt-3 text-muted" style="max-width:520px;margin:auto;">
+        From classic scoops to avant-garde gelatos — every flavor is a story 
+        crafted by our artisan ice cream chefs.
+      </p>
+    </div>
+
+    <!-- Main Carousel -->
+    <div id="flavorCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner reveal">
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="row g-4">
+            <div class="col-6 col-md-3">
+              <div class="flavor-card">
+                <img src="https://images.unsplash.com/photo-1560008581-09826d1de69e?w=500&q=80" alt="Strawberry"/>
+                <div class="flavor-overlay">
+                  <span class="flavor-tag tag-classic">Classic</span>
+                  <div class="flavor-name">Strawberry Dream</div>
+                  <div class="flavor-price">₹120 / scoop</div>
+                </div>
+                <div class="flavor-btn"><i class="fa-solid fa-plus"></i></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="flavor-card">
+                <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=500&q=80" alt="Chocolate"/>
+                <div class="flavor-overlay">
+                  <span class="flavor-tag tag-special">Special</span>
+                  <div class="flavor-name">Dark Choco Lava</div>
+                  <div class="flavor-price">₹140 / scoop</div>
+                </div>
+                <div class="flavor-btn"><i class="fa-solid fa-plus"></i></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="flavor-card">
+                <img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=500&q=80" alt="Mango"/>
+                <div class="flavor-overlay">
+                  <span class="flavor-tag tag-fruity">Fruity</span>
+                  <div class="flavor-name">Mango Tango</div>
+                  <div class="flavor-price">₹130 / scoop</div>
+                </div>
+                <div class="flavor-btn"><i class="fa-solid fa-plus"></i></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="flavor-card">
+                <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500&q=80" alt="Matcha"/>
+                <div class="flavor-overlay">
+                  <span class="flavor-tag tag-new">New</span>
+                  <div class="flavor-name">Matcha Zen</div>
+                  <div class="flavor-price">₹155 / scoop</div>
+                </div>
+                <div class="flavor-btn"><i class="fa-solid fa-plus"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <div class="row g-4">
+            <div class="col-6 col-md-3">
+              <div class="flavor-card">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=80" alt="Vanilla Cake"/>
+                <div class="flavor-overlay">
+                  <span class="flavor-tag tag-classic">Classic</span>
+                  <div class="flavor-name">Vanilla Bliss</div>
+                  <div class="flavor-price">₹110 / scoop</div>
+                </div>
+                <div class="flavor-btn"><i class="fa-solid fa-plus"></i></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="flavor-card">
+                <img src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=500&q=80" alt="Blueberry"/>
+                <div class="flavor-overlay">
+                  <span class="flavor-tag tag-fruity">Fruity</span>
+                  <div class="flavor-name">Blueberry Bliss</div>
+                  <div class="flavor-price">₹135 / scoop</div>
+                </div>
+                <div class="flavor-btn"><i class="fa-solid fa-plus"></i></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="flavor-card">
+                <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&q=80" alt="Waffle"/>
+                <div class="flavor-overlay">
+                  <span class="flavor-tag tag-special">Special</span>
+                  <div class="flavor-name">Waffle Crunch</div>
+                  <div class="flavor-price">₹180 / serving</div>
+                </div>
+                <div class="flavor-btn"><i class="fa-solid fa-plus"></i></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="flavor-card">
+                <img src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=500&q=80" alt="Pink Lemonade"/>
+                <div class="flavor-overlay">
+                  <span class="flavor-tag tag-new">New</span>
+                  <div class="flavor-name">Rose Litchi</div>
+                  <div class="flavor-price">₹150 / scoop</div>
+                </div>
+                <div class="flavor-btn"><i class="fa-solid fa-plus"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="d-flex justify-content-center gap-3 mt-4">
+        <button class="btn btn-outline-choco rounded-circle" style="width:48px;height:48px;"
+          data-bs-target="#flavorCarousel" data-bs-slide="prev">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div class="carousel-indicators position-relative d-flex align-items-center gap-2" style="margin:0;">
+          <button type="button" data-bs-target="#flavorCarousel" data-bs-slide-to="0"
+            class="active rounded-circle" style="width:10px;height:10px;background:var(--berry);border:none;"></button>
+          <button type="button" data-bs-target="#flavorCarousel" data-bs-slide-to="1"
+            class="rounded-circle" style="width:10px;height:10px;background:rgba(192,67,90,.3);border:none;"></button>
+        </div>
+        <button class="btn btn-berry rounded-circle" style="width:48px;height:48px;"
+          data-bs-target="#flavorCarousel" data-bs-slide="next">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ EXPERIENCE ═══════════════ -->
+<section id="experience">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 reveal-left">
+        <div class="section-eyebrow" style="color:var(--blush);">Why Choose Us</div>
+        <h2 class="exp-title">More Than<br>Just <em>Ice Cream</em></h2>
+        <p class="exp-desc mt-4 mb-5">
+          At Frost & Bloom we believe every visit should feel like a celebration. 
+          From our artisan kitchen to your hands — pure joy in every scoop.
+        </p>
+        <div class="exp-feature">
+          <div class="exp-feature-icon"><i class="fa-solid fa-mortar-pestle"></i></div>
+          <div>
+            <div class="exp-feature-title">Handcrafted Daily</div>
+            <div class="exp-feature-desc">Small-batch recipes made fresh every morning with locally sourced milk and seasonal fruits.</div>
+          </div>
+        </div>
+        <div class="exp-feature">
+          <div class="exp-feature-icon" style="background:var(--mint);"><i class="fa-solid fa-seedling"></i></div>
+          <div>
+            <div class="exp-feature-title">100% Natural Ingredients</div>
+            <div class="exp-feature-desc">No artificial colors, preservatives, or flavours — just pure, clean indulgence.</div>
+          </div>
+        </div>
+        <div class="exp-feature">
+          <div class="exp-feature-icon" style="background:var(--gold);"><i class="fa-solid fa-award"></i></div>
+          <div>
+            <div class="exp-feature-title">Award Winning Recipes</div>
+            <div class="exp-feature-desc">Recognized by Food & Beverage India as Lucknow's Best Ice Cream Parlor 3 years running.</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 reveal-right">
+        <div class="exp-img-collage">
+          <img class="collage-img collage-img-1"
+            src="https://images.unsplash.com/photo-1559561853-08451507cbe7?w=600&q=80" alt="Cafe interior"/>
+          <img class="collage-img collage-img-2"
+            src="https://images.unsplash.com/photo-1541189169598-c21fe79d66de?w=600&q=80" alt="Barista"/>
+          <img class="collage-img collage-img-3"
+            src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&q=80" alt="Dessert"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ MENU TABS ════════════════ -->
+<section id="menu">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="section-eyebrow justify-content-center">What We Serve</div>
+      <h2 class="section-title">Our <em>Delicious</em> Menu</h2>
+    </div>
+
+    <div class="menu-tabs" id="menuTabs">
+      <button class="menu-tab-btn active" data-tab="scoops"><i class="fa-solid fa-ice-cream me-2"></i>Ice Creams</button>
+      <button class="menu-tab-btn" data-tab="coffee"><i class="fa-solid fa-mug-hot me-2"></i>Coffees</button>
+      <button class="menu-tab-btn" data-tab="desserts"><i class="fa-solid fa-cake-candles me-2"></i>Desserts</button>
+      <button class="menu-tab-btn" data-tab="drinks"><i class="fa-solid fa-glass-water me-2"></i>Drinks</button>
+    </div>
+
+    <!-- ICE CREAMS -->
+    <div class="row g-3 menu-grid active" id="tab-scoops">
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1560008581-09826d1de69e?w=200&q=80" alt="Strawberry"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Strawberry Dream Scoop</div>
+            <div class="menu-item-desc">Fresh strawberry puree, cream, vanilla bean</div>
+            <div class="menu-item-price">₹120</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&q=80" alt="Choco"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Dark Chocolate Lava</div>
+            <div class="menu-item-desc">Belgian dark chocolate, sea salt caramel swirl</div>
+            <div class="menu-item-price">₹140</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=200&q=80" alt="Mango"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Alphonso Mango Tango</div>
+            <div class="menu-item-desc">Alphonso mango, lime zest, cardamom</div>
+            <div class="menu-item-price">₹130</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=200&q=80" alt="Matcha"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Matcha Zen Gelato</div>
+            <div class="menu-item-desc">Premium Japanese matcha, white chocolate chips</div>
+            <div class="menu-item-price">₹155</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=200&q=80" alt="Rose"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Rose Litchi Sorbet</div>
+            <div class="menu-item-desc">Real rose petals, litchi, hint of mint</div>
+            <div class="menu-item-price">₹145</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80" alt="Waffle"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Waffle Crunch Sundae</div>
+            <div class="menu-item-desc">Triple scoop, waffle cone crumble, hot fudge</div>
+            <div class="menu-item-price">₹220</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COFFEES -->
+    <div class="row g-3 menu-grid" id="tab-coffee">
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&q=80" alt="Latte"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Signature Caramel Latte</div>
+            <div class="menu-item-desc">Double espresso, steamed milk, salted caramel drizzle</div>
+            <div class="menu-item-price">₹180</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=200&q=80" alt="Cold brew"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Cold Brew Float</div>
+            <div class="menu-item-desc">18-hour cold brew, vanilla ice cream float</div>
+            <div class="menu-item-price">₹210</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=200&q=80" alt="Cappuccino"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Velvety Cappuccino</div>
+            <div class="menu-item-desc">Single origin espresso, microfoam milk art</div>
+            <div class="menu-item-price">₹160</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESSERTS -->
+    <div class="row g-3 menu-grid" id="tab-desserts">
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200&q=80" alt="Cake"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Strawberry Cream Cake</div>
+            <div class="menu-item-desc">Chiffon sponge, fresh cream, whole strawberries</div>
+            <div class="menu-item-price">₹320 / slice</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1567206563114-c179900f1e0c?w=200&q=80" alt="Pancake"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Japanese Soufflé Pancake</div>
+            <div class="menu-item-desc">Fluffy jiggly pancake, maple syrup, ice cream</div>
+            <div class="menu-item-price">₹280</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=200&q=80" alt="Brownie"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Hot Fudge Brownie</div>
+            <div class="menu-item-desc">Warm fudgy brownie, vanilla ice cream, walnuts</div>
+            <div class="menu-item-price">₹240</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRINKS -->
+    <div class="row g-3 menu-grid" id="tab-drinks">
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=200&q=80" alt="Shake"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Triple Berry Milkshake</div>
+            <div class="menu-item-desc">Strawberry, blueberry, raspberry blend</div>
+            <div class="menu-item-price">₹190</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=200&q=80" alt="Smoothie"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Tropical Smoothie Bowl</div>
+            <div class="menu-item-desc">Acai, mango, banana, granola, fresh fruits</div>
+            <div class="menu-item-price">₹220</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="menu-item-card">
+          <img class="menu-item-img" src="https://images.unsplash.com/photo-1546173159-315724a31696?w=200&q=80" alt="Soda"/>
+          <div class="flex-grow-1">
+            <div class="menu-item-name">Italian Cream Soda</div>
+            <div class="menu-item-desc">Sparkling soda, cream, choice of 8 syrups</div>
+            <div class="menu-item-price">₹150</div>
+          </div>
+          <button class="add-btn"><i class="fa-solid fa-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════ TESTIMONIALS ═════════════ -->
+<section id="testimonials">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="section-eyebrow justify-content-center">Sweet Words</div>
+      <h2 class="section-title">Guests <em>Love</em> Us</h2>
+    </div>
+
+    <div id="testCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row g-4">
+            <div class="col-md-4 reveal">
+              <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="testimonial-text">The Mango Tango scoop was an absolute revelation! I've never tasted ice cream this fresh and vibrant. The cafe ambiance is gorgeous too — we stayed for hours!</p>
+                <div class="testimonial-author">
+                  <img class="t-avatar" src="https://i.pravatar.cc/100?img=1" alt=""/>
+                  <div>
+                    <div class="t-name">Priya Sharma</div>
+                    <div class="t-role">Food Blogger, Lucknow</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 reveal" style="transition-delay:.1s">
+              <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="testimonial-text">Best Cold Brew Float I've ever had! Came in for ice cream, stayed for the coffee. The nitro ice cream live station is an absolute show-stopper for kids and adults alike.</p>
+                <div class="testimonial-author">
+                  <img class="t-avatar" src="https://i.pravatar.cc/100?img=8" alt=""/>
+                  <div>
+                    <div class="t-name">Arjun Mehta</div>
+                    <div class="t-role">Café Enthusiast</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 reveal" style="transition-delay:.2s">
+              <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
+                <p class="testimonial-text">We ordered a custom ice cream cake for our daughter's birthday — it was stunning and delicious! The team was so accommodating and creative. Truly special people!</p>
+                <div class="testimonial-author">
+                  <img class="t-avatar" src="https://i.pravatar.cc/100?img=5" alt=""/>
+                  <div>
+                    <div class="t-name">Sunita Verma</div>
+                    <div class="t-role">Happy Parent</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="testimonial-text">The Matcha Zen Gelato is genuinely the best matcha dessert outside Japan. The texture, the flavour balance — absolutely impeccable. Will keep coming back!</p>
+                <div class="testimonial-author">
+                  <img class="t-avatar" src="https://i.pravatar.cc/100?img=12" alt=""/>
+                  <div>
+                    <div class="t-name">Rohit Kapoor</div>
+                    <div class="t-role">Foodie &amp; Traveller</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="testimonial-text">I'm a vegan and I was so thrilled by the sorbet options here. Rose Litchi is my go-to every weekend. The staff is incredibly warm and knowledgeable!</p>
+                <div class="testimonial-author">
+                  <img class="t-avatar" src="https://i.pravatar.cc/100?img=9" alt=""/>
+                  <div>
+                    <div class="t-name">Meera Patel</div>
+                    <div class="t-role">Wellness Coach</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="testimonial-card">
+                <div class="quote-icon">"</div>
+                <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="testimonial-text">Frost &amp; Bloom has become our family's weekly ritual. The Japanese Soufflé Pancake with ice cream? Divine! Lucknow is so lucky to have this place.</p>
+                <div class="testimonial-author">
+                  <img class="t-avatar" src="https://i.pravatar.cc/100?img=3" alt=""/>
+                  <div>
+                    <div class="t-name">Aisha Khan</div>
+                    <div class="t-role">Interior Designer</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center gap-3 mt-4">
+        <button class="btn btn-outline-choco rounded-circle" style="width:44px;height:44px;"
+          data-bs-target="#testCarousel" data-bs-slide="prev">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <button class="btn btn-berry rounded-circle" style="width:44px;height:44px;"
+          data-bs-target="#testCarousel" data-bs-slide="next">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ GALLERY ══════════════════ -->
+<section id="gallery">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="section-eyebrow justify-content-center">Our World</div>
+      <h2 class="section-title">A Feast for <em>Eyes</em> Too</h2>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1587314168485-3236d6710814?w=800&q=80" alt=""/>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1541189169598-c21fe79d66de?w=600&q=80" alt=""/>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&q=80" alt=""/>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80" alt=""/>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1559561853-08451507cbe7?w=800&q=80" alt=""/>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&q=80" alt=""/>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CTA ══════════════════════ -->
+<section id="cta">
+  <div class="container text-center" style="position:relative;z-index:1;">
+    <div class="reveal">
+      <div class="section-eyebrow justify-content-center" style="color:var(--blush);">Come Visit</div>
+      <h2 class="cta-title">Ready for Your<br><em>Sweetest</em> Moment?</h2>
+      <p class="cta-desc">Walk in for a scoop, stay for the vibe. We're open 7 days a week!</p>
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="#" class="btn btn-white">
+          <i class="fa-solid fa-location-dot me-2"></i>Find Us
+        </a>
+        <a href="#" class="btn btn-outline-white">
+          <i class="fa-brands fa-whatsapp me-2"></i>Order on WhatsApp
+        </a>
+      </div>
+      <div class="d-flex justify-content-center gap-5 mt-5 flex-wrap">
+        <div class="text-center">
+          <i class="fa-solid fa-clock fa-lg mb-2" style="color:var(--blush);"></i>
+          <div style="color:#fff;font-weight:700;">Mon – Fri</div>
+          <div style="color:rgba(255,255,255,.6);font-size:.88rem;">11 AM – 11 PM</div>
+        </div>
+        <div class="text-center">
+          <i class="fa-solid fa-sun fa-lg mb-2" style="color:var(--blush);"></i>
+          <div style="color:#fff;font-weight:700;">Weekends</div>
+          <div style="color:rgba(255,255,255,.6);font-size:.88rem;">10 AM – 12 AM</div>
+        </div>
+        <div class="text-center">
+          <i class="fa-solid fa-location-dot fa-lg mb-2" style="color:var(--blush);"></i>
+          <div style="color:#fff;font-weight:700;">Hazratganj</div>
+          <div style="color:rgba(255,255,255,.6);font-size:.88rem;">Lucknow, UP</div>
+        </div>
+        <div class="text-center">
+          <i class="fa-solid fa-phone fa-lg mb-2" style="color:var(--blush);"></i>
+          <div style="color:#fff;font-weight:700;">+91 9876 543210</div>
+          <div style="color:rgba(255,255,255,.6);font-size:.88rem;">Call for reservations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer id="footer">
+  <div class="container">
+    <div class="row g-5 mb-5">
+      <div class="col-lg-4">
+        <div class="footer-brand">Frost & Bloom</div>
+        <p class="footer-desc">
+          Crafting happiness one scoop at a time since 2010. 
+          Your favourite neighbourhood ice cream parlor and artisan café in Lucknow.
+        </p>
+        <div class="mt-4">
+          <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Quick Links</div>
+        <a href="#" class="footer-link">Home</a>
+        <a href="#flavors" class="footer-link">Flavors</a>
+        <a href="#menu" class="footer-link">Menu</a>
+        <a href="#gallery" class="footer-link">Gallery</a>
+        <a href="#experience" class="footer-link">About Us</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Explore</div>
+        <a href="#" class="footer-link">Catering</a>
+        <a href="#" class="footer-link">Ice Cream Cakes</a>
+        <a href="#" class="footer-link">Franchising</a>
+        <a href="#" class="footer-link">Gift Cards</a>
+        <a href="#" class="footer-link">Loyalty Club</a>
+      </div>
+      <div class="col-lg-4">
+        <div class="footer-heading">Stay Sweet</div>
+        <p style="font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:16px;">
+          Subscribe for new flavour drops, offers & events!
+        </p>
+        <div class="newsletter-form">
+          <input class="newsletter-input" placeholder="Your email address" type="email"/>
+          <button class="newsletter-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+        <div class="mt-4 d-flex gap-3 flex-wrap">
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border-radius:12px;padding:10px 16px;">
+            <i class="fa-brands fa-apple" style="color:#fff;font-size:1.3rem;"></i>
+            <div>
+              <div style="font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:.05em;">DOWNLOAD ON</div>
+              <div style="font-size:.82rem;color:#fff;font-weight:600;">App Store</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border-radius:12px;padding:10px 16px;">
+            <i class="fa-brands fa-google-play" style="color:#fff;font-size:1.2rem;"></i>
+            <div>
+              <div style="font-size:.6rem;color:rgba(255,255,255,.4);letter-spacing:.05em;">GET IT ON</div>
+              <div style="font-size:.82rem;color:#fff;font-weight:600;">Google Play</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider"/>
+    <div class="footer-bottom">
+      <span>© 2025 Frost &amp; Bloom. All rights reserved.</span>
+      <span style="font-size:1.1rem; color:var(--berry);">
+        <i class="fa-solid fa-ice-cream"></i>
+      </span>
+      <span>
+        <a href="#">Privacy</a> &nbsp;·&nbsp;
+        <a href="#">Terms</a> &nbsp;·&nbsp;
+        <a href="#">Sitemap</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ─── PAGE LOADER ───────────────────────────────
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('pageLoader').classList.add('hidden');
+    }, 800);
+  });
+
+  // ─── CUSTOM CURSOR ─────────────────────────────
+  const dot  = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx=0,my=0, rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  (function animCursor(){
+    dot.style.left  = mx+'px'; dot.style.top  = my+'px';
+    rx += (mx-rx)*.15; ry += (my-ry)*.15;
+    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    requestAnimationFrame(animCursor);
+  })();
+  document.querySelectorAll('a,button,.flavor-card,.menu-item-card,.gallery-item').forEach(el => {
+    el.addEventListener('mouseenter', ()=>{ ring.style.transform='translate(-50%,-50%) scale(1.8)'; ring.style.opacity='.35'; });
+    el.addEventListener('mouseleave', ()=>{ ring.style.transform='translate(-50%,-50%) scale(1)'; ring.style.opacity='.6'; });
+  });
+
+  // ─── NAVBAR SCROLL ─────────────────────────────
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 60) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+
+  // ─── SCROLL TO TOP ─────────────────────────────
+  const st = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 400) st.classList.add('show');
+    else st.classList.remove('show');
+  });
+  st.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+  // ─── REVEAL ON SCROLL ──────────────────────────
+  const reveals = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+  const revObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        revObs.unobserve(e.target);
+      }
+    });
+  }, { threshold:.15 });
+  reveals.forEach(r => revObs.observe(r));
+
+  // ─── MENU TABS ─────────────────────────────────
+  document.getElementById('menuTabs').addEventListener('click', e => {
+    const btn = e.target.closest('.menu-tab-btn');
+    if(!btn) return;
+    document.querySelectorAll('.menu-tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.menu-grid').forEach(g=>g.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+
+  // ─── ADD TO CART PULSE ─────────────────────────
+  document.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', function(){
+      this.innerHTML = '<i class="fa-solid fa-check"></i>';
+      this.style.background = 'var(--berry)';
+      this.style.color = '#fff';
+      setTimeout(()=>{
+        this.innerHTML = '<i class="fa-solid fa-plus"></i>';
+        this.style.background = '';
+        this.style.color = '';
+      }, 1200);
+    });
+  });
+
+  // ─── PARALLAX HERO ─────────────────────────────
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const blobs = document.querySelectorAll('.blob');
+    blobs.forEach((b,i) => {
+      b.style.transform = `translate(${Math.sin(i)*y*.04}px, ${y*.08*(i+1)*.3}px)`;
+    });
+  });
+
+  // ─── SMOOTH ANCHOR ─────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth'}); }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Space — Velvet Scoop · Cafeteria & Sitting Areas</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Lato:wght@300;400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --paper:#F9F5EF;--paper2:#F4EFE6;--paper3:#EDE6D8;
+  --white:#FFFFFF;--ink:#1C150D;--ink-soft:#3D2E1E;
+  --ink-muted:#7A6855;--ink-light:#B0A090;
+  --gold:#B8924A;--gold-lt:#D4AF6E;--gold-pale:#F0E4C8;--gold-deep:#8A6930;
+  --sage:#6B8F71;--rose:#C26B6B;
+  --border:rgba(28,21,13,0.09);--border-gold:rgba(184,146,74,0.25);
+  --shadow-soft:0 2px 20px rgba(28,21,13,0.07);
+  --shadow-med:0 8px 40px rgba(28,21,13,0.10);
+  --shadow-deep:0 20px 60px rgba(28,21,13,0.14);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Lato',sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+
+/* CURSOR */
+#cur{width:7px;height:7px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+#cur-r{width:32px;height:32px;border:1.5px solid var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.45;transition:all .22s ease}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:10000;background:var(--paper);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .7s,visibility .7s}
+#loader.out{opacity:0;visibility:hidden}
+.ld-logo{font-family:'Dancing Script',cursive;font-size:2.2rem;color:var(--gold)}
+.ld-bar{width:160px;height:1px;background:var(--border-gold);overflow:hidden}
+.ld-fill{height:100%;background:var(--gold);width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.ld-note{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-light)}
+
+/* NAVBAR */
+#nav{position:fixed;top:0;width:100%;z-index:1000;padding:22px 0;transition:all .45s}
+#nav.scrolled{padding:12px 0;background:rgba(249,245,239,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:var(--shadow-soft)}
+.nav-brand{font-family:'Dancing Script',cursive;font-size:1.75rem;color:var(--gold-deep);text-decoration:none;line-height:1}
+.nav-brand-sub{font-family:'Lato',sans-serif;font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-muted);display:block;margin-top:0}
+.nav-menu a{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none;margin-left:28px;font-weight:400;transition:color .3s}
+.nav-menu a:hover{color:var(--gold)}
+.nav-btn{background:transparent;border:1px solid var(--gold-deep);color:var(--gold-deep);padding:9px 22px;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-family:'Lato',sans-serif;font-weight:700;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
+.nav-btn:hover{background:var(--gold-deep);color:#fff}
+
+/* HERO */
+#hero{height:100vh;min-height:680px;position:relative;overflow:hidden;display:flex;align-items:center}
+.hero-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.88) saturate(.95)}
+.hero-vignette{position:absolute;inset:0;background:linear-gradient(105deg,rgba(249,245,239,.9) 0%,rgba(249,245,239,.55) 45%,rgba(249,245,239,.08) 100%)}
+.hero-vignette-b{position:absolute;inset:0;background:linear-gradient(to top,rgba(244,239,230,.65) 0%,transparent 50%)}
+.hero-content{position:relative;z-index:2}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:20px;opacity:0;animation:slideU .9s .3s ease forwards}
+.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--gold);opacity:.7}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(3.2rem,6.5vw,6.2rem);font-weight:400;line-height:1.02;color:var(--ink);margin-bottom:22px;opacity:0;animation:slideU 1s .5s ease forwards}
+.hero-h1 em{font-style:italic;color:var(--gold-deep)}
+.hero-p{font-size:1.05rem;font-weight:300;color:var(--ink-muted);line-height:1.95;max-width:460px;margin-bottom:38px;opacity:0;animation:slideU 1s .7s ease forwards}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:slideU 1s .9s ease forwards}
+.btn-primary{background:var(--gold-deep);color:#fff;border:none;padding:14px 36px;font-family:'Lato',sans-serif;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
+.btn-primary:hover{background:var(--gold);transform:translateY(-1px);box-shadow:0 8px 24px rgba(138,105,48,.22);color:#fff}
+.btn-outline{background:transparent;border:1.5px solid var(--ink);color:var(--ink);padding:13px 30px;font-family:'Lato',sans-serif;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-flex;align-items:center;gap:9px}
+.btn-outline:hover{background:var(--ink);color:var(--paper)}
+.hero-awards{position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:2;display:flex;flex-direction:column;background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border-left:1px solid var(--border);opacity:0;animation:fadeIn .8s 1.3s ease forwards}
+.ha-item{padding:20px 28px;border-bottom:1px solid var(--border);text-align:right}
+.ha-item:last-child{border-bottom:none}
+.ha-n{font-family:'Playfair Display',serif;font-size:2rem;font-weight:400;color:var(--gold-deep);line-height:1}
+.ha-l{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-light);margin-top:2px}
+.scroll-ind{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;animation:fadeIn .8s 1.6s ease forwards}
+.si-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-muted)}
+.si-bar{width:1px;height:52px;background:linear-gradient(to bottom,var(--gold-deep),transparent);animation:barDrop 2s ease-in-out infinite}
+@keyframes barDrop{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* SECTION COMMON */
+.sec-eyebrow{font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.sec-eyebrow::before{content:'';width:28px;height:1px;background:var(--gold)}
+.sec-h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,3.5vw,3.2rem);font-weight:400;color:var(--ink);line-height:1.12}
+.sec-h2 em{font-style:italic;color:var(--gold-deep)}
+.sec-body{font-size:.93rem;color:var(--ink-muted);line-height:2;font-weight:300}
+.divider-line{width:40px;height:1.5px;background:var(--gold);margin:20px 0}
+
+/* SCROLL BANNER */
+.scroll-banner{background:var(--ink);overflow:hidden;padding:14px 0}
+.sb-track{display:flex;animation:marqueeL 28s linear infinite;white-space:nowrap}
+.sb-item{display:inline-flex;align-items:center;gap:28px;padding:0 40px;font-family:'Libre Baskerville',serif;font-size:.88rem;font-style:italic;color:rgba(255,255,255,.45);flex-shrink:0}
+.sb-dot{width:3px;height:3px;border-radius:50%;background:var(--gold);flex-shrink:0}
+@keyframes marqueeL{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* INTRO */
+#intro{padding:120px 0;background:var(--white)}
+.intro-img-col{position:relative}
+.intro-main{width:100%;height:580px;object-fit:cover;display:block}
+.intro-inset{position:absolute;bottom:-28px;right:-28px;width:52%;height:42%;object-fit:cover;border:6px solid var(--white);box-shadow:var(--shadow-deep)}
+.intro-tag{position:absolute;top:32px;left:32px;background:var(--white);padding:16px 20px;box-shadow:var(--shadow-med)}
+.it-icon{font-size:1.1rem;color:var(--gold);margin-bottom:6px}
+.it-val{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--ink);font-weight:500;line-height:1.2}
+.it-sub{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-light);margin-top:2px}
+.intro-features{margin-top:36px;border-top:1px solid var(--border)}
+.if-row{display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--border)}
+.if-row:last-child{border-bottom:none}
+.if-ic{width:42px;height:42px;background:var(--paper2);display:flex;align-items:center;justify-content:center;color:var(--gold-deep);font-size:.95rem;flex-shrink:0}
+.if-title{font-size:.88rem;font-weight:700;color:var(--ink);margin-bottom:3px}
+.if-desc{font-size:.8rem;color:var(--ink-muted);line-height:1.7}
+.award-chip{display:inline-flex;align-items:center;gap:8px;background:var(--gold-pale);border:1px solid var(--border-gold);padding:8px 16px;font-size:.72rem;color:var(--gold-deep);font-weight:700;letter-spacing:.06em;margin-top:28px}
+
+/* ZONES */
+#zones{background:var(--paper)}
+.zones-top{padding:80px 0 0}
+.zone-nav-wrap{border-bottom:1px solid var(--border);margin-top:44px;overflow-x:auto}
+.zone-nav{display:flex;gap:0;min-width:max-content}
+.z-tab{padding:16px 32px;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--ink-light);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all .3s;font-family:'Lato',sans-serif;white-space:nowrap}
+.z-tab:hover{color:var(--ink)}
+.z-tab.active{color:var(--gold-deep);border-bottom-color:var(--gold-deep)}
+.zone-panel{display:none}
+.zone-panel.active{display:block;animation:fadeU .5s ease both}
+
+/* Zone hero image */
+.zone-img-hero{position:relative;height:60vh;min-height:460px;overflow:hidden}
+.zone-img-hero img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.9) saturate(.95)}
+.zone-img-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(28,21,13,.72) 0%,transparent 55%)}
+.zone-hero-info{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:48px 60px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px}
+.zhi-left .z-num{font-family:'Playfair Display',serif;font-size:4rem;font-weight:400;color:rgba(255,255,255,.1);line-height:1;margin-bottom:4px}
+.zhi-left .z-name{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.4rem);font-weight:400;color:#fff;line-height:1}
+.zhi-left .z-name em{font-style:italic;color:var(--gold-lt)}
+.z-chips{display:flex;gap:8px;flex-wrap:wrap}
+.z-chip{padding:6px 14px;border:1px solid rgba(255,255,255,.28);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.z-chip.gold-chip{border-color:var(--gold-lt);color:var(--gold-lt)}
+
+/* Zone body */
+.zone-body{padding:72px 0 80px;background:var(--white)}
+.zb-img-stack{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:300px 220px;gap:8px}
+.zb-img-stack img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;transition:filter .4s}
+.zb-img-stack img:hover{filter:brightness(.82)}
+.zb-img-stack img:first-child{grid-column:span 2}
+.z-desc{font-size:.95rem;color:var(--ink-muted);line-height:2;font-weight:300;margin-bottom:28px}
+.z-spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
+.z-spec{background:var(--paper);border:1px solid var(--border);padding:14px 16px}
+.zs-icon{font-size:.85rem;color:var(--gold);margin-bottom:5px}
+.zs-lbl{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-light);margin-bottom:1px}
+.zs-val{font-size:.85rem;font-weight:700;color:var(--ink)}
+.amenity-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.am-tag{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--paper2);font-size:.72rem;color:var(--ink-muted);transition:all .3s;border:1px solid transparent}
+.am-tag:hover{border-color:var(--gold);color:var(--gold-deep);background:var(--gold-pale)}
+.am-tag i{font-size:.7rem;color:var(--gold)}
+
+/* Zone gallery strip */
+.zone-gallery-row{display:flex;gap:6px;background:var(--paper);padding:24px 0 0}
+.zg-thumb{flex:1;height:180px;overflow:hidden;position:relative;cursor:zoom-in}
+.zg-thumb:first-child{flex:2}
+.zg-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s,filter .4s}
+.zg-thumb:hover img{transform:scale(1.06);filter:brightness(.8)}
+.zg-over{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;background:rgba(28,21,13,.18)}
+.zg-thumb:hover .zg-over{opacity:1}
+.zg-over i{color:#fff;font-size:1.1rem}
+
+/* AMBIENCE */
+.amb-parallax{position:relative;height:85vh;min-height:500px;overflow:hidden;display:flex;align-items:center}
+.amb-bg{position:absolute;inset:-60px;background-size:cover;background-position:center;background-attachment:fixed;filter:brightness(.52) saturate(.82)}
+.amb-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(28,21,13,.18) 0%,rgba(28,21,13,.65) 100%)}
+.amb-content{position:relative;z-index:2;text-align:center;max-width:700px;margin:0 auto;padding:0 24px}
+.amb-eyebrow{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:18px;opacity:.85}
+.amb-h{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5.5rem);font-weight:400;color:#fff;line-height:1.02;margin-bottom:20px}
+.amb-h em{font-style:italic;color:var(--gold-lt)}
+.amb-p{font-size:.97rem;color:rgba(255,255,255,.58);line-height:2;margin-bottom:36px}
+.amb-cards-row{background:var(--white)}
+.amb-cards{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border)}
+.amb-c{padding:44px 32px;border-right:1px solid var(--border);transition:background .3s}
+.amb-c:last-child{border-right:none}
+.amb-c:hover{background:var(--paper)}
+.amb-c-icon{font-size:1.5rem;color:var(--gold);margin-bottom:18px}
+.amb-c-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:10px}
+.amb-c-desc{font-size:.82rem;color:var(--ink-muted);line-height:1.85}
+
+/* PHOTO GRID */
+#interiors{padding:100px 0;background:var(--paper2)}
+.ph-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:320px 240px;gap:6px;margin-top:52px}
+.ph-cell{overflow:hidden;position:relative;cursor:zoom-in}
+.ph-cell img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s,filter .5s}
+.ph-cell:hover img{transform:scale(1.05);filter:brightness(.82)}
+.ph-cell:nth-child(1){grid-row:span 2}
+.ph-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(28,21,13,.72),transparent);padding:20px 18px;opacity:0;transition:opacity .35s}
+.ph-cell:hover .ph-caption{opacity:1}
+.ph-cap-text{font-family:'Libre Baskerville',serif;font-size:.88rem;font-style:italic;color:#fff}
+
+/* DESIGN STORY */
+.ds-block{display:grid;grid-template-columns:1fr 1fr;min-height:520px}
+.ds-block.rev{direction:rtl}
+.ds-block.rev>*{direction:ltr}
+.ds-img{overflow:hidden}
+.ds-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s;filter:brightness(.97) saturate(.92)}
+.ds-img:hover img{transform:scale(1.04)}
+.ds-text{padding:80px 70px;display:flex;flex-direction:column;justify-content:center;background:var(--white)}
+.ds-text.bg2{background:var(--paper)}
+.ds-text.bg3{background:var(--paper2)}
+.ds-num{font-family:'Playfair Display',serif;font-size:5rem;font-weight:400;color:rgba(28,21,13,.06);line-height:1;margin-bottom:4px}
+.ds-h{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,2.8vw,2.5rem);font-weight:400;color:var(--ink);line-height:1.15;margin-bottom:16px}
+.ds-h em{font-style:italic;color:var(--gold-deep)}
+.ds-p{font-size:.91rem;color:var(--ink-muted);line-height:2;margin-bottom:24px;font-weight:300}
+.ds-tags{display:flex;gap:10px;flex-wrap:wrap}
+.ds-tag{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--border-gold);color:var(--gold-deep)}
+
+/* TIME OF DAY */
+#time-mood{padding:100px 0;background:var(--white)}
+.tod-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.tod-img-frame{position:relative}
+.tod-img{width:100%;height:520px;object-fit:cover;display:block;transition:opacity .5s}
+.tod-label-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(249,245,239,.93);backdrop-filter:blur(8px);padding:18px 24px;display:flex;align-items:center;justify-content:space-between}
+.tlb-time{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:var(--ink)}
+.tlb-mood{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-deep)}
+.tod-item{display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .25s;border-left:2px solid transparent}
+.tod-item:first-child{border-top:1px solid var(--border)}
+.tod-item.active,.tod-item:hover{border-left-color:var(--gold);padding-left:16px;background:var(--paper)}
+.ti-time-col{min-width:68px;flex-shrink:0}
+.ti-hour{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;color:var(--gold-deep);line-height:1}
+.ti-period{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-light)}
+.ti-bar{width:1px;background:var(--border);flex-shrink:0}
+.ti-mood-name{font-size:.88rem;font-weight:700;color:var(--ink);margin-bottom:4px}
+.ti-desc{font-size:.8rem;color:var(--ink-muted);line-height:1.7}
+
+/* FULL EXPERIENCE */
+#full-exp{padding:100px 0;background:var(--paper2)}
+.fe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:60px}
+.fe-card{background:var(--white);padding:44px 36px;transition:background .35s}
+.fe-card:hover{background:var(--paper)}
+.fe-icon{width:48px;height:48px;background:var(--paper2);display:flex;align-items:center;justify-content:center;color:var(--gold-deep);font-size:1.1rem;margin-bottom:20px}
+.fe-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:500;color:var(--ink);margin-bottom:10px}
+.fe-body{font-size:.82rem;color:var(--ink-muted);line-height:1.85}
+.fe-num{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:400;color:rgba(184,146,74,.15);float:right;line-height:1;margin-top:-6px}
+
+/* CTA */
+#cta{background:var(--ink);padding:90px 0;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(184,146,74,.08) 0%,transparent 55%),radial-gradient(ellipse at 80% 50%,rgba(184,146,74,.06) 0%,transparent 55%)}
+.cta-inner{position:relative;z-index:1;text-align:center}
+.cta-script{font-family:'Dancing Script',cursive;font-size:1.1rem;color:rgba(184,146,74,.5);letter-spacing:.1em;margin-bottom:12px}
+.cta-h{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4.2rem);font-weight:400;color:#fff;line-height:1.05;margin-bottom:16px}
+.cta-h em{font-style:italic;color:var(--gold-lt)}
+.cta-p{font-size:.93rem;color:rgba(255,255,255,.45);margin-bottom:38px}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-gold-inv{background:var(--gold);color:var(--ink);border:none;padding:15px 38px;font-family:'Lato',sans-serif;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
+.btn-gold-inv:hover{background:var(--gold-lt);color:var(--ink);transform:translateY(-1px)}
+.btn-outline-inv{background:transparent;border:1.5px solid rgba(255,255,255,.3);color:rgba(255,255,255,.75);padding:14px 32px;font-family:'Lato',sans-serif;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:400;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-outline-inv:hover{border-color:#fff;color:#fff}
+.cta-info-row{display:flex;justify-content:center;gap:56px;margin-top:56px;flex-wrap:wrap}
+.cta-info{text-align:center}
+.ci-icon{font-size:1.1rem;color:var(--gold);margin-bottom:8px}
+.ci-val{font-size:.9rem;font-weight:700;color:#fff}
+.ci-lbl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:2px}
+
+/* FOOTER */
+#footer{background:#100C08;padding:72px 0 30px;border-top:1px solid rgba(255,255,255,.05)}
+.f-logo{font-family:'Dancing Script',cursive;font-size:2.4rem;color:var(--gold)}
+.f-tag{font-size:.72rem;color:rgba(255,255,255,.28);letter-spacing:.06em;margin-top:-4px}
+.fh{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;opacity:.7}
+.fl{display:block;font-size:.82rem;color:rgba(255,255,255,.38);text-decoration:none;margin-bottom:9px;letter-spacing:.02em;transition:color .3s}
+.fl:hover{color:var(--gold-lt)}
+.fsoc{width:34px;height:34px;border:1px solid rgba(255,255,255,.12);display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.35);font-size:.78rem;margin-right:6px;margin-bottom:6px;transition:all .3s;text-decoration:none}
+.fsoc:hover{border-color:var(--gold);color:var(--gold)}
+.fdiv{border-color:rgba(255,255,255,.07);margin:42px 0 22px}
+.fbot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:.7rem;color:rgba(255,255,255,.22)}
+.fbot a{color:rgba(255,255,255,.28);text-decoration:none}
+.fbot a:hover{color:var(--gold-lt)}
+
+/* LIGHTBOX */
+#lb{position:fixed;inset:0;z-index:10000;background:rgba(28,21,13,.96);display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+#lb.open{display:flex}
+#lb img{max-width:92vw;max-height:82vh;object-fit:contain;border:1px solid rgba(184,146,74,.2)}
+#lb-x{position:absolute;top:22px;right:28px;background:transparent;border:1px solid rgba(184,146,74,.3);color:var(--gold-lt);width:40px;height:40px;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:all .3s}
+#lb-x:hover{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+#lb-cap{font-family:'Libre Baskerville',serif;font-size:.88rem;font-style:italic;color:rgba(255,255,255,.4);text-align:center}
+
+/* SCROLL REVEAL */
+.sr{opacity:0;transform:translateY(28px);transition:opacity .85s ease,transform .85s ease}
+.srl{opacity:0;transform:translateX(-28px);transition:opacity .85s ease,transform .85s ease}
+.srr{opacity:0;transform:translateX(28px);transition:opacity .85s ease,transform .85s ease}
+.sr.vis,.srl.vis,.srr.vis{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+@keyframes slideU{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:none}}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+@keyframes fadeU{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+
+/* RESPONSIVE */
+@media(max-width:1199px){
+  .ds-text{padding:60px 44px}
+  .ph-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .ph-cell:nth-child(1){grid-row:span 1;grid-column:span 2;height:300px}
+  .ph-cell{height:220px}
+}
+@media(max-width:991px){
+  .ds-block,.tod-grid{grid-template-columns:1fr}
+  .ds-block.rev{direction:ltr}
+  .ds-img{height:360px}
+  .ds-text{padding:48px 36px}
+  .amb-cards{grid-template-columns:1fr 1fr}
+  .hero-awards{display:none}
+  .nav-menu{display:none}
+  .fe-grid{grid-template-columns:1fr 1fr}
+  .zone-hero-info{padding:32px 24px}
+}
+@media(max-width:575px){
+  .fe-grid{grid-template-columns:1fr}
+  .amb-cards{grid-template-columns:1fr}
+  .zb-img-stack{grid-template-columns:1fr}
+  .zb-img-stack img:first-child{grid-column:span 1}
+  .z-spec-grid{grid-template-columns:1fr}
+  .cta-info-row{gap:32px}
+}
+</style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div id="lb">
+  <button id="lb-x"><i class="fa-solid fa-xmark"></i></button>
+  <img id="lb-img" src="" alt=""/>
+  <div id="lb-cap"></div>
+</div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">Velvet Scoop</div>
+  <div class="ld-bar"><div class="ld-fill" id="ldFill"></div></div>
+  <div class="ld-note">Loading The Space</div>
+</div>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="container d-flex align-items-center justify-content-between">
+    <a href="velvet-home.html" class="text-decoration-none">
+      <div class="nav-brand">Velvet Scoop</div>
+      <span class="nav-brand-sub">Artisan Ice Cream &amp; Café · Lucknow</span>
+    </a>
+    <div class="nav-menu d-flex align-items-center">
+      <a href="velvet-home.html">Home</a>
+      <a href="#zones">The Space</a>
+      <a href="velvet-home.html#menu-section">Menu</a>
+      <a href="velvet-home.html#flavors">Flavors</a>
+      <a href="velvet-book.html" class="nav-btn ms-3">Reserve a Table</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <img class="hero-bg-img"
+    src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1800&q=90"
+    alt="Velvet Scoop Interior"/>
+  <div class="hero-vignette"></div>
+  <div class="hero-vignette-b"></div>
+  <div class="container hero-content">
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="hero-eyebrow">Cafeteria &amp; Sitting Areas</div>
+        <h1 class="hero-h1">
+          A Place to<br>
+          <em>Slow Down</em><br>
+          &amp; Stay Awhile
+        </h1>
+        <p class="hero-p">Six thoughtfully designed spaces, each with its own character — from sunlit morning alcoves to candlelit evening corners. Built for people who believe beautiful surroundings make everything taste better.</p>
+        <div class="hero-btns">
+          <a href="#zones" class="btn-primary">Explore the Spaces</a>
+          <a href="velvet-book.html" class="btn-outline">
+            <i class="fa-regular fa-calendar-check"></i> Reserve a Seat
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-awards">
+    <div class="ha-item"><div class="ha-n">6</div><div class="ha-l">Unique Zones</div></div>
+    <div class="ha-item"><div class="ha-n">120</div><div class="ha-l">Total Covers</div></div>
+    <div class="ha-item"><div class="ha-n">2</div><div class="ha-l">Floors</div></div>
+    <div class="ha-item"><div class="ha-n">★</div><div class="ha-l">Award Interior</div></div>
+  </div>
+  <div class="scroll-ind">
+    <span class="si-label">Scroll</span>
+    <div class="si-bar"></div>
+  </div>
+</section>
+
+<!-- SCROLL BANNER -->
+<div class="scroll-banner">
+  <div class="sb-track">
+    <span class="sb-item"><span class="sb-dot"></span>Handcrafted Interiors</span>
+    <span class="sb-item"><span class="sb-dot"></span>Italian Velvet Upholstery</span>
+    <span class="sb-item"><span class="sb-dot"></span>Curated Ambient Lighting</span>
+    <span class="sb-item"><span class="sb-dot"></span>200+ Live Plants</span>
+    <span class="sb-item"><span class="sb-dot"></span>Acoustic-Engineered Spaces</span>
+    <span class="sb-item"><span class="sb-dot"></span>Open Seven Days a Week</span>
+    <span class="sb-item"><span class="sb-dot"></span>Pet-Friendly Terrace</span>
+    <span class="sb-item"><span class="sb-dot"></span>Handcrafted Interiors</span>
+    <span class="sb-item"><span class="sb-dot"></span>Italian Velvet Upholstery</span>
+    <span class="sb-item"><span class="sb-dot"></span>Curated Ambient Lighting</span>
+    <span class="sb-item"><span class="sb-dot"></span>200+ Live Plants</span>
+    <span class="sb-item"><span class="sb-dot"></span>Acoustic-Engineered Spaces</span>
+    <span class="sb-item"><span class="sb-dot"></span>Open Seven Days a Week</span>
+    <span class="sb-item"><span class="sb-dot"></span>Pet-Friendly Terrace</span>
+  </div>
+</div>
+
+<!-- ═══ INTRO ═══ -->
+<section id="intro">
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-6 srl">
+        <div class="intro-img-col">
+          <img class="intro-main"
+            src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=900&q=88"
+            alt="Café interior"/>
+          <img class="intro-inset"
+            src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=700&q=85"
+            alt="Dessert detail"/>
+          <div class="intro-tag">
+            <div class="it-icon"><i class="fa-solid fa-award"></i></div>
+            <div class="it-val">Best Café Interior</div>
+            <div class="it-sub">Lucknow Design Awards 2023</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 srr d2">
+        <div class="sec-eyebrow">Our Philosophy</div>
+        <h2 class="sec-h2">Spaces Designed to<br><em>Make You Feel at Home</em></h2>
+        <div class="divider-line"></div>
+        <p class="sec-body mt-2">Every corner of Velvet Scoop was designed with one belief — that the surroundings you eat in are as important as what you eat. Our interiors are not a backdrop. They are part of the experience itself.</p>
+        <p class="sec-body mt-3">We worked with local craftsmen, a Lucknow-based lighting studio, and an acoustic engineer to create spaces that look beautiful, feel comfortable, and sound just right.</p>
+        <div class="intro-features mt-4">
+          <div class="if-row sr d1">
+            <div class="if-ic"><i class="fa-solid fa-palette"></i></div>
+            <div><div class="if-title">Artisan Materials Throughout</div><div class="if-desc">Hand-laid terrazzo, lime-plaster walls, reclaimed teak accents and Italian velvet — sourced thoughtfully, installed carefully.</div></div>
+          </div>
+          <div class="if-row sr d2">
+            <div class="if-ic"><i class="fa-solid fa-lightbulb"></i></div>
+            <div><div class="if-title">Circadian Lighting Design</div><div class="if-desc">Our lighting studio programmed warm-to-cool transitions across the day so every space always feels exactly right for the hour.</div></div>
+          </div>
+          <div class="if-row sr d3">
+            <div class="if-ic"><i class="fa-solid fa-seedling"></i></div>
+            <div><div class="if-title">Live Botanicals Maintained Weekly</div><div class="if-desc">Over 200 live plants tended by a resident botanist — they clean the air and lift the spirit.</div></div>
+          </div>
+        </div>
+        <div class="award-chip sr d4">
+          <i class="fa-solid fa-star"></i>
+          Rated Lucknow's Most Beautiful Café — Condé Nast Traveller India, 2024
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ZONES ═══ -->
+<section id="zones">
+  <div class="zones-top">
+    <div class="container sr">
+      <div class="sec-eyebrow">Six Distinct Spaces</div>
+      <h2 class="sec-h2">Choose Your <em>Corner</em></h2>
+      <p class="sec-body mt-2" style="max-width:480px">Each zone has its own personality. Browse below and find the one that is right for your visit.</p>
+    </div>
+    <div class="zone-nav-wrap mt-5">
+      <div class="container px-0">
+        <div class="zone-nav" id="zoneNav">
+          <button class="z-tab active" data-z="salon">The Velvet Salon</button>
+          <button class="z-tab" data-z="alcoves">Window Alcoves</button>
+          <button class="z-tab" data-z="terrace">Garden Terrace</button>
+          <button class="z-tab" data-z="parlour">Private Parlour</button>
+          <button class="z-tab" data-z="bar">The Café Bar</button>
+          <button class="z-tab" data-z="loft">The Loft</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SALON -->
+  <div class="zone-panel active" id="zp-salon">
+    <div class="zone-img-hero">
+      <img src="https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=1800&q=88" alt="The Velvet Salon"/>
+      <div class="zone-hero-info">
+        <div class="zhi-left"><div class="z-num">01</div><div class="z-name">The Velvet <em>Salon</em></div></div>
+        <div class="z-chips">
+          <span class="z-chip">Ground Floor</span><span class="z-chip">40 Covers</span>
+          <span class="z-chip">Air Conditioned</span>
+          <span class="z-chip gold-chip"><i class="fa-solid fa-star me-1"></i>Most Popular</span>
+        </div>
+      </div>
+    </div>
+    <div class="zone-body">
+      <div class="container">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-6">
+            <div class="zb-img-stack">
+              <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&q=82" alt="Salon main" class="lb-img" data-cap="The Velvet Salon — main hall"/>
+              <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=82" alt="Salon seating" class="lb-img" data-cap="Deep velvet booth seating"/>
+              <img src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=500&q=82" alt="Salon detail" class="lb-img" data-cap="Handcrafted wall panelling"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="sec-eyebrow">Zone 01 · Ground Floor</div>
+            <h3 class="sec-h2">The Velvet <em>Salon</em></h3>
+            <div class="divider-line"></div>
+            <p class="z-desc">The heart of Velvet Scoop. Deep burgundy velvet booths, warm brass fixtures, and a ceiling hung with cascading Edison bulb clusters create a light that feels more like candlelight than electricity. The Salon seats forty across twelve booths and four freestanding tables. It is where first dates, long lunches, and quiet birthday dinners all seem to happen naturally.</p>
+            <div class="z-spec-grid">
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-chair"></i></div><div class="zs-lbl">Capacity</div><div class="zs-val">40 covers</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-ruler-combined"></i></div><div class="zs-lbl">Floor Area</div><div class="zs-val">1,800 sq ft</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-thermometer-half"></i></div><div class="zs-lbl">Climate</div><div class="zs-val">24 °C maintained</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-music"></i></div><div class="zs-lbl">Sound</div><div class="zs-val">Live jazz · Thursdays</div></div>
+            </div>
+            <div class="amenity-row">
+              <span class="am-tag"><i class="fa-solid fa-wifi"></i>Free Wi-Fi</span>
+              <span class="am-tag"><i class="fa-solid fa-plug"></i>Power outlets</span>
+              <span class="am-tag"><i class="fa-solid fa-couch"></i>Velvet booths</span>
+              <span class="am-tag"><i class="fa-solid fa-volume-xmark"></i>Acoustic panels</span>
+              <span class="am-tag"><i class="fa-solid fa-bell-concierge"></i>Table service</span>
+              <span class="am-tag"><i class="fa-solid fa-wheelchair"></i>Accessible</span>
+            </div>
+            <a href="velvet-book.html" class="btn-primary">Reserve in The Salon</a>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid px-0 mt-4">
+        <div class="zone-gallery-row">
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=1400&q=88" data-cap="The Velvet Salon"><img src="https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1400&q=88" data-cap="Evening Light"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=88" data-cap="Booth Seating"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=1400&q=88" data-cap="Wall Detail"><img src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALCOVES -->
+  <div class="zone-panel" id="zp-alcoves">
+    <div class="zone-img-hero">
+      <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1800&q=88" alt="Window Alcoves"/>
+      <div class="zone-hero-info">
+        <div class="zhi-left"><div class="z-num">02</div><div class="z-name">Window <em>Alcoves</em></div></div>
+        <div class="z-chips"><span class="z-chip">Ground Floor</span><span class="z-chip">8 Alcoves</span><span class="z-chip">Natural Daylight</span><span class="z-chip">Quiet Zone</span></div>
+      </div>
+    </div>
+    <div class="zone-body">
+      <div class="container">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-6">
+            <div class="zb-img-stack">
+              <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=900&q=82" alt="Window alcove" class="lb-img" data-cap="Window Alcoves — morning light"/>
+              <img src="https://images.unsplash.com/photo-1577301550525-0e5e4d33e4b0?w=500&q=82" alt="Bench seat" class="lb-img" data-cap="Cushioned linen window bench"/>
+              <img src="https://images.unsplash.com/photo-1559304787-578e67a987fe?w=500&q=82" alt="Side table" class="lb-img" data-cap="Reclaimed teak side table"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="sec-eyebrow">Zone 02 · Ground Floor</div>
+            <h3 class="sec-h2">Window <em>Alcoves</em></h3>
+            <div class="divider-line"></div>
+            <p class="z-desc">Eight arched alcoves line the south wall, each fitted with a deep cushioned bench in linen, a side table of reclaimed teak, and a reading lamp that casts a warm circle of light. Best experienced on a quiet weekday morning with a flat white and no agenda. The arched glass frames a view of the street that gives these spots a particular charm — you are inside, cosy, but connected to the world outside.</p>
+            <div class="z-spec-grid">
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-archway"></i></div><div class="zs-lbl">Number</div><div class="zs-val">8 alcoves</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-users"></i></div><div class="zs-lbl">Per Alcove</div><div class="zs-val">2 – 3 guests</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-sun"></i></div><div class="zs-lbl">Best Visit</div><div class="zs-val">Morning &amp; afternoon</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-volume-xmark"></i></div><div class="zs-lbl">Noise Level</div><div class="zs-val">Low — quiet zone</div></div>
+            </div>
+            <div class="amenity-row">
+              <span class="am-tag"><i class="fa-solid fa-wifi"></i>Free Wi-Fi</span>
+              <span class="am-tag"><i class="fa-solid fa-plug"></i>USB charging</span>
+              <span class="am-tag"><i class="fa-solid fa-book-open"></i>Reading lamp</span>
+              <span class="am-tag"><i class="fa-solid fa-window-maximize"></i>Street views</span>
+              <span class="am-tag"><i class="fa-solid fa-mug-hot"></i>Self-service bar nearby</span>
+            </div>
+            <a href="velvet-book.html" class="btn-primary">Reserve a Window Seat</a>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid px-0 mt-4">
+        <div class="zone-gallery-row">
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1400&q=88" data-cap="Window Alcoves"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1577301550525-0e5e4d33e4b0?w=1400&q=88" data-cap="Morning Light"><img src="https://images.unsplash.com/photo-1577301550525-0e5e4d33e4b0?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1559304787-578e67a987fe?w=1400&q=88" data-cap="Teak Side Table"><img src="https://images.unsplash.com/photo-1559304787-578e67a987fe?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1400&q=88" data-cap="Afternoon Alcove"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERRACE -->
+  <div class="zone-panel" id="zp-terrace">
+    <div class="zone-img-hero">
+      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1800&q=88" alt="Garden Terrace"/>
+      <div class="zone-hero-info">
+        <div class="zhi-left"><div class="z-num">03</div><div class="z-name">Garden <em>Terrace</em></div></div>
+        <div class="z-chips"><span class="z-chip">Outdoor</span><span class="z-chip">32 Covers</span><span class="z-chip">Fairy Lights</span><span class="z-chip gold-chip"><i class="fa-solid fa-heart me-1"></i>Romantic Pick</span></div>
+      </div>
+    </div>
+    <div class="zone-body">
+      <div class="container">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-6">
+            <div class="zb-img-stack">
+              <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=900&q=82" alt="Terrace" class="lb-img" data-cap="Garden Terrace at twilight"/>
+              <img src="https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=500&q=82" alt="Fairy lights" class="lb-img" data-cap="Fairy light canopy after dusk"/>
+              <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=500&q=82" alt="Plant wall" class="lb-img" data-cap="Vertical jasmine and fern wall"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="sec-eyebrow">Zone 03 · Outdoor</div>
+            <h3 class="sec-h2">Garden <em>Terrace</em></h3>
+            <div class="divider-line"></div>
+            <p class="z-desc">A 2,400 sq ft open-air terrace wrapped in a living wall of jasmine and ferns, lit after dusk by a thousand warm fairy lights strung above wrought-iron bistro tables. Candles are placed at every table each evening. The fire pit glows in the cooler months. Peaceful, romantic, and genuinely beautiful — the kind of space that photographs naturally and stays in the memory long after.</p>
+            <div class="z-spec-grid">
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-chair"></i></div><div class="zs-lbl">Capacity</div><div class="zs-val">32 covers</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-ruler-combined"></i></div><div class="zs-lbl">Area</div><div class="zs-val">2,400 sq ft</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-cloud-sun"></i></div><div class="zs-lbl">Best Season</div><div class="zs-val">October – March</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-dog"></i></div><div class="zs-lbl">Pets</div><div class="zs-val">Warmly welcome</div></div>
+            </div>
+            <div class="amenity-row">
+              <span class="am-tag"><i class="fa-solid fa-wifi"></i>Wi-Fi extended</span>
+              <span class="am-tag"><i class="fa-solid fa-star"></i>Fairy lights</span>
+              <span class="am-tag"><i class="fa-solid fa-fire"></i>Fire pit</span>
+              <span class="am-tag"><i class="fa-solid fa-wind"></i>Misting fans</span>
+              <span class="am-tag"><i class="fa-solid fa-seedling"></i>Living plant wall</span>
+              <span class="am-tag"><i class="fa-solid fa-camera"></i>Photo corners</span>
+            </div>
+            <a href="velvet-book.html" class="btn-primary">Reserve the Terrace</a>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid px-0 mt-4">
+        <div class="zone-gallery-row">
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1400&q=88" data-cap="Garden Terrace"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1400&q=88" data-cap="Fairy Light Canopy"><img src="https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=1400&q=88" data-cap="Living Wall"><img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1400&q=88" data-cap="Evening Setting"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARLOUR -->
+  <div class="zone-panel" id="zp-parlour">
+    <div class="zone-img-hero">
+      <img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1800&q=88" alt="Private Parlour"/>
+      <div class="zone-hero-info">
+        <div class="zhi-left"><div class="z-num">04</div><div class="z-name">Private <em>Parlour</em></div></div>
+        <div class="z-chips"><span class="z-chip">Ground Floor</span><span class="z-chip">Up to 20 Guests</span><span class="z-chip">Butler Service</span><span class="z-chip gold-chip"><i class="fa-solid fa-crown me-1"></i>Premium</span></div>
+      </div>
+    </div>
+    <div class="zone-body">
+      <div class="container">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-6">
+            <div class="zb-img-stack">
+              <img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=900&q=82" alt="Parlour" class="lb-img" data-cap="The Private Parlour"/>
+              <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=82" alt="Celebration" class="lb-img" data-cap="Custom celebration setup"/>
+              <img src="https://images.unsplash.com/photo-1567206563114-c179900f1e0c?w=500&q=82" alt="Desserts" class="lb-img" data-cap="Bespoke dessert presentation"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="sec-eyebrow">Zone 04 · Ground Floor · Premium</div>
+            <h3 class="sec-h2">Private <em>Parlour</em></h3>
+            <div class="divider-line"></div>
+            <p class="z-desc">A fully private room for the moments that deserve undivided attention. Thick velvet drapes, a dedicated butler, a bespoke dessert table, and a 60-inch screen for photographs and video. You tell us what you are celebrating — we take care of everything else. From proposals to baby showers to corporate appreciation dinners, the Parlour is the most intimate space we offer.</p>
+            <div class="z-spec-grid">
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-users"></i></div><div class="zs-lbl">Capacity</div><div class="zs-val">Up to 20 guests</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-clock"></i></div><div class="zs-lbl">Minimum</div><div class="zs-val">2 hours</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div><div class="zs-lbl">From</div><div class="zs-val">₹3,500 / 2 hrs</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-bell-concierge"></i></div><div class="zs-lbl">Service</div><div class="zs-val">Dedicated butler</div></div>
+            </div>
+            <div class="amenity-row">
+              <span class="am-tag"><i class="fa-solid fa-cake-candles"></i>Custom dessert table</span>
+              <span class="am-tag"><i class="fa-solid fa-wand-magic-sparkles"></i>Decor setup included</span>
+              <span class="am-tag"><i class="fa-solid fa-display"></i>60" screen</span>
+              <span class="am-tag"><i class="fa-solid fa-music"></i>Sound system</span>
+              <span class="am-tag"><i class="fa-solid fa-lock"></i>Fully private</span>
+            </div>
+            <a href="velvet-book.html" class="btn-primary">Book the Parlour</a>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid px-0 mt-4">
+        <div class="zone-gallery-row">
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1400&q=88" data-cap="The Parlour"><img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1400&q=88" data-cap="Dessert Table"><img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1567206563114-c179900f1e0c?w=1400&q=88" data-cap="Service Detail"><img src="https://images.unsplash.com/photo-1567206563114-c179900f1e0c?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=1400&q=88" data-cap="Parlour Ambience"><img src="https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAR -->
+  <div class="zone-panel" id="zp-bar">
+    <div class="zone-img-hero">
+      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1800&q=88" alt="The Café Bar"/>
+      <div class="zone-hero-info">
+        <div class="zhi-left"><div class="z-num">05</div><div class="z-name">The Café <em>Bar</em></div></div>
+        <div class="z-chips"><span class="z-chip">Ground Floor</span><span class="z-chip">16 Counter Stools</span><span class="z-chip">Open Kitchen View</span><span class="z-chip">Live Nitrogen</span></div>
+      </div>
+    </div>
+    <div class="zone-body">
+      <div class="container">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-6">
+            <div class="zb-img-stack">
+              <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=82" alt="Café bar" class="lb-img" data-cap="The Café Bar — espresso counter"/>
+              <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&q=82" alt="Cold brew" class="lb-img" data-cap="18-hour cold brew tower"/>
+              <img src="https://images.unsplash.com/photo-1541189169598-c21fe79d66de?w=500&q=82" alt="Barista" class="lb-img" data-cap="Barista at La Marzocco GB5"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="sec-eyebrow">Zone 05 · Ground Floor</div>
+            <h3 class="sec-h2">The Café <em>Bar</em></h3>
+            <div class="divider-line"></div>
+            <p class="z-desc">Sixteen marble-topped counter stools face our walnut-and-brass espresso bar — built around our La Marzocco GB5 machines, an 18-hour cold brew tower, and the most theatrical feature of the café: the live nitrogen ice cream station. Ideal for a quick solo visit, a business coffee, or simply the best seat in the house for watching craft up close.</p>
+            <div class="z-spec-grid">
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-barstool"></i></div><div class="zs-lbl">Seats</div><div class="zs-val">16 counter stools</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-snowflake"></i></div><div class="zs-lbl">Live Station</div><div class="zs-val">Nitrogen ice cream</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-eye"></i></div><div class="zs-lbl">View</div><div class="zs-val">Open kitchen</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-mug-hot"></i></div><div class="zs-lbl">Machines</div><div class="zs-val">La Marzocco GB5</div></div>
+            </div>
+            <div class="amenity-row">
+              <span class="am-tag"><i class="fa-solid fa-wifi"></i>Free Wi-Fi</span>
+              <span class="am-tag"><i class="fa-solid fa-plug"></i>Charging ports</span>
+              <span class="am-tag"><i class="fa-solid fa-snowflake"></i>Live N₂ demo</span>
+              <span class="am-tag"><i class="fa-solid fa-newspaper"></i>Morning papers</span>
+              <span class="am-tag"><i class="fa-solid fa-mobile-screen"></i>QR menu</span>
+            </div>
+            <a href="velvet-book.html" class="btn-primary">Reserve a Counter Seat</a>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid px-0 mt-4">
+        <div class="zone-gallery-row">
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1400&q=88" data-cap="The Café Bar"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=1400&q=88" data-cap="Cold Brew Tower"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1541189169598-c21fe79d66de?w=1400&q=88" data-cap="Barista at Work"><img src="https://images.unsplash.com/photo-1541189169598-c21fe79d66de?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=1400&q=88" data-cap="Counter Detail"><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOFT -->
+  <div class="zone-panel" id="zp-loft">
+    <div class="zone-img-hero">
+      <img src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=1800&q=88" alt="The Loft"/>
+      <div class="zone-hero-info">
+        <div class="zhi-left"><div class="z-num">06</div><div class="z-name">The <em>Loft</em></div></div>
+        <div class="z-chips"><span class="z-chip">First Floor</span><span class="z-chip">24 Lounge Covers</span><span class="z-chip">Quiet Zone</span><span class="z-chip">Work-Friendly</span></div>
+      </div>
+    </div>
+    <div class="zone-body">
+      <div class="container">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-6">
+            <div class="zb-img-stack">
+              <img src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=900&q=82" alt="The Loft" class="lb-img" data-cap="The Loft — mezzanine level"/>
+              <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&q=82" alt="Loft lounge" class="lb-img" data-cap="Kilim rug lounge area"/>
+              <img src="https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=500&q=82" alt="Work desk" class="lb-img" data-cap="Multi-plug work desk corner"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="sec-eyebrow">Zone 06 · First Floor</div>
+            <h3 class="sec-h2">The <em>Loft</em></h3>
+            <div class="divider-line"></div>
+            <p class="z-desc">Up the reclaimed mango-wood staircase, The Loft is a mezzanine sanctuary overlooking the salon below. Low sofas, kilim rugs, a curated bookshelf and oversized windows. Our fastest Wi-Fi, the quietest policy, and the most unhurried pace in the building. The place where remote workers settle in at 10 AM and surface, surprised, at dusk. The bookshelf is free to browse — leave one, take one.</p>
+            <div class="z-spec-grid">
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-couch"></i></div><div class="zs-lbl">Seating</div><div class="zs-val">24 lounge covers</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-wifi"></i></div><div class="zs-lbl">Internet</div><div class="zs-val">200 Mbps dedicated</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-book"></i></div><div class="zs-lbl">Library</div><div class="zs-val">300+ curated titles</div></div>
+              <div class="z-spec"><div class="zs-icon"><i class="fa-solid fa-volume-xmark"></i></div><div class="zs-lbl">Policy</div><div class="zs-val">Quiet zone, no calls</div></div>
+            </div>
+            <div class="amenity-row">
+              <span class="am-tag"><i class="fa-solid fa-wifi"></i>200 Mbps Wi-Fi</span>
+              <span class="am-tag"><i class="fa-solid fa-plug"></i>Multi-plug desks</span>
+              <span class="am-tag"><i class="fa-solid fa-book-open"></i>Free library</span>
+              <span class="am-tag"><i class="fa-solid fa-rug"></i>Lounge sofas</span>
+              <span class="am-tag"><i class="fa-solid fa-binoculars"></i>Mezzanine views</span>
+            </div>
+            <a href="velvet-book.html" class="btn-primary">Reserve Loft Seating</a>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid px-0 mt-4">
+        <div class="zone-gallery-row">
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=1400&q=88" data-cap="The Loft"><img src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=88" data-cap="Kilim Lounge"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=1400&q=88" data-cap="Work Corner"><img src="https://images.unsplash.com/photo-1534536281715-e28d76689b4d?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+          <div class="zg-thumb lb-img" data-src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1400&q=88" data-cap="Loft View"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=700&q=80" alt=""/><div class="zg-over"><i class="fa-solid fa-magnifying-glass-plus"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AMBIENCE ═══ -->
+<section id="ambience">
+  <div class="amb-parallax">
+    <div class="amb-bg" style="background-image:url('https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=1800&q=88')"></div>
+    <div class="amb-vignette"></div>
+    <div class="amb-content sr">
+      <div class="amb-eyebrow">The Atmosphere</div>
+      <h2 class="amb-h">Designed to<br><em>Slow You Down</em></h2>
+      <p class="amb-p">In a city that moves fast, Velvet Scoop is a deliberate pause. Every sensory detail — the warmth of the light, the weight of the crockery, the sound of a piano — is chosen to help you arrive, settle, and simply be.</p>
+      <a href="velvet-book.html" class="btn-primary">Experience It in Person</a>
+    </div>
+  </div>
+  <div class="amb-cards-row">
+    <div class="container-fluid px-0">
+      <div class="amb-cards">
+        <div class="amb-c sr"><div class="amb-c-icon"><i class="fa-solid fa-lightbulb"></i></div><div class="amb-c-title">Warm Lighting</div><div class="amb-c-desc">2700K Edison bulbs and adjustable candlelight create a perpetual golden hour inside every space.</div></div>
+        <div class="amb-c sr d1"><div class="amb-c-icon"><i class="fa-solid fa-music"></i></div><div class="amb-c-title">Live Music</div><div class="amb-c-desc">Thursday jazz evenings, Sunday acoustic sets, and a curated vinyl playlist every other day.</div></div>
+        <div class="amb-c sr d2"><div class="amb-c-icon"><i class="fa-solid fa-wind"></i></div><div class="amb-c-title">Scent Design</div><div class="amb-c-desc">A subtle diffusion of vanilla, sandalwood and fresh cream — present but never overwhelming.</div></div>
+        <div class="amb-c sr d3"><div class="amb-c-icon"><i class="fa-solid fa-temperature-half"></i></div><div class="amb-c-title">Climate Control</div><div class="amb-c-desc">Zone-controlled HVAC holds every indoor space at a consistent 23–24 °C all day.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PHOTO GRID ═══ -->
+<section id="interiors">
+  <div class="container sr">
+    <div class="sec-eyebrow">The Interiors</div>
+    <h2 class="sec-h2">Every Room, <em>Every Angle</em></h2>
+    <p class="sec-body mt-2" style="max-width:500px">A selection of photographs from across our six spaces. Click any image to view in full.</p>
+  </div>
+  <div class="container">
+    <div class="ph-grid">
+      <div class="ph-cell lb-img" data-src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1600&q=90" data-cap="The Velvet Salon at evening"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&q=82" alt=""/><div class="ph-caption"><div class="ph-cap-text">The Velvet Salon — evening</div></div></div>
+      <div class="ph-cell lb-img" data-src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=1200&q=88" data-cap="Window light, afternoon"><img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=700&q=80" alt=""/><div class="ph-caption"><div class="ph-cap-text">Window light</div></div></div>
+      <div class="ph-cell lb-img" data-src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=88" data-cap="Window Alcove — morning"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=700&q=80" alt=""/><div class="ph-caption"><div class="ph-cap-text">Window Alcove</div></div></div>
+      <div class="ph-cell lb-img" data-src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=1200&q=88" data-cap="Interior arch detail"><img src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?w=700&q=80" alt=""/><div class="ph-caption"><div class="ph-cap-text">Arch detail</div></div></div>
+      <div class="ph-cell lb-img" data-src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200&q=88" data-cap="Garden Terrace at dusk"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=80" alt=""/><div class="ph-caption"><div class="ph-cap-text">Garden Terrace</div></div></div>
+      <div class="ph-cell lb-img" data-src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=1200&q=88" data-cap="Tableside dessert styling"><img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=700&q=80" alt=""/><div class="ph-caption"><div class="ph-cap-text">Tableside service</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DESIGN STORY ═══ -->
+<section id="design-story">
+  <div class="ds-block srl">
+    <div class="ds-img">
+      <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=85" alt="Velvet upholstery"/>
+    </div>
+    <div class="ds-text">
+      <div class="ds-num">01</div>
+      <div class="sec-eyebrow">Material Detail</div>
+      <h3 class="ds-h">Italian Velvet<br><em>Upholstery</em></h3>
+      <p class="ds-p">Every booth seat and banquette is upholstered in Italian velvet from a mill in Bergamo. We chose three colourways — deep burgundy, forest green, and midnight amber — to give each zone its own personality within a unified palette. The fabric is heavy, warm to the touch, and ageless in the way good materials always are.</p>
+      <div class="ds-tags">
+        <span class="ds-tag">Bergamo, Italy</span>
+        <span class="ds-tag">Three colourways</span>
+        <span class="ds-tag">Stain-treated</span>
+      </div>
+    </div>
+  </div>
+  <div class="ds-block rev srr">
+    <div class="ds-img">
+      <img src="https://images.unsplash.com/photo-1559304787-578e67a987fe?w=900&q=85" alt="Terrazzo floors"/>
+    </div>
+    <div class="ds-text bg2">
+      <div class="ds-num">02</div>
+      <div class="sec-eyebrow">Material Detail</div>
+      <h3 class="ds-h">Hand-Laid<br><em>Terrazzo Floors</em></h3>
+      <p class="ds-p">Our floors were laid over six weeks by a team from Jaipur who specialise in traditional terrazzo. The mix was customised with fine gold-fleck aggregate so that in the right light the floor itself seems to glow. No two panels are the same — each one a unique composition of stone chips, marble fragments and resin, sealed and polished for three days.</p>
+      <div class="ds-tags">
+        <span class="ds-tag">Jaipur artisans</span>
+        <span class="ds-tag">Gold aggregate</span>
+        <span class="ds-tag">Six weeks to lay</span>
+      </div>
+    </div>
+  </div>
+  <div class="ds-block srl">
+    <div class="ds-img">
+      <img src="https://images.unsplash.com/photo-1577301550525-0e5e4d33e4b0?w=900&q=85" alt="Lime plaster arches"/>
+    </div>
+    <div class="ds-text bg3">
+      <div class="ds-num">03</div>
+      <div class="sec-eyebrow">Material Detail</div>
+      <h3 class="ds-h">Lime Plaster<br><em>Archwork</em></h3>
+      <p class="ds-p">Each arch was finished by hand with tadelakt lime plaster in three layered pigments — a technique borrowed from traditional Lucknowi haveli architecture. Two days per arch: the first coat sets the base tone, the second adds depth, and the third is burnished with a stone to produce the faint sheen you notice only when light catches the wall at an angle.</p>
+      <div class="ds-tags">
+        <span class="ds-tag">Tadelakt technique</span>
+        <span class="ds-tag">Lucknow heritage craft</span>
+        <span class="ds-tag">Three-coat burnishing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TIME OF DAY ═══ -->
+<section id="time-mood">
+  <div class="container">
+    <div class="row align-items-start mb-5">
+      <div class="col-lg-6 sr">
+        <div class="sec-eyebrow">Any Time of Day</div>
+        <h2 class="sec-h2">The Space Changes<br><em>Through the Day</em></h2>
+        <p class="sec-body mt-3 mb-0">Velvet Scoop is designed to look and feel different at every hour — a bright morning café, an afternoon retreat, an intimate evening destination.</p>
+      </div>
+    </div>
+    <div class="tod-grid">
+      <div class="tod-img-frame srl">
+        <img class="tod-img" id="todImg"
+          src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=85"
+          alt="Time of day"/>
+        <div class="tod-label-bar">
+          <span class="tlb-time" id="todTime">Morning</span>
+          <span class="tlb-mood" id="todMood">Bright &amp; Unhurried</span>
+        </div>
+      </div>
+      <div class="srr d1" id="todList">
+        <div class="tod-item active"
+          data-img="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&q=85"
+          data-time="Morning" data-mood="Bright &amp; Unhurried">
+          <div class="ti-time-col"><div class="ti-hour">7</div><div class="ti-period">AM</div></div>
+          <div class="ti-bar"></div>
+          <div><div class="ti-mood-name">Morning Quiet</div><div class="ti-desc">Natural light through the alcoves, fresh filter coffee, a seat and a newspaper. The pace is gentle and the café is yours.</div></div>
+        </div>
+        <div class="tod-item"
+          data-img="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=900&q=85"
+          data-time="Midday" data-mood="Golden &amp; Social">
+          <div class="ti-time-col"><div class="ti-hour">12</div><div class="ti-period">PM</div></div>
+          <div class="ti-bar"></div>
+          <div><div class="ti-mood-name">Midday Energy</div><div class="ti-desc">The salon fills with conversation, the terrace catches the sun, and the bar is busy. The most social hour of the day.</div></div>
+        </div>
+        <div class="tod-item"
+          data-img="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&q=85"
+          data-time="Afternoon" data-mood="Warm &amp; Relaxed">
+          <div class="ti-time-col"><div class="ti-hour">4</div><div class="ti-period">PM</div></div>
+          <div class="ti-bar"></div>
+          <div><div class="ti-mood-name">Afternoon Warmth</div><div class="ti-desc">The light turns amber, the loft fills with remote workers, and it is the right moment for a slow cold brew and a good book.</div></div>
+        </div>
+        <div class="tod-item"
+          data-img="https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=900&q=85"
+          data-time="Evening" data-mood="Candlelit &amp; Intimate">
+          <div class="ti-time-col"><div class="ti-hour">8</div><div class="ti-period">PM</div></div>
+          <div class="ti-bar"></div>
+          <div><div class="ti-mood-name">Candlelit Evening</div><div class="ti-desc">Candles on every table, fairy lights in the garden, jazz in the salon. This is the version people come back for.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FULL EXPERIENCE ═══ -->
+<section id="full-exp">
+  <div class="container sr">
+    <div class="row align-items-end">
+      <div class="col-lg-7">
+        <div class="sec-eyebrow">What Every Visit Includes</div>
+        <h2 class="sec-h2">The Complete <em>Picture</em></h2>
+        <p class="sec-body mt-2">What a visit to Velvet Scoop actually means — across all six spaces.</p>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="fe-grid sr d1">
+      <div class="fe-card"><div class="fe-num">01</div><div class="fe-icon"><i class="fa-solid fa-chair"></i></div><div class="fe-title">120 Covers Across 2 Floors</div><div class="fe-body">From intimate corner alcoves to an open terrace for 32, there is always a table that suits exactly what you came for.</div></div>
+      <div class="fe-card"><div class="fe-num">02</div><div class="fe-icon"><i class="fa-solid fa-universal-access"></i></div><div class="fe-title">Fully Accessible Design</div><div class="fe-body">Ramped entry, wide aisles, accessible bathrooms, hearing loop in the salon and braille menus available on request.</div></div>
+      <div class="fe-card"><div class="fe-num">03</div><div class="fe-icon"><i class="fa-solid fa-child-reaching"></i></div><div class="fe-title">Dedicated Kids' Corner</div><div class="fe-body">A supervised kids' corner with activity kits and a mini menu — tucked into a corner of The Salon so parents can relax nearby.</div></div>
+      <div class="fe-card"><div class="fe-num">04</div><div class="fe-icon"><i class="fa-solid fa-dog"></i></div><div class="fe-title">Pet-Friendly Terrace</div><div class="fe-body">Dogs welcome on the Garden Terrace with water bowls, a dedicated area, and a small treat jar from our team.</div></div>
+      <div class="fe-card"><div class="fe-num">05</div><div class="fe-icon"><i class="fa-solid fa-car"></i></div><div class="fe-title">Free On-Site Parking</div><div class="fe-body">30 car spaces in our private compound, reserved for Velvet Scoop guests and managed by an attendant on busy evenings.</div></div>
+      <div class="fe-card"><div class="fe-num">06</div><div class="fe-icon"><i class="fa-solid fa-leaf"></i></div><div class="fe-title">200+ Live Plants</div><div class="fe-body">Our resident botanist maintains over 200 live plants across every space — ferns, jasmine, fiddle-leaf figs and more. They clean the air and lift the spirits.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section id="cta">
+  <div class="container cta-inner">
+    <div class="cta-script">Come and see us</div>
+    <h2 class="cta-h">Your Favourite<br>Corner Is <em>Waiting</em></h2>
+    <p class="cta-p">Walk in any time. Or reserve your preferred space below — it takes under a minute.</p>
+    <div class="cta-btns">
+      <a href="velvet-book.html" class="btn-gold-inv">Reserve a Table</a>
+      <a href="tel:+919876543210" class="btn-outline-inv"><i class="fa-solid fa-phone"></i> +91 9876 543210</a>
+    </div>
+    <div class="cta-info-row">
+      <div class="cta-info"><div class="ci-icon"><i class="fa-solid fa-clock"></i></div><div class="ci-val">11 AM – 11 PM</div><div class="ci-lbl">Mon – Fri</div></div>
+      <div class="cta-info"><div class="ci-icon"><i class="fa-solid fa-sun"></i></div><div class="ci-val">10 AM – 12 AM</div><div class="ci-lbl">Sat – Sun</div></div>
+      <div class="cta-info"><div class="ci-icon"><i class="fa-solid fa-location-dot"></i></div><div class="ci-val">Hazratganj, Lucknow</div><div class="ci-lbl">Location</div></div>
+      <div class="cta-info"><div class="ci-icon"><i class="fa-solid fa-car"></i></div><div class="ci-val">Free Parking</div><div class="ci-lbl">On-site · 30 spaces</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer id="footer">
+  <div class="container">
+    <div class="row g-5 mb-5">
+      <div class="col-lg-4">
+        <div class="f-logo">Velvet Scoop</div>
+        <div class="f-tag">Artisan Ice Cream &amp; Café · Est. 2010 · Lucknow</div>
+        <p style="font-size:.8rem;color:rgba(255,255,255,.28);margin-top:14px;line-height:1.9">Crafting moments of beauty and joy, one space and one scoop at a time.</p>
+        <div class="mt-4">
+          <a class="fsoc" href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a class="fsoc" href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="fsoc" href="#"><i class="fa-brands fa-x-twitter"></i></a>
+          <a class="fsoc" href="#"><i class="fa-brands fa-pinterest-p"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="fh">Our Spaces</div>
+        <a class="fl" href="#zp-salon">The Velvet Salon</a>
+        <a class="fl" href="#zp-alcoves">Window Alcoves</a>
+        <a class="fl" href="#zp-terrace">Garden Terrace</a>
+        <a class="fl" href="#zp-parlour">Private Parlour</a>
+        <a class="fl" href="#zp-bar">The Café Bar</a>
+        <a class="fl" href="#zp-loft">The Loft</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="fh">Explore</div>
+        <a class="fl" href="velvet-home.html">Homepage</a>
+        <a class="fl" href="velvet-home.html#flavors">Flavors</a>
+        <a class="fl" href="velvet-home.html#menu-section">Full Menu</a>
+        <a class="fl" href="velvet-book.html">Reservations</a>
+        <a class="fl" href="#">Gift Cards</a>
+        <a class="fl" href="#">Private Events</a>
+      </div>
+      <div class="col-lg-4">
+        <div class="fh">Find Us</div>
+        <p style="font-size:.82rem;color:rgba(255,255,255,.3);line-height:2">14 Shahnajaf Road, Hazratganj<br>Lucknow 226 001, Uttar Pradesh</p>
+        <p style="margin-top:12px;font-size:.82rem">
+          <a href="tel:+919876543210" style="color:var(--gold);text-decoration:none">+91 9876 543210</a><br>
+          <a href="mailto:hello@velvetscoop.com" style="color:rgba(255,255,255,.3);text-decoration:none;font-size:.8rem">hello@velvetscoop.com</a>
+        </p>
+      </div>
+    </div>
+    <hr class="fdiv"/>
+    <div class="fbot">
+      <span>© 2025 Velvet Scoop. All rights reserved.</span>
+      <span style="font-family:'Dancing Script',cursive;font-size:1.2rem;color:rgba(184,146,74,.3)">Velvet Scoop</span>
+      <span><a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a> &nbsp;·&nbsp; <a href="#">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* LOADER */
+const ldf=document.getElementById('ldFill');
+let lp=0;
+const lt=setInterval(()=>{lp=Math.min(lp+Math.random()*14,92);ldf.style.width=lp+'%';},110);
+window.addEventListener('load',()=>{
+  clearInterval(lt);ldf.style.width='100%';
+  setTimeout(()=>document.getElementById('loader').classList.add('out'),500);
+});
+
+/* CURSOR */
+const c=document.getElementById('cur'),cr=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function loop(){
+  c.style.left=mx+'px';c.style.top=my+'px';
+  rx+=(mx-rx)*.15;ry+=(my-ry)*.15;
+  cr.style.left=rx+'px';cr.style.top=ry+'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,button,.z-tab,.fe-card,.amb-c,.tod-item,.zg-thumb,.ph-cell,.lb-img,.ds-img').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cr.style.transform='translate(-50%,-50%) scale(1.8)';cr.style.opacity='.18'});
+  el.addEventListener('mouseleave',()=>{cr.style.transform='translate(-50%,-50%) scale(1)';cr.style.opacity='.45'});
+});
+
+/* NAVBAR */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>70));
+
+/* ZONE TABS */
+document.querySelectorAll('.z-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.z-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.zone-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('zp-'+tab.dataset.z).classList.add('active');
+    const zonesTop=document.getElementById('zones');
+    const offset=zonesTop.getBoundingClientRect().top+window.scrollY-80;
+    window.scrollTo({top:offset,behavior:'smooth'});
+  });
+});
+
+/* TIME OF DAY */
+document.querySelectorAll('.tod-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.tod-item').forEach(x=>x.classList.remove('active'));
+    item.classList.add('active');
+    const img=document.getElementById('todImg');
+    img.style.opacity='0';
+    img.style.transform='scale(1.03)';
+    img.style.transition='opacity .4s,transform .5s';
+    setTimeout(()=>{
+      img.src=item.dataset.img;
+      img.style.opacity='1';
+      img.style.transform='scale(1)';
+      document.getElementById('todTime').textContent=item.dataset.time;
+      document.getElementById('todMood').innerHTML=item.dataset.mood;
+    },320);
+  });
+});
+
+/* LIGHTBOX */
+const lb=document.getElementById('lb');
+const lbImg=document.getElementById('lb-img');
+const lbCap=document.getElementById('lb-cap');
+document.querySelectorAll('.lb-img').forEach(el=>{
+  el.style.cursor='zoom-in';
+  el.addEventListener('click',()=>{
+    const src=el.dataset.src||el.src||el.querySelector('img')?.src||'';
+    const cap=el.dataset.cap||el.alt||'';
+    if(src){lbImg.src=src;lbCap.textContent=cap;lb.classList.add('open');}
+  });
+});
+document.getElementById('lb-x').addEventListener('click',()=>lb.classList.remove('open'));
+lb.addEventListener('click',e=>{if(e.target===lb)lb.classList.remove('open');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open');});
+
+/* SCROLL REVEAL */
+const sEls=document.querySelectorAll('.sr,.srl,.srr');
+const sObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');sObs.unobserve(e.target);}});
+},{threshold:.1});
+sEls.forEach(el=>sObs.observe(el));
+
+/* SMOOTH ANCHOR */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+</script>
+</body>
+</html>

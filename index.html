@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Drip — Artisan Gelato & Café</title>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Caveat:wght@500;700&family=DM+Serif+Display:ital@0;1&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css"/>
+<style>
+/* ══════════════════════════════════════
+   TOKENS — Sensory & Melting
+══════════════════════════════════════ */
+:root{
+  --cream:  #fff9f0;
+  --latte:  #f5e6cc;
+  --butter: #fdebd0;
+  --drip:   #f0d5a8;
+  --ink:    #1a100a;
+  --espresso:#2e1a10;
+  --brown:  #5c3217;
+  --mocha:  #8b5a2b;
+  --text:   #3d2010;
+  --muted:  #9a7050;
+
+  /* Flavor drip colors */
+  --straw:  #ff5c7a;
+  --straw2: #ff8fa3;
+  --mango:  #ff9f43;
+  --mango2: #ffbe76;
+  --mint:   #26b584;
+  --mint2:  #6fcf9f;
+  --choco:  #7b3f00;
+  --choco2: #b06020;
+  --blue:   #5e60ce;
+  --blue2:  #8e90e8;
+  --rasp:   #c0392b;
+  --rasp2:  #e74c5a;
+  --lemon:  #f9ca24;
+  --lemon2: #ffd700;
+  --pist:   #6ab04c;
+  --pist2:  #a3d977;
+
+  --ease: cubic-bezier(.4,0,.2,1);
+  --spring: cubic-bezier(.34,1.56,.64,1);
+  --bounce: cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  overflow-x:hidden;
+  cursor:none;
+  font-weight:400;
+}
+img{display:block;width:100%;}
+a{text-decoration:none;color:inherit;}
+
+/* ══════════════════════════════════════
+   CURSOR — Drip drop
+══════════════════════════════════════ */
+#cur{
+  position:fixed;pointer-events:none;z-index:9999;
+  width:24px;height:32px;
+  transform:translate(-50%,-20%);
+  transition:transform .2s var(--spring);
+}
+#cur svg{width:100%;height:100%;}
+.ch #cur{transform:translate(-50%,-20%) scale(1.6);}
+
+/* ══════════════════════════════════════
+   PRELOADER — Drip animation
+══════════════════════════════════════ */
+#pl{
+  position:fixed;inset:0;z-index:99999;
+  background:var(--cream);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;
+  transition:opacity .8s .3s,visibility .8s .3s;
+}
+#pl.out{opacity:0;visibility:hidden;}
+.pl-drip-row{display:flex;gap:12px;align-items:flex-end;margin-bottom:1.5rem;}
+.pl-drip{
+  width:18px;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation:plDrip 1.2s ease-in-out infinite;
+}
+.pl-drip:nth-child(1){height:52px;background:var(--straw);animation-delay:0s;}
+.pl-drip:nth-child(2){height:68px;background:var(--mango);animation-delay:.2s;}
+.pl-drip:nth-child(3){height:44px;background:var(--mint);animation-delay:.4s;}
+.pl-drip:nth-child(4){height:72px;background:var(--blue);animation-delay:.1s;}
+.pl-drip:nth-child(5){height:56px;background:var(--rasp);animation-delay:.3s;}
+@keyframes plDrip{
+  0%,100%{transform:scaleY(1);border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;}
+  50%{transform:scaleY(1.15);border-radius:50% 50% 60% 60% / 55% 55% 45% 45%;}
+}
+.pl-name{
+  font-family:'Abril Fatface',serif;font-size:3.5rem;
+  background:linear-gradient(135deg,var(--straw),var(--mango),var(--mint));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:2px;
+}
+.pl-sub{font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-top:.5rem;}
+
+/* ══════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.6rem 4rem;
+  transition:all .5s var(--ease);
+}
+#nav.stuck{
+  background:rgba(255,249,240,.95);
+  backdrop-filter:blur(20px);
+  padding:1rem 4rem;
+  box-shadow:0 4px 30px rgba(26,16,10,.08);
+  border-bottom:2px solid var(--drip);
+}
+.nav-brand{
+  font-family:'Abril Fatface',serif;font-size:2.2rem;
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:1px;
+}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{
+  font-size:.82rem;font-weight:700;letter-spacing:.5px;
+  color:var(--mocha);transition:color .3s;
+  display:flex;align-items:center;gap:.35rem;
+}
+.nav-links a i{font-size:.7rem;}
+.nav-links a:hover{color:var(--straw);}
+.nav-btn{
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  color:#fff;border-radius:50px;
+  padding:.6rem 1.6rem;font-size:.8rem;font-weight:800;
+  border:none;cursor:pointer;letter-spacing:.5px;
+  transition:all .35s var(--spring);
+  box-shadow:0 6px 20px rgba(255,92,122,.3);
+}
+.nav-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 30px rgba(255,92,122,.4);}
+
+/* ══════════════════════════════════════
+   DRIP SVG DIVIDER — reusable
+══════════════════════════════════════ */
+.drip-divider{
+  width:100%;line-height:0;display:block;
+  position:relative;z-index:2;
+  margin-top:-1px;
+}
+.drip-divider svg{display:block;width:100%;}
+
+/* ══════════════════════════════════════
+   HERO — Melting, sensory, organic
+══════════════════════════════════════ */
+#hero{
+  min-height:100vh;
+  background:var(--cream);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;
+}
+/* Animated gradient mesh background */
+.hero-mesh{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(255,92,122,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 20% 70%, rgba(255,159,67,.15) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 50% at 60% 80%, rgba(38,181,132,.1) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 45% at 10% 30%, rgba(94,96,206,.08) 0%, transparent 55%);
+  animation:meshFloat 12s ease-in-out infinite;
+}
+@keyframes meshFloat{
+  0%,100%{filter:blur(0px);}
+  50%{filter:blur(2px);}
+}
+/* Drip blobs */
+.blob{
+  position:absolute;border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;
+  opacity:.18;filter:blur(1px);
+  animation:blobMorph 10s ease-in-out infinite;
+}
+@keyframes blobMorph{
+  0%{border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;}
+  25%{border-radius:58% 42% 75% 25% / 76% 46% 54% 24%;}
+  50%{border-radius:50% 50% 33% 67% / 55% 27% 73% 45%;}
+  75%{border-radius:33% 67% 58% 42% / 63% 68% 32% 37%;}
+  100%{border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;}
+}
+
+.hero-content{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:center;
+  max-width:1300px;margin:0 auto;
+  padding:8rem 4rem 4rem;width:100%;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:var(--butter);border:2px solid var(--drip);
+  border-radius:50px;padding:.4rem 1rem;
+  font-size:.72rem;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--mocha);
+  margin-bottom:1.4rem;
+}
+.hero-tag i{color:var(--straw);}
+.hero-h1{
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(3.5rem,7vw,7rem);
+  line-height:.92;letter-spacing:-1px;color:var(--espresso);
+  margin-bottom:1.2rem;
+}
+.hero-h1 .drip-word{
+  display:inline-block;
+  background:linear-gradient(160deg,var(--straw) 0%,var(--mango) 40%,var(--mango2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  position:relative;
+}
+.hero-h1 .drip-word::after{
+  content:'';
+  position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);
+  width:30px;height:40px;
+  background:linear-gradient(180deg,var(--mango),transparent);
+  clip-path:polygon(30% 0%,70% 0%,85% 50%,50% 100%,15% 50%);
+  animation:dripDrop 3s ease-in-out infinite;
+}
+@keyframes dripDrop{
+  0%,70%{transform:translateX(-50%) scaleY(0);opacity:0;}
+  80%{transform:translateX(-50%) scaleY(1);opacity:1;}
+  100%{transform:translateX(-50%) scaleY(1) translateY(12px);opacity:0;}
+}
+.hero-sub-handwrite{
+  font-family:'Caveat',cursive;font-size:1.5rem;font-weight:700;
+  color:var(--straw);display:block;margin-bottom:.8rem;
+  transform:rotate(-1.5deg);
+}
+.hero-desc{
+  font-size:1rem;line-height:1.85;color:var(--mocha);
+  max-width:430px;margin-bottom:2.5rem;font-weight:400;
+}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.btn-drip{
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  color:#fff;border-radius:50px;
+  padding:.9rem 2.2rem;font-size:.85rem;font-weight:800;
+  border:none;cursor:pointer;letter-spacing:.3px;
+  transition:all .35s var(--spring));
+  display:inline-flex;align-items:center;gap:.7rem;
+  box-shadow:0 8px 24px rgba(255,92,122,.35);
+  position:relative;overflow:hidden;
+}
+.btn-drip::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.btn-drip:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 14px 36px rgba(255,92,122,.45);}
+.btn-drip:hover::after{opacity:1;}
+.btn-plain{
+  background:#fff;color:var(--espresso);
+  border-radius:50px;padding:.88rem 2rem;
+  font-size:.85rem;font-weight:700;
+  border:2px solid var(--drip);cursor:pointer;
+  display:inline-flex;align-items:center;gap:.7rem;
+  transition:all .35s var(--ease));
+  box-shadow:0 4px 16px rgba(26,16,10,.06);
+}
+.btn-plain:hover{border-color:var(--straw);color:var(--straw);transform:translateY(-2px);}
+/* Hero trust row */
+.hero-trust{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.ht{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-size:.78rem;font-weight:700;color:var(--mocha);
+}
+.ht i{font-size:.8rem;}
+
+/* Hero visual side */
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center;}
+/* Main scoop plate */
+.scoop-plate{
+  width:400px;height:400px;border-radius:50%;
+  background:linear-gradient(135deg,var(--butter),var(--latte));
+  border:6px solid #fff;
+  box-shadow:0 20px 80px rgba(255,92,122,.2),0 8px 30px rgba(26,16,10,.12);
+  overflow:hidden;position:relative;
+  animation:plateBob 6s ease-in-out infinite;
+}
+@keyframes plateBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+.scoop-plate img{
+  width:100%;height:100%;object-fit:cover;
+  transform:scale(1.1);
+  transition:transform 6s var(--ease);
+}
+.scoop-plate:hover img{transform:scale(1.15);}
+/* Drip trails on the plate */
+.plate-drip{
+  position:absolute;top:0;width:28px;
+  border-radius:0 0 50% 50%;
+  animation:dripSlide 4s ease-in-out infinite;
+}
+.plate-drip:nth-child(2){left:25%;height:60px;background:linear-gradient(180deg,var(--straw),rgba(255,92,122,0));animation-delay:0s;}
+.plate-drip:nth-child(3){left:55%;height:80px;background:linear-gradient(180deg,var(--mango),rgba(255,159,67,0));animation-delay:1.2s;}
+.plate-drip:nth-child(4){left:75%;height:50px;background:linear-gradient(180deg,var(--mint),rgba(38,181,132,0));animation-delay:2.4s;}
+@keyframes dripSlide{
+  0%{height:0;opacity:0;}30%{opacity:1;}
+  70%{opacity:1;}100%{height:80px;opacity:0;}
+}
+
+/* Floating flavor chips */
+.flavor-chip{
+  position:absolute;background:#fff;border-radius:50px;
+  padding:.55rem 1.1rem;
+  box-shadow:0 6px 20px rgba(26,16,10,.12);
+  display:flex;align-items:center;gap:.5rem;
+  font-size:.8rem;font-weight:700;color:var(--espresso);
+  border:2px solid var(--drip);
+  animation:chipFloat 5s ease-in-out infinite;
+  white-space:nowrap;
+}
+.chip-dot{width:10px;height:10px;border-radius:50%;}
+.fc-1{top:-10px;left:-80px;animation-delay:0s;}
+.fc-2{top:40%;left:-100px;animation-delay:1.8s;}
+.fc-3{bottom:20px;left:-70px;animation-delay:3.2s;}
+.fc-4{top:-20px;right:-70px;animation-delay:.8s;}
+.fc-5{bottom:40px;right:-90px;animation-delay:2.5s;}
+@keyframes chipFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* ══════════════════════════════════════
+   DRIP WAVE section transitions
+══════════════════════════════════════ */
+.sec-drip-top{
+  position:relative;margin-bottom:-2px;line-height:0;
+}
+.sec-drip-top svg{display:block;width:100%;}
+
+/* ══════════════════════════════════════
+   FLAVORS MARQUEE — organic flowing
+══════════════════════════════════════ */
+#flavor-river{
+  padding:1.2rem 0;overflow:hidden;
+  background:linear-gradient(90deg,var(--straw) 0%,var(--mango) 30%,var(--mint) 60%,var(--blue) 80%,var(--straw) 100%);
+  background-size:300% 100%;
+  animation:riverFlow 6s ease infinite;
+}
+@keyframes riverFlow{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+.river-track{display:flex;width:max-content;animation:riverScroll 28s linear infinite;}
+.river-item{
+  display:inline-flex;align-items:center;gap:1rem;
+  padding:0 2rem;white-space:nowrap;
+  font-size:.75rem;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(255,255,255,.9);
+}
+.river-dot{width:5px;height:5px;background:rgba(255,255,255,.5);border-radius:50%;}
+@keyframes riverScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ══════════════════════════════════════
+   STATS — Drip card style
+══════════════════════════════════════ */
+#stats{background:var(--butter);padding:5rem 0;}
+.stats-row{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:1.5rem;
+}
+.stat-card{
+  background:#fff;border-radius:24px;
+  padding:2rem 1.5rem;text-align:center;
+  box-shadow:0 8px 32px rgba(26,16,10,.07);
+  border:2px solid var(--drip);
+  position:relative;overflow:hidden;
+  transition:all .4s var(--spring));
+}
+.stat-card::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:4px;
+  transition:height .4s;
+}
+.stat-card:hover{transform:translateY(-8px);box-shadow:0 18px 50px rgba(26,16,10,.12);}
+.stat-card:hover::before{height:6px;}
+.sc-1::before{background:var(--straw);}
+.sc-2::before{background:var(--mango);}
+.sc-3::before{background:var(--mint);}
+.sc-4::before{background:var(--blue);}
+.sc-5::before{background:var(--rasp);}
+.stat-emoji{font-size:2rem;display:block;margin-bottom:.6rem;}
+.stat-val{
+  font-family:'Abril Fatface',serif;
+  font-size:2.8rem;color:var(--espresso);line-height:1;
+  display:flex;align-items:baseline;justify-content:center;gap:.1rem;
+}
+.stat-val sup{font-size:1.1rem;}
+.stat-lab{font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:.4rem;}
+
+/* ══════════════════════════════════════
+   ABOUT — Organic blob layout
+══════════════════════════════════════ */
+#about{background:var(--cream);padding:7rem 0;position:relative;overflow:hidden;}
+.about-blob-bg{
+  position:absolute;top:-100px;right:-100px;
+  width:600px;height:600px;
+  background:radial-gradient(ellipse,rgba(255,159,67,.1),transparent 65%);
+  border-radius:60% 40% 70% 30% / 40% 60% 40% 60%;
+  animation:blobMorph 12s ease-in-out infinite;
+}
+.about-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:center;
+  position:relative;z-index:1;
+}
+/* Stacked images with drip overlay */
+.about-img-blob{
+  position:relative;
+}
+.aib-main{
+  width:100%;height:520px;
+  border-radius:40% 60% 55% 45% / 50% 45% 55% 50%;
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(255,92,122,.18);
+  animation:blobMorph 10s ease-in-out infinite;
+  transition:border-radius 1s;
+}
+.aib-main img{
+  width:100%;height:100%;object-fit:cover;
+  filter:saturate(.9);
+}
+.aib-float{
+  position:absolute;bottom:-30px;right:-30px;
+  width:180px;height:180px;
+  border-radius:55% 45% 50% 50% / 45% 55% 45% 55%;
+  overflow:hidden;
+  border:5px solid #fff;
+  box-shadow:0 12px 40px rgba(26,16,10,.15);
+  animation:blobMorph 8s ease-in-out infinite 2s;
+}
+.aib-float img{width:100%;height:100%;object-fit:cover;}
+.aib-badge{
+  position:absolute;top:30px;right:-20px;
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  color:#fff;border-radius:50%;
+  width:100px;height:100px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Caveat',cursive;font-size:1.1rem;font-weight:700;
+  box-shadow:0 8px 24px rgba(255,92,122,.35);
+  animation:chipFloat 4s ease-in-out infinite;
+  text-align:center;line-height:1.2;
+}
+/* Drip trails */
+.aib-drip-trail{
+  position:absolute;top:0;width:16px;border-radius:0 0 50% 50%;
+  opacity:.7;animation:dripSlide 5s ease-in-out infinite;
+}
+.adt1{left:20%;height:70px;background:linear-gradient(180deg,var(--straw),transparent);animation-delay:0s;}
+.adt2{left:45%;height:55px;background:linear-gradient(180deg,var(--mango),transparent);animation-delay:1.5s;}
+.adt3{left:70%;height:80px;background:linear-gradient(180deg,var(--mint),transparent);animation-delay:3s;}
+
+.about-text .handwrite{
+  font-family:'Caveat',cursive;font-size:1.4rem;font-weight:700;
+  color:var(--straw);display:block;margin-bottom:.5rem;
+  transform:rotate(-1deg);
+}
+.about-h{
+  font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:clamp(2.2rem,4vw,3.8rem);
+  color:var(--espresso);line-height:1.08;letter-spacing:-.5px;
+  margin-bottom:1rem;
+}
+.about-rule{
+  width:60px;height:4px;border-radius:4px;
+  background:linear-gradient(90deg,var(--straw),var(--mango));
+  margin:1.2rem 0 1.5rem;
+}
+.about-desc{font-size:.97rem;line-height:1.9;color:var(--mocha);margin-bottom:1.5rem;}
+.about-perks{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.5rem 0 2rem;}
+.ap{
+  background:#fff;border-radius:16px;
+  padding:.8rem 1rem;
+  display:flex;align-items:center;gap:.6rem;
+  font-size:.82rem;font-weight:700;color:var(--espresso);
+  border:2px solid var(--drip);
+  transition:all .3s var(--spring));
+}
+.ap:hover{border-color:var(--straw);transform:translateY(-3px);}
+.ap i{font-size:.85rem;}
+
+/* ══════════════════════════════════════
+   MENU — Flavor grid with drip cards
+══════════════════════════════════════ */
+#menu{
+  position:relative;
+  background:linear-gradient(180deg,var(--cream) 0%,var(--butter) 100%);
+  padding:7rem 0 5rem;
+}
+.wrap{max-width:1300px;margin:0 auto;padding:0 4rem;}
+.section-kicker{
+  font-family:'Caveat',cursive;font-size:1.3rem;font-weight:700;
+  color:var(--straw);display:block;transform:rotate(-1deg);margin-bottom:.3rem;
+}
+.section-h{
+  font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:clamp(2.2rem,4vw,3.5rem);
+  color:var(--espresso);letter-spacing:-.5px;line-height:1.05;
+}
+.section-rule{
+  width:60px;height:4px;border-radius:4px;margin:1rem 0 2rem;
+}
+/* Filter pills */
+.filter-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.fpill{
+  background:#fff;border:2px solid var(--drip);
+  border-radius:50px;padding:.5rem 1.2rem;
+  font-size:.78rem;font-weight:700;color:var(--mocha);
+  cursor:pointer;transition:all .35s var(--spring));
+  display:inline-flex;align-items:center;gap:.4rem;
+}
+.fpill i{font-size:.72rem;}
+.fpill.on,.fpill:hover{
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 16px rgba(255,92,122,.3);
+  transform:translateY(-2px);
+}
+
+/* Menu card */
+.menu-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1.5rem;
+}
+.mcard{
+  background:#fff;border-radius:28px;overflow:hidden;
+  box-shadow:0 8px 32px rgba(26,16,10,.07);
+  border:2px solid var(--drip);
+  transition:all .4s var(--spring));
+  position:relative;display:flex;flex-direction:column;
+}
+.mcard:hover{
+  transform:translateY(-10px) rotate(.5deg);
+  box-shadow:0 24px 60px rgba(26,16,10,.14);
+}
+.mcard-img{height:220px;overflow:hidden;position:relative;}
+.mcard-img img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s var(--ease));
+}
+.mcard:hover .mcard-img img{transform:scale(1.08);}
+/* Drip strip at top of card */
+.mcard-drip{
+  position:absolute;top:0;left:0;right:0;height:8px;
+}
+/* Flavor drip drops hanging from strip */
+.mcard-drip-drops{
+  position:absolute;top:8px;left:0;right:0;
+  display:flex;justify-content:space-evenly;
+  pointer-events:none;
+}
+.mdd{
+  width:10px;border-radius:0 0 50% 50%;
+  animation:dripSlide 3s ease-in-out infinite;
+}
+.mcard-ribbon{
+  position:absolute;top:16px;left:0;
+  padding:.28rem 1rem .28rem .7rem;
+  font-size:.65rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:#fff;clip-path:polygon(0 0,100% 0,90% 100%,0 100%);
+}
+.mcard-fav{
+  position:absolute;top:14px;right:14px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;color:var(--muted);cursor:pointer;
+  transition:all .3s var(--spring));border:2px solid var(--drip);
+}
+.mcard-fav:hover,.mcard-fav.on{color:var(--straw);border-color:var(--straw);transform:scale(1.15);}
+.mcard-body{padding:1.3rem 1.3rem .6rem;flex:1;}
+.mcard-flavor{
+  font-size:.65rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:.4rem;
+}
+.mcard-name{
+  font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:1.3rem;color:var(--espresso);line-height:1.2;margin-bottom:.4rem;
+}
+.mcard-desc{font-size:.82rem;color:var(--mocha);line-height:1.65;}
+.mcard-stars{margin-top:.6rem;display:flex;align-items:center;gap:.3rem;font-size:.8rem;color:#f9ca24;}
+.mcard-stars span{color:var(--muted);font-size:.74rem;}
+.mcard-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.8rem 1.3rem 1.3rem;
+}
+.mcard-price{
+  font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:1.5rem;color:var(--espresso);
+}
+.mcard-price s{font-size:.9rem;color:var(--muted);font-family:'Nunito',sans-serif;font-style:normal;}
+.mcard-add{
+  width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;
+  color:#fff;transition:all .35s var(--spring));
+}
+.mcard-add:hover{transform:scale(1.2) rotate(-10deg);}
+
+/* ══════════════════════════════════════
+   SPECIALS — Full cinematic drip swiper
+══════════════════════════════════════ */
+#specials{height:90vh;min-height:600px;position:relative;}
+.sp-swiper{width:100%;height:100%;}
+.sp-slide{position:relative;overflow:hidden;display:flex;align-items:flex-end;}
+.sp-bg{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  transform:scale(1.05);transition:transform 6s var(--ease));
+  filter:saturate(.85) brightness(.6);
+}
+.swiper-slide-active .sp-bg{transform:scale(1);}
+/* Drip overlay at bottom */
+.sp-drip-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  height:200px;
+  background:linear-gradient(to top,rgba(26,16,10,.95) 0%,transparent 100%);
+}
+/* Colored drip columns */
+.sp-drip-cols{
+  position:absolute;bottom:0;left:0;right:0;
+  display:flex;height:80px;align-items:flex-end;
+  pointer-events:none;overflow:hidden;
+}
+.sp-drip-col{
+  flex:1;border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  height:100%;opacity:.3;
+}
+.sp-content{
+  position:relative;z-index:3;
+  padding:0 8% 4rem;max-width:750px;
+}
+.sp-flavor-tag{
+  display:inline-flex;align-items:center;gap:.6rem;
+  border-radius:50px;padding:.35rem 1rem;
+  font-size:.68rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:#fff;margin-bottom:1.2rem;
+}
+.sp-flavor-dot{width:8px;height:8px;border-radius:50%;}
+.sp-title{
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(3rem,6.5vw,6.5rem);
+  color:#fff;line-height:.92;letter-spacing:-1px;
+  margin-bottom:1rem;
+}
+.sp-desc{
+  font-size:.97rem;color:rgba(255,255,255,.72);
+  line-height:1.85;max-width:480px;margin-bottom:1.8rem;
+}
+.sp-price-row{display:flex;align-items:baseline;gap:1rem;margin-bottom:2rem;}
+.sp-price{
+  font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:3rem;color:#fff;line-height:1;
+}
+.sp-old{font-size:1.2rem;color:rgba(255,255,255,.35);text-decoration:line-through;}
+.sp-save{
+  font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  padding:.3rem .8rem;border-radius:50px;color:#fff;
+}
+.sp-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+.sp-btn-p{
+  background:#fff;color:var(--espresso);border-radius:50px;
+  padding:.85rem 2rem;font-size:.8rem;font-weight:800;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.6rem;
+  transition:all .35s var(--spring));
+}
+.sp-btn-p:hover{background:var(--straw);color:#fff;transform:translateY(-3px);}
+.sp-btn-g{
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  color:#fff;border-radius:50px;padding:.83rem 1.8rem;
+  font-size:.8rem;font-weight:700;border:1.5px solid rgba(255,255,255,.3);
+  cursor:pointer;transition:all .3s;
+  display:inline-flex;align-items:center;gap:.6rem;
+}
+.sp-btn-g:hover{background:rgba(255,255,255,.2);}
+/* Swiper controls */
+.sp-nav-p,.sp-nav-n{
+  position:absolute;bottom:4rem;z-index:5;
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(255,255,255,.25);
+  color:#fff;font-size:.9rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;
+}
+.sp-nav-p{right:calc(4% + 60px);}
+.sp-nav-n{right:4%;}
+.sp-nav-p:hover,.sp-nav-n:hover{background:var(--straw);border-color:var(--straw);}
+.sp-pag .swiper-pagination-bullet{
+  width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);opacity:1;
+  transition:all .4s;
+}
+.sp-pag .swiper-pagination-bullet-active{background:#fff;transform:scale(1.3);}
+
+/* ══════════════════════════════════════
+   FLAVOR CHAPTERS — Organic drip cards
+══════════════════════════════════════ */
+#flavors{background:var(--cream);padding:7rem 0;}
+.flavor-chapters-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2rem;
+}
+.flav-card{
+  border-radius:32px;overflow:hidden;
+  box-shadow:0 12px 40px rgba(26,16,10,.1);
+  position:relative;transition:all .4s var(--spring));
+  cursor:pointer;background:#fff;
+}
+.flav-card:hover{transform:translateY(-12px) scale(1.02);}
+.flav-card-img{height:280px;position:relative;overflow:hidden;}
+.flav-card-img img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s var(--ease));
+  filter:saturate(.85);
+}
+.flav-card:hover .flav-card-img img{transform:scale(1.08);filter:saturate(1);}
+/* Drip shape at bottom of image */
+.flav-card-drip{
+  position:absolute;bottom:-1px;left:0;right:0;line-height:0;
+}
+.flav-card-drip svg{display:block;width:100%;}
+.flav-card-body{padding:1.6rem 1.8rem 2rem;}
+.fc-label{
+  display:inline-flex;align-items:center;gap:.4rem;
+  border-radius:50px;padding:.3rem .9rem;
+  font-size:.65rem;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;color:#fff;margin-bottom:.9rem;
+}
+.fc-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.7);}
+.fc-name{
+  font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:1.5rem;color:var(--espresso);line-height:1.15;margin-bottom:.5rem;
+}
+.fc-origin{
+  font-size:.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem;
+}
+.fc-origin i{font-size:.62rem;}
+.fc-desc{font-size:.83rem;color:var(--mocha);line-height:1.7;margin-bottom:1.2rem;}
+.fc-notes{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.fc-note{
+  font-size:.65rem;font-weight:700;border-radius:50px;
+  padding:.25rem .7rem;border:2px solid;
+}
+.fc-price-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:1rem;border-top:2px dashed var(--drip);
+}
+.fc-price{font-family:'DM Serif Display',serif;font-style:italic;font-size:1.6rem;color:var(--espresso);}
+.fc-add-btn{
+  border-radius:50px;padding:.5rem 1.2rem;
+  font-size:.72rem;font-weight:800;border:none;cursor:pointer;
+  color:#fff;transition:all .35s var(--spring));
+  display:flex;align-items:center;gap:.4rem;
+}
+.fc-add-btn:hover{transform:scale(1.08);}
+
+/* ══════════════════════════════════════
+   INTERIOR — Zones with drip tabs
+══════════════════════════════════════ */
+#interior{
+  background:var(--butter);
+  padding:7rem 0;position:relative;overflow:hidden;
+}
+.int-blob{
+  position:absolute;top:-80px;left:-80px;
+  width:400px;height:400px;
+  background:radial-gradient(ellipse,rgba(255,92,122,.08),transparent 65%);
+  border-radius:60% 40% 50% 50% / 50% 60% 40% 50%;
+  animation:blobMorph 10s ease-in-out infinite;
+}
+.zone-tabs{
+  display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2.5rem;
+}
+.ztab{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:#fff;border:2px solid var(--drip);
+  border-radius:50px;padding:.55rem 1.3rem;
+  font-size:.78rem;font-weight:700;color:var(--mocha);
+  cursor:pointer;transition:all .35s var(--spring));
+}
+.ztab.on,.ztab:hover{
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 16px rgba(255,92,122,.3);
+  transform:translateY(-2px);
+}
+.zone-panel{display:none;animation:zoneFade .5s var(--ease));}
+.zone-panel.on{display:grid;grid-template-columns:1.1fr 1fr;gap:2.5rem;align-items:center;}
+@keyframes zoneFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.zp-img{
+  border-radius:32px;overflow:hidden;height:460px;position:relative;
+  box-shadow:0 16px 56px rgba(26,16,10,.12);
+}
+.zp-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.85);transition:transform 6s,filter 1s;}
+.zp-img:hover img{transform:scale(1.04);filter:saturate(.95);}
+.zp-badge{
+  position:absolute;top:1.5rem;left:1.5rem;
+  border-radius:50px;padding:.35rem 1rem;
+  font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:#fff;display:flex;align-items:center;gap:.4rem;
+}
+.zp-cap{
+  position:absolute;bottom:1.5rem;right:1.5rem;
+  background:rgba(255,249,240,.92);backdrop-filter:blur(10px);
+  border-radius:20px;padding:.9rem 1.2rem;text-align:center;
+  border:2px solid var(--drip);
+}
+.zp-cap-num{font-family:'Abril Fatface',serif;font-size:2.2rem;line-height:1;}
+.zp-cap-lab{font-size:.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.zp-text .section-kicker{margin-bottom:.2rem;}
+.zp-h{font-family:'DM Serif Display',serif;font-style:italic;font-size:2rem;color:var(--espresso);line-height:1.1;margin-bottom:.8rem;}
+.zp-body{font-size:.9rem;color:var(--mocha);line-height:1.85;margin-bottom:1.5rem;}
+.zp-feats{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin-bottom:2rem;}
+.zp-feat{display:flex;align-items:center;gap:.7rem;font-size:.85rem;color:var(--text);}
+.zp-feat i{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--butter);color:var(--straw);
+  display:flex;align-items:center;justify-content:center;font-size:.72rem;flex-shrink:0;
+  border:2px solid var(--drip);
+}
+
+/* ══════════════════════════════════════
+   TESTIMONIALS — Blob cards
+══════════════════════════════════════ */
+#reviews{
+  background:var(--cream);
+  padding:7rem 0;
+}
+.rev-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:2rem;}
+.rating-chip{
+  display:flex;align-items:center;gap:1rem;
+  background:#fff;border-radius:24px;padding:1.2rem 1.8rem;
+  border:2px solid var(--drip);box-shadow:0 6px 20px rgba(26,16,10,.06);
+}
+.rc-num{font-family:'Abril Fatface',serif;font-size:2.8rem;line-height:1;}
+.rc-stars{font-size:.8rem;letter-spacing:2px;color:#f9ca24;display:block;}
+.rc-count{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+.rev-swiper{padding:0 .5rem 3rem;}
+.rev-card{
+  background:#fff;border-radius:28px;padding:2.2rem;
+  box-shadow:0 8px 32px rgba(26,16,10,.07);
+  border:2px solid var(--drip);height:100%;
+  display:flex;flex-direction:column;
+  transition:all .4s var(--spring));
+}
+.rev-card:hover{transform:translateY(-6px);box-shadow:0 18px 50px rgba(26,16,10,.12);}
+.rev-q{font-size:.82rem;color:var(--straw);font-weight:800;letter-spacing:1px;margin-bottom:.6rem;}
+.rev-stars{font-size:.8rem;color:#f9ca24;margin-bottom:.8rem;letter-spacing:2px;}
+.rev-body{font-size:.9rem;color:var(--mocha);line-height:1.85;flex:1;margin-bottom:1.5rem;}
+.rev-person{display:flex;align-items:center;gap:.8rem;}
+.rev-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--drip);}
+.rev-name{font-size:.88rem;font-weight:700;color:var(--espresso);}
+.rev-role{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:.1rem;}
+.rev-pag .swiper-pagination-bullet{background:var(--drip);opacity:1;width:8px;height:8px;transition:all .3s;}
+.rev-pag .swiper-pagination-bullet-active{background:var(--straw);transform:scale(1.4);}
+
+/* ══════════════════════════════════════
+   GALLERY — Organic masonry drip grid
+══════════════════════════════════════ */
+#gallery{
+  background:var(--butter);
+  padding:7rem 0 0;
+}
+.gal-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  grid-auto-rows:220px;gap:12px;
+}
+.gi{border-radius:24px;overflow:hidden;position:relative;cursor:pointer;}
+.gi img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s var(--ease)),filter .4s;
+  filter:saturate(.8);
+}
+.gi:hover img{transform:scale(1.09);filter:saturate(1);}
+.gi-over{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(255,92,122,.7) 0%,transparent 55%);
+  opacity:0;transition:opacity .4s;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem;
+}
+.gi:hover .gi-over{opacity:1;}
+.gi-name{color:#fff;font-size:.85rem;font-weight:800;}
+.gi-sub{color:rgba(255,255,255,.75);font-size:.72rem;margin-top:.15rem;}
+.gi-ico{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(255,255,255,.9);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;color:var(--straw);
+  transition:transform .4s var(--spring));
+}
+.gi:hover .gi-ico{transform:translate(-50%,-50%) scale(1);}
+.ga{grid-column:span 2;grid-row:span 2;}
+.gb{grid-column:span 2;}
+.gc{grid-column:span 1;}
+.gd{grid-column:span 1;}
+.ge{grid-column:span 2;}
+.gf{grid-column:span 3;}
+.gg{grid-column:span 2;}
+
+/* ══════════════════════════════════════
+   OFFER — Drip parallax
+══════════════════════════════════════ */
+#offer{
+  background-image:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1800&q=90');
+  background-size:cover;background-position:center;
+  background-attachment:fixed;
+  padding:10rem 0;position:relative;
+}
+#offer::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,92,122,.88) 0%,rgba(255,159,67,.82) 50%,rgba(38,181,132,.75) 100%);
+}
+.offer-inner{position:relative;z-index:1;text-align:center;}
+.offer-handwrite{
+  font-family:'Caveat',cursive;font-size:1.8rem;font-weight:700;
+  color:rgba(255,255,255,.8);display:block;margin-bottom:.5rem;
+  transform:rotate(-1deg);
+}
+.offer-h{
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(3.5rem,9vw,9rem);
+  color:#fff;line-height:.88;letter-spacing:-2px;margin-bottom:1.2rem;
+}
+.offer-sub{
+  font-size:1.05rem;color:rgba(255,255,255,.85);
+  max-width:520px;margin:0 auto 2.5rem;line-height:1.85;
+}
+.offer-chips{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;}
+.offer-chip{
+  background:rgba(255,255,255,.15);backdrop-filter:blur(10px);
+  border:1.5px solid rgba(255,255,255,.3);border-radius:50px;
+  padding:.6rem 1.4rem;font-size:.78rem;font-weight:800;color:#fff;
+  display:flex;align-items:center;gap:.5rem;
+}
+.btn-offer{
+  background:#fff;color:var(--straw);border-radius:50px;
+  padding:1rem 3rem;font-size:.85rem;font-weight:800;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.7rem;
+  box-shadow:0 10px 36px rgba(0,0,0,.15);
+  transition:all .4s var(--spring));
+}
+.btn-offer:hover{background:var(--espresso);color:#fff;transform:translateY(-4px) scale(1.03);}
+
+/* ══════════════════════════════════════
+   NEWSLETTER — Drip card
+══════════════════════════════════════ */
+#newsletter{
+  background:linear-gradient(135deg,var(--butter) 0%,var(--cream) 100%);
+  padding:7rem 0;position:relative;overflow:hidden;
+}
+.nl-blob-bg{
+  position:absolute;top:-100px;right:-100px;
+  width:500px;height:500px;
+  background:radial-gradient(ellipse,rgba(255,92,122,.1),transparent 60%);
+  border-radius:55% 45% 50% 50% / 45% 55% 45% 55%;
+  animation:blobMorph 10s ease-in-out infinite;
+}
+.nl-card{
+  background:#fff;border-radius:40px;
+  padding:4rem;
+  box-shadow:0 20px 70px rgba(26,16,10,.1);
+  border:3px solid var(--drip);
+  max-width:680px;margin:0 auto;
+  text-align:center;position:relative;overflow:hidden;
+}
+/* Drip at top of card */
+.nl-drip-top{
+  position:absolute;top:0;left:0;right:0;
+  display:flex;height:12px;
+}
+.nl-drip-seg{flex:1;}
+.nl-emoji{font-size:3rem;display:block;margin-bottom:.8rem;}
+.nl-h{
+  font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:clamp(1.8rem,3.5vw,2.8rem);
+  color:var(--espresso);line-height:1.1;margin-bottom:.7rem;
+}
+.nl-sub{font-size:.9rem;color:var(--mocha);line-height:1.8;margin-bottom:2rem;}
+.nl-form{
+  display:flex;background:var(--butter);border-radius:50px;
+  border:2px solid var(--drip);overflow:hidden;padding:.35rem;
+  max-width:480px;margin:0 auto;
+}
+.nl-inp{
+  flex:1;background:transparent;border:none;outline:none;
+  padding:.75rem 1.2rem;font-size:.9rem;font-family:'Nunito',sans-serif;
+  color:var(--espresso);
+}
+.nl-inp::placeholder{color:var(--muted);}
+.nl-btn{
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  color:#fff;border:none;border-radius:50px;
+  padding:.75rem 1.6rem;font-size:.78rem;font-weight:800;cursor:pointer;
+  display:flex;align-items:center;gap:.4rem;white-space:nowrap;
+  transition:all .35s var(--spring));
+}
+.nl-btn:hover{transform:scale(1.04);}
+.nl-note{margin-top:1rem;font-size:.72rem;color:var(--muted);font-weight:600;}
+.nl-note i{color:var(--straw);margin-right:.3rem;}
+
+/* ══════════════════════════════════════
+   CONTACT
+══════════════════════════════════════ */
+#contact{background:var(--cream);padding:7rem 0;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;}
+.c-card{
+  background:#fff;border-radius:32px;padding:2.5rem;
+  box-shadow:0 8px 32px rgba(26,16,10,.07);
+  border:2px solid var(--drip);
+}
+.c-row{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1rem 0;border-bottom:2px dashed var(--drip);
+}
+.c-row:last-child{border-bottom:none;}
+.c-icon{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.95rem;color:#fff;flex-shrink:0;
+}
+.c-label{font-size:.65rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+.c-val{font-size:.9rem;color:var(--text);line-height:1.7;}
+.c-val a{color:var(--straw);transition:color .3s;}
+.c-val a:hover{color:var(--espresso);}
+.h-row{display:flex;justify-content:space-between;padding:.65rem 0;border-bottom:2px dashed var(--drip);font-size:.85rem;}
+.h-row:last-child{border-bottom:none;}
+.h-day{color:var(--muted);font-weight:600;}
+.h-time{font-weight:800;color:var(--espresso);}
+.h-time.sp{color:var(--straw);}
+.h-badge{
+  font-size:.62rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  background:var(--butter);color:var(--mint);border-radius:50px;
+  padding:.2rem .7rem;border:2px solid var(--drip);
+}
+.map-card{
+  border-radius:32px;overflow:hidden;min-height:320px;
+  background:linear-gradient(135deg,var(--butter),var(--drip));
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:3rem;position:relative;
+}
+.map-dots{
+  position:absolute;inset:0;
+  background-image:radial-gradient(rgba(26,16,10,.08) 1px,transparent 1px);
+  background-size:20px 20px;
+}
+.map-inner{position:relative;z-index:1;}
+.map-pin-big{font-size:3.5rem;display:block;margin-bottom:1rem;animation:chipFloat 4s ease-in-out infinite;}
+.map-name{font-family:'DM Serif Display',serif;font-style:italic;font-size:1.7rem;color:var(--espresso);margin-bottom:.4rem;}
+.map-addr{font-size:.88rem;color:var(--mocha);line-height:1.7;margin-bottom:1.5rem;}
+.soc-row{display:flex;gap:.6rem;margin-top:1.5rem;}
+.soc{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--butter);border:2px solid var(--drip);
+  color:var(--mocha);font-size:.85rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .35s var(--spring));
+}
+.soc:hover{background:var(--straw);border-color:var(--straw);color:#fff;transform:translateY(-3px) scale(1.1);}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer{
+  background:var(--espresso);
+  padding:5rem 0 0;
+}
+.foot-grid{
+  display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;
+  gap:3.5rem;padding-bottom:4rem;
+  border-bottom:2px solid rgba(255,255,255,.07);
+}
+.foot-logo{
+  font-family:'Abril Fatface',serif;font-size:2.4rem;
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:.8rem;display:block;
+}
+.foot-about{font-size:.83rem;color:rgba(255,255,255,.38);line-height:1.9;max-width:280px;}
+.foot-socials{display:flex;gap:.5rem;margin-top:1.4rem;}
+.f-soc{
+  width:36px;height:36px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.35);font-size:.85rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s var(--spring));
+}
+.f-soc:hover{background:var(--straw);border-color:var(--straw);color:#fff;transform:translateY(-3px);}
+.foot-head{font-size:.65rem;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--mango);margin-bottom:1.2rem;}
+.foot-link{
+  display:flex;align-items:center;gap:.4rem;
+  font-size:.82rem;color:rgba(255,255,255,.35);margin-bottom:.6rem;transition:color .3s;
+}
+.foot-link i{font-size:.6rem;color:rgba(255,92,122,.4);transition:color .3s;}
+.foot-link:hover{color:rgba(255,255,255,.75);}
+.foot-link:hover i{color:var(--straw);}
+.foot-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.8rem 0;flex-wrap:wrap;gap:1rem;
+}
+.foot-copy{font-size:.75rem;color:rgba(255,255,255,.2);}
+.foot-copy span{color:var(--straw);}
+.foot-pay{display:flex;gap:.7rem;font-size:1.5rem;color:rgba(255,255,255,.15);}
+
+/* ── Back to top ── */
+#btt{
+  position:fixed;bottom:2.5rem;right:2.5rem;z-index:990;
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,var(--straw),var(--mango));
+  color:#fff;border:none;cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(255,92,122,.4);
+  opacity:0;transform:translateY(16px) scale(.8);
+  transition:all .4s var(--spring));
+}
+#btt.show{opacity:1;transform:translateY(0) scale(1);}
+#btt:hover{transform:translateY(-4px) scale(1.1);}
+
+/* ══ Responsive ══ */
+@media(max-width:1199px){
+  .wrap{padding:0 2.5rem;}
+  .hero-content{padding:8rem 2.5rem 4rem;grid-template-columns:1fr;}
+  .scoop-plate{display:none;}
+  .flavor-chapters-grid{grid-template-columns:1fr 1fr;}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:2.5rem;}
+}
+@media(max-width:991px){
+  #nav{padding:1.2rem 2rem;}#nav.stuck{padding:.9rem 2rem;}
+  .nav-links{display:none;}
+  .about-layout{grid-template-columns:1fr;}
+  .aib-main{height:340px;}
+  .stats-row{grid-template-columns:repeat(3,1fr);}
+  .zone-panel.on{grid-template-columns:1fr;}
+  .zp-img{height:300px;}
+  .flavor-chapters-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .gal-grid{grid-template-columns:repeat(3,1fr);}
+  .ga,.gb,.gc,.gd,.ge,.gf,.gg{grid-column:span 1;grid-row:span 1;}
+  .ga{grid-column:span 2;}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:767px){
+  .wrap{padding:0 1.5rem;}
+  .hero-content{padding:7rem 1.5rem 3rem;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .about-perks{grid-template-columns:1fr;}
+  .gal-grid{grid-template-columns:repeat(2,1fr);}
+  .ga{grid-column:span 2;}
+  .foot-grid{grid-template-columns:1fr;}
+  .foot-bottom{flex-direction:column;text-align:center;}
+  .nl-form{flex-direction:column;border-radius:24px;gap:.4rem;}
+  .nl-btn{border-radius:50px;}
+  .offer-h{font-size:clamp(3rem,12vw,5rem);}
+}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="pl">
+  <div class="pl-drip-row">
+    <div class="pl-drip"></div><div class="pl-drip"></div>
+    <div class="pl-drip"></div><div class="pl-drip"></div>
+    <div class="pl-drip"></div>
+  </div>
+  <div class="pl-name">Drip.</div>
+  <div class="pl-sub">Artisan Gelato &amp; Café · Est. 2010</div>
+</div>
+
+<!-- CURSOR -->
+<div id="cur">
+  <svg viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 0C12 0 0 12 0 20C0 26.627 5.373 32 12 32C18.627 32 24 26.627 24 20C24 12 12 0 12 0Z" fill="#ff5c7a"/>
+    <ellipse cx="9" cy="16" rx="2.5" ry="4" fill="rgba(255,255,255,0.3)"/>
+    <path d="M12 32C12 32 10 35 12 36C14 35 12 32 12 32Z" fill="#ff5c7a"/>
+  </svg>
+</div>
+
+<!-- ════════ NAVBAR ════════ -->
+<nav id="nav">
+  <div class="nav-brand">Drip.</div>
+  <ul class="nav-links">
+    <li><a href="#about"><i class="fa-solid fa-heart"></i>About</a></li>
+    <li><a href="#menu"><i class="fa-solid fa-ice-cream"></i>Menu</a></li>
+    <li><a href="#specials"><i class="fa-solid fa-fire-flame-curved"></i>Specials</a></li>
+    <li><a href="#interior"><i class="fa-solid fa-chair"></i>The Space</a></li>
+    <li><a href="#gallery"><i class="fa-brands fa-instagram"></i>Gallery</a></li>
+  </ul>
+  <button class="nav-btn" onclick="location.href='#contact'"><i class="fa-solid fa-calendar-plus"></i> Reserve</button>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<section id="hero">
+  <div class="hero-mesh"></div>
+  <!-- Morphing blobs -->
+  <div class="blob" style="width:500px;height:500px;background:var(--straw);top:-150px;right:-100px;animation-delay:0s;"></div>
+  <div class="blob" style="width:380px;height:380px;background:var(--mango);bottom:-80px;left:-80px;animation-delay:3s;"></div>
+  <div class="blob" style="width:280px;height:280px;background:var(--mint);top:40%;left:38%;animation-delay:6s;"></div>
+
+  <div class="hero-content">
+    <div>
+      <div class="hero-tag"><i class="fa-solid fa-star"></i>Lucknow's Favourite Since 2010</div>
+      <h1 class="hero-h1">
+        Life is<br/>
+        <span class="drip-word">Sweeter</span><br/>
+        when it<br/>Drips.
+      </h1>
+      <span class="hero-sub-handwrite">…slowly, perfectly, deliciously.</span>
+      <p class="hero-desc">60+ handcrafted gelato flavours, single-origin coffees and warm café vibes — all made fresh every morning with ingredients we've personally sourced from around the world.</p>
+      <div class="hero-btns">
+        <button class="btn-drip" onclick="location.href='#menu'"><i class="fa-solid fa-ice-cream"></i>Explore Menu</button>
+        <button class="btn-plain" onclick="location.href='#specials'"><i class="fa-solid fa-fire-flame-curved"></i>Today's Specials</button>
+      </div>
+      <div class="hero-trust">
+        <span class="ht"><i class="fa-solid fa-star" style="color:#f9ca24;"></i>4.9 on Google</span>
+        <span class="ht"><i class="fa-solid fa-trophy" style="color:var(--mango);"></i>14 Awards</span>
+        <span class="ht"><i class="fa-solid fa-users" style="color:var(--mint);"></i>50K+ Happy Guests</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="flavor-chip fc-1"><span class="chip-dot" style="background:var(--straw);"></span>Strawberry Bliss</div>
+      <div class="flavor-chip fc-2"><span class="chip-dot" style="background:var(--mint);"></span>Pistachio Matcha</div>
+      <div class="flavor-chip fc-3"><span class="chip-dot" style="background:var(--blue);"></span>Blueberry Swirl</div>
+      <div class="flavor-chip fc-4"><span class="chip-dot" style="background:var(--mango);"></span>Alphonso Mango</div>
+      <div class="flavor-chip fc-5"><span class="chip-dot" style="background:var(--rasp);"></span>Raspberry Rose</div>
+      <div class="scoop-plate">
+        <div class="plate-drip"></div>
+        <div class="plate-drip"></div>
+        <div class="plate-drip"></div>
+        <div class="plate-drip"></div>
+        <img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=800&q=90" alt="Artisan gelato"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Drip divider -->
+<div class="sec-drip-top" style="background:var(--cream);">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,0 C240,80 480,0 720,60 C960,120 1200,20 1440,50 L1440,80 L0,80 Z" fill="#fdebd0"/>
+  </svg>
+</div>
+
+<!-- FLAVOR RIVER -->
+<div id="flavor-river">
+  <div class="river-track">
+    <div class="river-item">Strawberry Bliss<span class="river-dot"></span></div>
+    <div class="river-item">Belgian Waffle<span class="river-dot"></span></div>
+    <div class="river-item">Nitro Cold Brew<span class="river-dot"></span></div>
+    <div class="river-item">Alphonso Mango<span class="river-dot"></span></div>
+    <div class="river-item">Pistachio Matcha<span class="river-dot"></span></div>
+    <div class="river-item">Triple Chocolate<span class="river-dot"></span></div>
+    <div class="river-item">Saffron Caramel<span class="river-dot"></span></div>
+    <div class="river-item">Raspberry Rose<span class="river-dot"></span></div>
+    <div class="river-item">Earl Grey Lavender<span class="river-dot"></span></div>
+    <div class="river-item">Affogato Royale<span class="river-dot"></span></div>
+    <div class="river-item">Strawberry Bliss<span class="river-dot"></span></div>
+    <div class="river-item">Belgian Waffle<span class="river-dot"></span></div>
+    <div class="river-item">Nitro Cold Brew<span class="river-dot"></span></div>
+    <div class="river-item">Alphonso Mango<span class="river-dot"></span></div>
+    <div class="river-item">Pistachio Matcha<span class="river-dot"></span></div>
+    <div class="river-item">Triple Chocolate<span class="river-dot"></span></div>
+    <div class="river-item">Saffron Caramel<span class="river-dot"></span></div>
+    <div class="river-item">Raspberry Rose<span class="river-dot"></span></div>
+    <div class="river-item">Earl Grey Lavender<span class="river-dot"></span></div>
+    <div class="river-item">Affogato Royale<span class="river-dot"></span></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="wrap">
+    <div class="stats-row">
+      <div class="stat-card sc-1">
+        <span class="stat-emoji">🍓</span>
+        <div class="stat-val"><span data-count="60">0</span><sup>+</sup></div>
+        <div class="stat-lab">Flavours</div>
+      </div>
+      <div class="stat-card sc-2">
+        <span class="stat-emoji">😊</span>
+        <div class="stat-val"><span data-count="50">0</span><sup>K</sup></div>
+        <div class="stat-lab">Happy Guests</div>
+      </div>
+      <div class="stat-card sc-3">
+        <span class="stat-emoji">🏆</span>
+        <div class="stat-val"><span data-count="14">0</span></div>
+        <div class="stat-lab">Awards</div>
+      </div>
+      <div class="stat-card sc-4">
+        <span class="stat-emoji">⭐</span>
+        <div class="stat-val">4.<span data-count="9">0</span></div>
+        <div class="stat-lab">Rating</div>
+      </div>
+      <div class="stat-card sc-5">
+        <span class="stat-emoji">🪑</span>
+        <div class="stat-val"><span data-count="120">0</span></div>
+        <div class="stat-lab">Café Seats</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-blob-bg"></div>
+  <div class="wrap">
+    <div class="about-layout">
+      <div class="about-img-blob">
+        <div class="aib-drip-trail adt1"></div>
+        <div class="aib-drip-trail adt2"></div>
+        <div class="aib-drip-trail adt3"></div>
+        <div class="aib-badge">Since<br/>2010</div>
+        <div class="aib-main">
+          <img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=900&q=90" alt="Our story"/>
+        </div>
+        <div class="aib-float">
+          <img src="https://images.unsplash.com/photo-1567206563114-c179706a56b4?w=400&q=90" alt="Flavours"/>
+        </div>
+      </div>
+      <div class="about-text">
+        <span class="handwrite">our sweet story…</span>
+        <h2 class="about-h">Crafted From a Family Recipe, Dripping with Love</h2>
+        <div class="about-rule"></div>
+        <p class="about-desc">Born in a small Lucknow kitchen in 2010, Drip started as a family obsession — three generations of ice cream lore, finally shared with the world. Every batch is still prepared by hand, every flavour still personally approved by our founder before it reaches your bowl.</p>
+        <p class="about-desc">We source Alphonso mangoes from Ratnagiri, Belgian chocolate from Bruges, pistachios from Iran, and single-origin coffee from Colombia — because great gelato begins before the churn.</p>
+        <div class="about-perks">
+          <div class="ap"><i class="fa-solid fa-leaf" style="color:var(--mint);"></i>100% Natural</div>
+          <div class="ap"><i class="fa-solid fa-seedling" style="color:var(--pist);"></i>Vegan Options</div>
+          <div class="ap"><i class="fa-solid fa-rotate-left" style="color:var(--mango);"></i>Fresh Daily</div>
+          <div class="ap"><i class="fa-solid fa-flask" style="color:var(--blue);"></i>Lab Tested</div>
+          <div class="ap"><i class="fa-solid fa-hand-sparkles" style="color:var(--straw);"></i>Handmade</div>
+          <div class="ap"><i class="fa-solid fa-award" style="color:var(--rasp);"></i>Award Winning</div>
+        </div>
+        <button class="btn-drip" onclick="location.href='#menu'"><i class="fa-solid fa-arrow-right"></i>See Our Menu</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Drip divider -->
+<div class="sec-drip-top" style="background:var(--cream);">
+  <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,40 C360,100 720,0 1080,60 C1260,90 1380,30 1440,10 L1440,80 L0,80 Z" fill="rgba(253,235,208,1)"/>
+  </svg>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;margin-bottom:2rem;">
+      <div>
+        <span class="section-kicker">handcrafted daily…</span>
+        <h2 class="section-h">Our Flavour <span style="color:var(--straw);">Menu</span></h2>
+        <div class="section-rule" style="background:linear-gradient(90deg,var(--straw),var(--mango));"></div>
+      </div>
+    </div>
+    <div class="filter-row">
+      <button class="fpill on" data-f="all"><i class="fa-solid fa-border-all"></i>All</button>
+      <button class="fpill" data-f="gelato"><i class="fa-solid fa-ice-cream"></i>Gelato</button>
+      <button class="fpill" data-f="sundae"><i class="fa-solid fa-bowl-food"></i>Sundaes</button>
+      <button class="fpill" data-f="coffee"><i class="fa-solid fa-mug-hot"></i>Coffee</button>
+      <button class="fpill" data-f="waffle"><i class="fa-solid fa-bread-slice"></i>Waffles</button>
+      <button class="fpill" data-f="vegan"><i class="fa-solid fa-seedling"></i>Vegan</button>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+</section>
+
+<!-- SPECIALS -->
+<section id="specials" style="margin-top:4rem;">
+  <div class="sec-drip-top" style="background:var(--butter);">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,20 C180,80 360,0 540,50 C720,100 900,10 1080,55 C1260,100 1380,20 1440,40 L1440,80 L0,80 Z" fill="#1a100a"/>
+    </svg>
+  </div>
+  <div class="swiper sp-swiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide sp-slide">
+        <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=1800&q=90');"></div>
+        <div class="sp-drip-overlay"></div>
+        <div class="sp-drip-cols">
+          <div class="sp-drip-col" style="background:var(--straw);"></div>
+          <div class="sp-drip-col" style="background:var(--mango);"></div>
+          <div class="sp-drip-col" style="background:var(--mint);"></div>
+          <div class="sp-drip-col" style="background:var(--blue);"></div>
+          <div class="sp-drip-col" style="background:var(--rasp);"></div>
+          <div class="sp-drip-col" style="background:var(--lemon);"></div>
+        </div>
+        <div class="sp-content">
+          <div class="sp-flavor-tag" style="background:rgba(255,92,122,.3);border:1.5px solid rgba(255,92,122,.5);">
+            <div class="sp-flavor-dot" style="background:var(--straw);"></div>Weekend Signature
+          </div>
+          <h2 class="sp-title">The Galaxy<br/>Sundae</h2>
+          <p class="sp-desc">Five legendary scoops, four house-made sauces, toasted meringue kisses and a shimmer of 24K edible gold — composed for two who deserve it.</p>
+          <div class="sp-price-row">
+            <span class="sp-price">₹599</span>
+            <span class="sp-old">₹849</span>
+            <span class="sp-save" style="background:rgba(255,92,122,.4);">Save ₹250</span>
+          </div>
+          <div class="sp-btns">
+            <button class="sp-btn-p"><i class="fa-solid fa-bag-shopping"></i>Order Now</button>
+            <button class="sp-btn-g"><i class="fa-regular fa-heart"></i>Save for Later</button>
+          </div>
+        </div>
+        <div class="sp-nav-p" id="spPrev"><i class="fa-solid fa-arrow-left fa-sm"></i></div>
+        <div class="sp-nav-n" id="spNext"><i class="fa-solid fa-arrow-right fa-sm"></i></div>
+        <div class="swiper-pagination sp-pag" id="spPag" style="position:absolute;left:8%;bottom:2rem;width:auto;"></div>
+      </div>
+      <div class="swiper-slide sp-slide">
+        <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=1800&q=90');"></div>
+        <div class="sp-drip-overlay"></div>
+        <div class="sp-drip-cols">
+          <div class="sp-drip-col" style="background:var(--choco);"></div>
+          <div class="sp-drip-col" style="background:var(--choco2);"></div>
+          <div class="sp-drip-col" style="background:var(--mango);"></div>
+          <div class="sp-drip-col" style="background:var(--straw);"></div>
+          <div class="sp-drip-col" style="background:var(--choco);"></div>
+          <div class="sp-drip-col" style="background:var(--choco2);"></div>
+        </div>
+        <div class="sp-content">
+          <div class="sp-flavor-tag" style="background:rgba(139,90,43,.4);border:1.5px solid rgba(139,90,43,.6);">
+            <div class="sp-flavor-dot" style="background:var(--mango);"></div>Coffee Selection
+          </div>
+          <h2 class="sp-title">Cold Brew<br/>Affogato Flight</h2>
+          <p class="sp-desc">Three mini affogatos — Colombian ristretto, Ethiopian cold brew and a rose-infused single origin. Three drips, infinite depth.</p>
+          <div class="sp-price-row">
+            <span class="sp-price">₹449</span>
+            <span class="sp-old">₹620</span>
+            <span class="sp-save" style="background:rgba(255,159,67,.4);">Save ₹171</span>
+          </div>
+          <div class="sp-btns">
+            <button class="sp-btn-p"><i class="fa-solid fa-bag-shopping"></i>Order Now</button>
+            <button class="sp-btn-g"><i class="fa-solid fa-share-nodes"></i>Share</button>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide sp-slide">
+        <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=1800&q=90');"></div>
+        <div class="sp-drip-overlay"></div>
+        <div class="sp-drip-cols">
+          <div class="sp-drip-col" style="background:var(--lemon);"></div>
+          <div class="sp-drip-col" style="background:var(--mango);"></div>
+          <div class="sp-drip-col" style="background:var(--lemon2);"></div>
+          <div class="sp-drip-col" style="background:var(--mango2);"></div>
+          <div class="sp-drip-col" style="background:var(--lemon);"></div>
+          <div class="sp-drip-col" style="background:var(--mango);"></div>
+        </div>
+        <div class="sp-content">
+          <div class="sp-flavor-tag" style="background:rgba(249,202,36,.25);border:1.5px solid rgba(249,202,36,.5);">
+            <div class="sp-flavor-dot" style="background:var(--lemon);"></div>Chef's Table
+          </div>
+          <h2 class="sp-title">Golden Waffle<br/>Royale</h2>
+          <p class="sp-desc">Belgian waffle crowned with 24K edible gold leaf, truffle gelato and hand-drawn caramel ribbons. The most dramatic plate we make.</p>
+          <div class="sp-price-row">
+            <span class="sp-price">₹699</span>
+            <span class="sp-old">₹950</span>
+            <span class="sp-save" style="background:rgba(249,202,36,.3);">Save ₹251</span>
+          </div>
+          <div class="sp-btns">
+            <button class="sp-btn-p"><i class="fa-solid fa-bag-shopping"></i>Order Now</button>
+            <button class="sp-btn-g"><i class="fa-regular fa-calendar"></i>Reserve Table</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sp-nav-p" id="spPrev"><i class="fa-solid fa-arrow-left fa-sm"></i></div>
+    <div class="sp-nav-n" id="spNext"><i class="fa-solid fa-arrow-right fa-sm"></i></div>
+    <div class="swiper-pagination sp-pag" id="spPag" style="position:absolute;left:8%;bottom:2rem;width:auto;"></div>
+  </div>
+</section>
+
+<!-- FLAVOR CHAPTERS -->
+<section id="flavors">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:3.5rem;">
+      <span class="section-kicker" style="display:block;text-align:center;">our greatest hits…</span>
+      <h2 class="section-h">Signature <span style="color:var(--mint);">Flavours</span></h2>
+      <div class="section-rule" style="background:linear-gradient(90deg,var(--mint),var(--blue));margin:1rem auto 0;"></div>
+    </div>
+    <div class="flavor-chapters-grid" id="flavourGrid">
+
+      <!-- Strawberry -->
+      <div class="flav-card">
+        <div class="flav-card-img">
+          <img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=700&q=90" alt="Strawberry"/>
+          <div class="flav-card-drip">
+            <svg viewBox="0 0 300 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+              <path d="M0,0 C30,40 60,10 90,35 C120,60 150,5 180,38 C210,65 240,15 270,30 C285,38 295,20 300,25 L300,50 L0,50 Z" fill="white"/>
+            </svg>
+          </div>
+        </div>
+        <div class="flav-card-body">
+          <div class="fc-label" style="background:var(--straw);"><div class="fc-dot"></div>Strawberry</div>
+          <div class="fc-name">Strawberry &amp; Wild Rose</div>
+          <div class="fc-origin"><i class="fa-solid fa-location-dot"></i>Mahabaleshwar, Maharashtra</div>
+          <p class="fc-desc">Macerated overnight with foraged rose petals, slow-churned into dense pozzetti. Bright, floral and nothing like anything you've tasted.</p>
+          <div class="fc-notes">
+            <span class="fc-note" style="color:var(--straw);border-color:var(--straw);background:rgba(255,92,122,.06);">Fresh Strawberry</span>
+            <span class="fc-note" style="color:var(--rasp);border-color:var(--rasp);background:rgba(192,57,43,.06);">Wild Rose</span>
+            <span class="fc-note" style="color:var(--mango);border-color:var(--mango);background:rgba(255,159,67,.06);">Light Acidity</span>
+          </div>
+          <div class="fc-price-row">
+            <div class="fc-price">₹149</div>
+            <button class="fc-add-btn" style="background:linear-gradient(135deg,var(--straw),var(--rasp));box-shadow:0 6px 18px rgba(255,92,122,.3);" onclick="this.innerHTML='<i class=&quot;fa-solid fa-check&quot;></i> Added!';setTimeout(()=>this.innerHTML='<i class=&quot;fa-solid fa-plus&quot;></i> Add',1400)">
+              <i class="fa-solid fa-plus"></i> Add
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pistachio -->
+      <div class="flav-card">
+        <div class="flav-card-img">
+          <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=700&q=90" alt="Pistachio"/>
+          <div class="flav-card-drip">
+            <svg viewBox="0 0 300 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+              <path d="M0,15 C40,55 80,5 120,40 C160,70 200,10 240,35 C265,50 285,20 300,10 L300,50 L0,50 Z" fill="white"/>
+            </svg>
+          </div>
+        </div>
+        <div class="flav-card-body">
+          <div class="fc-label" style="background:var(--pist);"><div class="fc-dot"></div>Pistachio</div>
+          <div class="fc-name">Pistachio Matcha Fusion</div>
+          <div class="fc-origin"><i class="fa-solid fa-location-dot"></i>Rayen, Iran × Uji, Japan</div>
+          <p class="fc-desc">Iranian pistachios folded with ceremonial-grade Uji matcha — nutty, grassy, subtly sweet. A flavour of extraordinary depth and clean finish.</p>
+          <div class="fc-notes">
+            <span class="fc-note" style="color:var(--pist);border-color:var(--pist);background:rgba(106,176,76,.06);">Roasted Pistachio</span>
+            <span class="fc-note" style="color:var(--mint);border-color:var(--mint);background:rgba(38,181,132,.06);">Umami Matcha</span>
+            <span class="fc-note" style="color:var(--sage-col,#5a7a5c);border-color:#5a7a5c;background:rgba(90,122,92,.06);">Clean Finish</span>
+          </div>
+          <div class="fc-price-row">
+            <div class="fc-price">₹199</div>
+            <button class="fc-add-btn" style="background:linear-gradient(135deg,var(--pist),var(--mint));box-shadow:0 6px 18px rgba(106,176,76,.3);" onclick="this.innerHTML='<i class=&quot;fa-solid fa-check&quot;></i> Added!';setTimeout(()=>this.innerHTML='<i class=&quot;fa-solid fa-plus&quot;></i> Add',1400)">
+              <i class="fa-solid fa-plus"></i> Add
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Caramel -->
+      <div class="flav-card">
+        <div class="flav-card-img">
+          <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=700&q=90" alt="Caramel"/>
+          <div class="flav-card-drip">
+            <svg viewBox="0 0 300 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+              <path d="M0,25 C50,65 100,5 150,45 C200,80 250,10 300,30 L300,50 L0,50 Z" fill="white"/>
+            </svg>
+          </div>
+        </div>
+        <div class="flav-card-body">
+          <div class="fc-label" style="background:var(--mango);"><div class="fc-dot"></div>Caramel</div>
+          <div class="fc-name">Saffron Burnt Caramel</div>
+          <div class="fc-origin"><i class="fa-solid fa-location-dot"></i>Pampore, Kashmir</div>
+          <p class="fc-desc">Grade-A Kashmiri kesar steeped for 48 hours, folded into dark-caramelised cream. Honeyed, complex, and warm — a scoop that lingers.</p>
+          <div class="fc-notes">
+            <span class="fc-note" style="color:var(--mango);border-color:var(--mango);background:rgba(255,159,67,.06);">Saffron</span>
+            <span class="fc-note" style="color:var(--mocha);border-color:var(--mocha);background:rgba(139,90,43,.06);">Burnt Caramel</span>
+            <span class="fc-note" style="color:var(--lemon);border-color:var(--lemon);background:rgba(249,202,36,.08);">Honey Notes</span>
+          </div>
+          <div class="fc-price-row">
+            <div class="fc-price">₹229</div>
+            <button class="fc-add-btn" style="background:linear-gradient(135deg,var(--mango),var(--lemon));box-shadow:0 6px 18px rgba(255,159,67,.3);" onclick="this.innerHTML='<i class=&quot;fa-solid fa-check&quot;></i> Added!';setTimeout(()=>this.innerHTML='<i class=&quot;fa-solid fa-plus&quot;></i> Add',1400)">
+              <i class="fa-solid fa-plus"></i> Add
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INTERIOR -->
+<section id="interior">
+  <div class="int-blob"></div>
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <span class="section-kicker" style="display:block;text-align:center;">where the magic melts…</span>
+      <h2 class="section-h">Our <span style="color:var(--blue);">Spaces</span></h2>
+      <div class="section-rule" style="background:linear-gradient(90deg,var(--blue),var(--mint));margin:1rem auto 0;"></div>
+    </div>
+    <div class="zone-tabs" style="justify-content:center;">
+      <button class="ztab on" data-z="main"><i class="fa-solid fa-star"></i>Grand Hall</button>
+      <button class="ztab" data-z="lounge"><i class="fa-solid fa-couch"></i>Lounge</button>
+      <button class="ztab" data-z="terrace"><i class="fa-solid fa-sun"></i>Terrace</button>
+      <button class="ztab" data-z="private"><i class="fa-solid fa-lock"></i>Private Suite</button>
+      <button class="ztab" data-z="bar"><i class="fa-solid fa-mug-hot"></i>Brew Bar</button>
+    </div>
+    <div class="zone-panel on" id="zp-main">
+      <div class="zp-img">
+        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1100&q=90" alt="Grand Hall"/>
+        <div class="zp-badge" style="background:linear-gradient(135deg,var(--straw),var(--mango));"><i class="fa-solid fa-star"></i> Most Loved</div>
+        <div class="zp-cap"><div class="zp-cap-num" style="color:var(--straw);">60</div><div class="zp-cap-lab">Seats</div></div>
+      </div>
+      <div class="zp-text">
+        <span class="section-kicker">ground floor ·</span>
+        <div class="zp-h">The Grand Hall</div>
+        <p class="zp-body">Vaulted ceilings, Edison chandeliers and hand-painted murals — our most beloved space where first-timers fall in love and regulars feel at home. The warm, luminous heart of Drip.</p>
+        <ul class="zp-feats">
+          <li class="zp-feat"><i class="fa-solid fa-snowflake" style="color:var(--blue);"></i>Zoned air-conditioning throughout</li>
+          <li class="zp-feat"><i class="fa-solid fa-wifi" style="color:var(--mint);"></i>300 Mbps free Wi-Fi</li>
+          <li class="zp-feat"><i class="fa-solid fa-plug" style="color:var(--mango);"></i>Power outlets at every table</li>
+          <li class="zp-feat"><i class="fa-solid fa-music" style="color:var(--straw);"></i>Curated ambient sound design</li>
+          <li class="zp-feat"><i class="fa-solid fa-wheelchair" style="color:var(--pist);"></i>Fully wheelchair accessible</li>
+        </ul>
+        <button class="btn-drip" onclick="location.href='#contact'"><i class="fa-solid fa-calendar-plus"></i>Reserve a Table</button>
+      </div>
+    </div>
+    <div class="zone-panel" id="zp-lounge">
+      <div class="zp-img"><img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=1100&q=90" alt="Lounge"/><div class="zp-badge" style="background:linear-gradient(135deg,var(--blue),var(--rasp));"><i class="fa-solid fa-couch"></i>Relaxed</div><div class="zp-cap"><div class="zp-cap-num" style="color:var(--blue);">30</div><div class="zp-cap-lab">Seats</div></div></div>
+      <div class="zp-text"><span class="section-kicker">first floor ·</span><div class="zp-h">Velvet Lounge</div><p class="zp-body">Deep velvet sofas, amber candlelight and curated bookshelves. The Lounge is for those who believe the best meals are the ones that last three hours.</p><ul class="zp-feats"><li class="zp-feat"><i class="fa-solid fa-couch" style="color:var(--blue);"></i>Plush velvet sofas &amp; armchairs</li><li class="zp-feat"><i class="fa-solid fa-book-open" style="color:var(--mint);"></i>Book &amp; magazine corner</li><li class="zp-feat"><i class="fa-solid fa-fire-flame-curved" style="color:var(--straw);"></i>Decorative fireplace (winter)</li><li class="zp-feat"><i class="fa-solid fa-baby" style="color:var(--mango);"></i>Kids activity corner</li></ul><button class="btn-drip" onclick="location.href='#contact'"><i class="fa-solid fa-calendar-plus"></i>Reserve a Sofa</button></div>
+    </div>
+    <div class="zone-panel" id="zp-terrace">
+      <div class="zp-img"><img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=1100&q=90" alt="Terrace"/><div class="zp-badge" style="background:linear-gradient(135deg,var(--mint),var(--pist));"><i class="fa-solid fa-sun"></i>Alfresco</div><div class="zp-cap"><div class="zp-cap-num" style="color:var(--mint);">40</div><div class="zp-cap-lab">Seats</div></div></div>
+      <div class="zp-text"><span class="section-kicker">rooftop ·</span><div class="zp-h">Garden Terrace</div><p class="zp-body">Fairy lights, the scent of night-blooming jasmine, the Lucknow skyline at golden hour. The Terrace turns every evening visit into a ritual worth repeating.</p><ul class="zp-feats"><li class="zp-feat"><i class="fa-solid fa-dog" style="color:var(--mint);"></i>Pet friendly — water bowls provided</li><li class="zp-feat"><i class="fa-solid fa-guitar" style="color:var(--straw);"></i>Live acoustic sets weekends</li><li class="zp-feat"><i class="fa-solid fa-fan" style="color:var(--blue);"></i>Retractable awning &amp; ceiling fans</li><li class="zp-feat"><i class="fa-solid fa-star" style="color:var(--mango);"></i>Stargazing nights monthly</li></ul><button class="btn-drip" onclick="location.href='#contact'"><i class="fa-solid fa-calendar-plus"></i>Book the Terrace</button></div>
+    </div>
+    <div class="zone-panel" id="zp-private">
+      <div class="zp-img"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1100&q=90" alt="Private"/><div class="zp-badge" style="background:linear-gradient(135deg,var(--mango),var(--lemon));color:var(--espresso);"><i class="fa-solid fa-crown"></i>Premium</div><div class="zp-cap"><div class="zp-cap-num" style="color:var(--mango);">18</div><div class="zp-cap-lab">Seats</div></div></div>
+      <div class="zp-text"><span class="section-kicker">east wing · exclusive ·</span><div class="zp-h">Private Suite</div><p class="zp-body">Fully bookable room with custom gelato welcome platter, dedicated server and photography add-on. For celebrations that deserve to be remembered precisely as they happened.</p><ul class="zp-feats"><li class="zp-feat"><i class="fa-solid fa-lock" style="color:var(--mango);"></i>Fully private, bookable by the hour</li><li class="zp-feat"><i class="fa-solid fa-champagne-glasses" style="color:var(--straw);"></i>Custom welcome gelato platter</li><li class="zp-feat"><i class="fa-solid fa-camera" style="color:var(--blue);"></i>In-house photography add-on</li><li class="zp-feat"><i class="fa-solid fa-gifts" style="color:var(--mint);"></i>Décor &amp; balloon packages</li></ul><button class="btn-drip" onclick="location.href='#contact'"><i class="fa-solid fa-envelope"></i>Enquire Now</button></div>
+    </div>
+    <div class="zone-panel" id="zp-bar">
+      <div class="zp-img"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1100&q=90" alt="Bar"/><div class="zp-badge" style="background:linear-gradient(135deg,var(--choco),var(--choco2));"><i class="fa-solid fa-mug-hot"></i>Open Kitchen</div><div class="zp-cap"><div class="zp-cap-num" style="color:var(--mango);">12</div><div class="zp-cap-lab">Stools</div></div></div>
+      <div class="zp-text"><span class="section-kicker">front counter ·</span><div class="zp-h">The Brew Bar</div><p class="zp-body">Perch at the open counter and watch our baristas work — espresso pulled at precise pressure, milk steamed to texture, gelato plated with care. The most theatrical seat in the house.</p><ul class="zp-feats"><li class="zp-feat"><i class="fa-solid fa-eye" style="color:var(--mango);"></i>Full open-kitchen live view</li><li class="zp-feat"><i class="fa-solid fa-bolt" style="color:var(--straw);"></i>Fastest service in the café</li><li class="zp-feat"><i class="fa-solid fa-plug" style="color:var(--blue);"></i>Laptop-ready bar counter</li><li class="zp-feat"><i class="fa-solid fa-jar" style="color:var(--mint);"></i>Retail single-origin coffee beans</li></ul><button class="btn-drip" onclick="location.href='#contact'"><i class="fa-solid fa-calendar-plus"></i>Reserve a Stool</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="rev-header">
+      <div>
+        <span class="section-kicker">what people say…</span>
+        <h2 class="section-h">Sweet <span style="color:var(--rasp);">Words</span></h2>
+        <div class="section-rule" style="background:linear-gradient(90deg,var(--rasp),var(--straw));"></div>
+      </div>
+      <div class="rating-chip">
+        <div>
+          <div class="rc-num" style="background:linear-gradient(135deg,var(--straw),var(--mango));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">4.9</div>
+          <div class="rc-stars">★★★★★</div>
+        </div>
+        <div style="width:1px;height:40px;background:var(--drip);"></div>
+        <div>
+          <div style="font-size:.85rem;font-weight:800;color:var(--espresso);">50K+</div>
+          <div class="rc-count">Reviews</div>
+        </div>
+      </div>
+    </div>
+    <div class="swiper rev-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide" style="height:auto;"><div class="rev-card"><div class="rev-q">★★★★★</div><div class="rev-stars">★★★★★</div><p class="rev-body">The Pistachio Matcha gelato is unlike anything I've had across three countries. Floral, nutty, perfectly balanced — I almost cried at the first spoonful. Drip is pure magic.</p><div class="rev-person"><img src="https://i.pravatar.cc/100?img=47" class="rev-avatar" alt=""/><div><div class="rev-name">Priya Sharma</div><div class="rev-role">Food Blogger</div></div></div></div></div>
+        <div class="swiper-slide" style="height:auto;"><div class="rev-card"><div class="rev-q">★★★★★</div><div class="rev-stars">★★★★★</div><p class="rev-body">We celebrated our anniversary here and the staff made it absolutely magical. The affogato is life-changing. The staff remembered our names on the second visit — true hospitality.</p><div class="rev-person"><img src="https://i.pravatar.cc/100?img=12" class="rev-avatar" alt=""/><div><div class="rev-name">Rahul Verma</div><div class="rev-role">Regular Guest</div></div></div></div></div>
+        <div class="swiper-slide" style="height:auto;"><div class="rev-card"><div class="rev-q">★★★★★</div><div class="rev-stars">★★★★★</div><p class="rev-body">As a pastry chef with exacting standards, the fresh ingredients here are exceptional. The Alphonso Mango Sorbet is the finest I've tasted in North India. Drip gets artisan right.</p><div class="rev-person"><img src="https://i.pravatar.cc/100?img=28" class="rev-avatar" alt=""/><div><div class="rev-name">Chef Arjun Mehta</div><div class="rev-role">Pastry Chef · Verified</div></div></div></div></div>
+        <div class="swiper-slide" style="height:auto;"><div class="rev-card"><div class="rev-q">★★★★★</div><div class="rev-stars">★★★★★</div><p class="rev-body">The Saffron Caramel is the most sophisticated gelato I have ever tasted. The 48-hour steep is evident in every spoonful. Drip thinks about flavour the way a sommelier thinks about wine.</p><div class="rev-person"><img src="https://i.pravatar.cc/100?img=60" class="rev-avatar" alt=""/><div><div class="rev-name">Vikram Tiwari</div><div class="rev-role">Food Critic</div></div></div></div></div>
+      </div>
+      <div class="swiper-pagination rev-pag mt-3" id="revPag" style="position:relative;bottom:auto;margin-top:2rem;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="wrap" style="margin-bottom:2rem;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem;">
+      <div>
+        <span class="section-kicker">@dripgelateria</span>
+        <h2 class="section-h">The <span style="color:var(--mango);">Feed</span></h2>
+      </div>
+      <a href="#" style="font-size:.78rem;font-weight:800;color:var(--straw);display:flex;align-items:center;gap:.4rem;text-decoration:underline;text-underline-offset:3px;">View All <i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </div>
+  <div style="padding:0 4rem;">
+    <div class="gal-grid">
+      <div class="gi ga"><img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=900&q=90" alt=""/><div class="gi-over"><div class="gi-name">Strawberry Bliss</div><div class="gi-sub">Seasonal Special</div></div><div class="gi-ico"><i class="fa-brands fa-instagram"></i></div></div>
+      <div class="gi gb"><img src="https://images.unsplash.com/photo-1580915411954-282cb1b0d780?w=700&q=90" alt=""/><div class="gi-over"><div class="gi-name">Triple Chocolate</div></div><div class="gi-ico"><i class="fa-brands fa-instagram"></i></div></div>
+      <div class="gi gc"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=90" alt=""/><div class="gi-over"><div class="gi-name">Cold Brew</div></div><div class="gi-ico"><i class="fa-brands fa-instagram"></i></div></div>
+      <div class="gi gd"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=90" alt=""/><div class="gi-over"><div class="gi-name">Galaxy Sundae</div></div><div class="gi-ico"><i class="fa-brands fa-instagram"></i></div></div>
+      <div class="gi ge"><img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=700&q=90" alt=""/><div class="gi-over"><div class="gi-name">Mango Sorbet</div></div><div class="gi-ico"><i class="fa-brands fa-instagram"></i></div></div>
+      <div class="gi gf"><img src="https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=900&q=90" alt=""/><div class="gi-over"><div class="gi-name">Waffle Royale</div></div><div class="gi-ico"><i class="fa-brands fa-instagram"></i></div></div>
+      <div class="gi gg"><img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=900&q=90" alt=""/><div class="gi-over"><div class="gi-name">Pistachio Matcha</div></div><div class="gi-ico"><i class="fa-brands fa-instagram"></i></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER PARALLAX -->
+<section id="offer">
+  <div class="wrap offer-inner">
+    <span class="offer-handwrite">this weekend only…</span>
+    <h2 class="offer-h">Buy 2<br/>Get 1 Free</h2>
+    <p class="offer-sub">Every Friday &amp; Saturday from 4 PM — order any two scoops and receive a third on us. No code, no conditions. Just come and drip.</p>
+    <div class="offer-chips">
+      <div class="offer-chip"><i class="fa-solid fa-calendar-days"></i>Every Fri &amp; Sat</div>
+      <div class="offer-chip"><i class="fa-solid fa-clock"></i>4 PM to Close</div>
+      <div class="offer-chip"><i class="fa-solid fa-location-dot"></i>All Locations</div>
+      <div class="offer-chip"><i class="fa-solid fa-check"></i>All Flavours</div>
+    </div>
+    <button class="btn-offer" onclick="location.href='#contact'"><i class="fa-solid fa-arrow-right"></i>Find Us</button>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="nl-blob-bg"></div>
+  <div class="wrap">
+    <div class="nl-card">
+      <div class="nl-drip-top">
+        <div class="nl-drip-seg" style="background:var(--straw);"></div>
+        <div class="nl-drip-seg" style="background:var(--mango);"></div>
+        <div class="nl-drip-seg" style="background:var(--mint);"></div>
+        <div class="nl-drip-seg" style="background:var(--blue);"></div>
+        <div class="nl-drip-seg" style="background:var(--rasp);"></div>
+        <div class="nl-drip-seg" style="background:var(--lemon);"></div>
+        <div class="nl-drip-seg" style="background:var(--pist);"></div>
+        <div class="nl-drip-seg" style="background:var(--straw);"></div>
+      </div>
+      <span class="nl-emoji">🍦</span>
+      <h2 class="nl-h">Get the Sweetest<br/>News First</h2>
+      <p class="nl-sub">Join 15,000+ gelato lovers — new flavour alerts, weekly specials, event invitations and a welcome treat just for signing up.</p>
+      <div class="nl-form">
+        <input class="nl-inp" type="email" placeholder="your@email.com" id="nlInp"/>
+        <button class="nl-btn" id="nlBtn"><i class="fa-solid fa-paper-plane"></i>Subscribe</button>
+      </div>
+      <div class="nl-note"><i class="fa-solid fa-lock"></i>No spam, ever · Unsubscribe anytime · Welcome scoop on signup</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <span class="section-kicker" style="display:block;text-align:center;">come find us…</span>
+      <h2 class="section-h">Visit <span style="color:var(--straw);">Drip</span></h2>
+      <div class="section-rule" style="background:linear-gradient(90deg,var(--straw),var(--mango));margin:1rem auto 0;"></div>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <div class="c-card">
+          <div class="c-row"><div class="c-icon" style="background:linear-gradient(135deg,var(--straw),var(--rasp));"><i class="fa-solid fa-location-dot"></i></div><div><div class="c-label">Address</div><div class="c-val">12, Hazratganj Main Road<br/>Lucknow, UP – 226001</div></div></div>
+          <div class="c-row"><div class="c-icon" style="background:linear-gradient(135deg,var(--mango),var(--lemon));"><i class="fa-solid fa-phone"></i></div><div><div class="c-label">Phone</div><div class="c-val"><a href="tel:+911234567890">+91 12345 67890</a></div></div></div>
+          <div class="c-row"><div class="c-icon" style="background:linear-gradient(135deg,var(--blue),var(--rasp));"><i class="fa-solid fa-envelope"></i></div><div><div class="c-label">Email</div><div class="c-val"><a href="mailto:hello@dripgelato.in">hello@dripgelato.in</a></div></div></div>
+          <div class="c-row" style="border-bottom:none;"><div class="c-icon" style="background:linear-gradient(135deg,var(--mint),var(--pist));"><i class="fa-brands fa-instagram"></i></div><div><div class="c-label">Follow</div><div class="c-val">
+            <div class="soc-row">
+              <a href="#" class="soc"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" class="soc" style="background:linear-gradient(135deg,var(--blue-lt,#eef),var(--butter));"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="#" class="soc"><i class="fa-brands fa-youtube"></i></a>
+              <a href="#" class="soc"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+          </div></div></div>
+        </div>
+        <div class="c-card" style="margin-top:1.5rem;">
+          <div class="c-label" style="margin-bottom:.8rem;color:var(--straw);"><i class="fa-solid fa-clock me-1"></i>Opening Hours</div>
+          <div class="h-row"><span class="h-day">Mon – Thu</span><div style="display:flex;align-items:center;gap:.5rem;"><span class="h-time">11 AM – 10:30 PM</span><span class="h-badge">Open</span></div></div>
+          <div class="h-row"><span class="h-day"><i class="fa-solid fa-music fa-xs" style="color:var(--straw);margin-right:.3rem;"></i>Friday</span><div style="display:flex;align-items:center;gap:.5rem;"><span class="h-time sp">10 AM – 11:30 PM</span><span class="h-badge">Live Music</span></div></div>
+          <div class="h-row"><span class="h-day"><i class="fa-solid fa-music fa-xs" style="color:var(--straw);margin-right:.3rem;"></i>Saturday</span><div style="display:flex;align-items:center;gap:.5rem;"><span class="h-time sp">10 AM – 11:30 PM</span><span class="h-badge">Live Music</span></div></div>
+          <div class="h-row" style="border-bottom:none;"><span class="h-day">Sunday</span><div style="display:flex;align-items:center;gap:.5rem;"><span class="h-time">10 AM – 10 PM</span><span class="h-badge">Open</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="map-card">
+          <div class="map-dots"></div>
+          <div class="map-inner">
+            <span class="map-pin-big">📍</span>
+            <div class="map-name">Drip Hazratganj</div>
+            <div class="map-addr">12, Hazratganj Main Road<br/>Lucknow, Uttar Pradesh 226001</div>
+            <button class="btn-drip" onclick="window.open('https://maps.google.com','_blank')"><i class="fa-solid fa-diamond-turn-right"></i>Get Directions</button>
+            <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.2rem;flex-wrap:wrap;">
+              <span style="font-size:.72rem;font-weight:700;color:var(--mocha);"><i class="fa-solid fa-car" style="color:var(--straw);margin-right:.3rem;"></i>Valet</span>
+              <span style="font-size:.72rem;font-weight:700;color:var(--mocha);"><i class="fa-solid fa-wifi" style="color:var(--mint);margin-right:.3rem;"></i>Free Wi-Fi</span>
+              <span style="font-size:.72rem;font-weight:700;color:var(--mocha);"><i class="fa-solid fa-wheelchair" style="color:var(--blue);margin-right:.3rem;"></i>Accessible</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <span class="foot-logo">Drip.</span>
+        <p class="foot-about">Artisan gelato, specialty coffee and café experiences made with obsessive love since 2010. Lucknow's most drip-worthy gelateria.</p>
+        <div class="foot-socials">
+          <a href="#" class="f-soc"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="f-soc"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="f-soc"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="f-soc"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-head">Menu</div>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Gelato &amp; Sorbet</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Sundaes</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Waffles &amp; Crêpes</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Coffee &amp; Drinks</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Seasonal Specials</a>
+      </div>
+      <div>
+        <div class="foot-head">Visit</div>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Our Spaces</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Private Events</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Reserve</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Gallery</a>
+      </div>
+      <div>
+        <div class="foot-head">Company</div>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Our Story</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Careers</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Franchise</a>
+        <a href="#" class="foot-link"><i class="fa-solid fa-chevron-right"></i>Press</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2025 <span>Drip Gelateria</span>. Made with <i class="fa-solid fa-heart" style="color:var(--straw);font-size:.75rem;"></i> in Lucknow, India.</div>
+      <div class="foot-pay">
+        <i class="fa-brands fa-cc-visa"></i>
+        <i class="fa-brands fa-cc-mastercard"></i>
+        <i class="fa-brands fa-cc-paypal"></i>
+        <i class="fa-brands fa-google-pay"></i>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="btt" title="Back to top"><i class="fa-solid fa-arrow-up fa-sm"></i></button>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+<script>
+/* Preloader */
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('pl').classList.add('out'),2600));
+
+/* Cursor */
+const cur=document.getElementById('cur');
+let cx=0,cy=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY;});
+(function animCur(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(animCur);})();
+document.querySelectorAll('a,button,.mcard,.gi,.ztab,.fpill,.flav-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+});
+
+/* Navbar */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('stuck',window.scrollY>70);
+  document.getElementById('btt').classList.toggle('show',window.scrollY>500);
+});
+document.getElementById('btt').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+/* Menu data */
+const products=[
+  {f:'gelato',n:'Strawberry &amp; Wild Rose',d:'Mahabaleshwar sun-ripened strawberries with foraged rose petals.',img:'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=600&q=90',p:'₹149',old:'',rib:'Bestseller',rc:'var(--straw)',ac:'linear-gradient(135deg,var(--straw),var(--rasp))',stars:5,cnt:248},
+  {f:'gelato',n:'Triple Belgian Chocolate',d:'Dark, milk &amp; white couverture swirled into a dense pozzetti.',img:'https://images.unsplash.com/photo-1580915411954-282cb1b0d780?w=600&q=90',p:'₹179',old:'₹199',rib:'🔥 Hot',rc:'var(--choco)',ac:'linear-gradient(135deg,var(--choco),var(--choco2))',stars:5,cnt:312},
+  {f:'vegan gelato',n:'Alphonso Mango Sorbet',d:'100% real Ratnagiri Alphonso pulp — no cream, no compromise.',img:'https://images.unsplash.com/photo-1488900128323-21503983a07e?w=600&q=90',p:'₹159',old:'',rib:'🌿 Vegan',rc:'var(--mint)',ac:'linear-gradient(135deg,var(--mint),var(--pist))',stars:4,cnt:189},
+  {f:'gelato',n:'Pistachio Matcha Fusion',d:'Iranian pistachios × Uji ceremonial matcha — extraordinary depth.',img:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=90',p:'₹199',old:'₹229',rib:'✨ New',rc:'var(--pist)',ac:'linear-gradient(135deg,var(--pist),var(--mint))',stars:5,cnt:97},
+  {f:'sundae',n:'Galaxy Sundae',d:'5 scoops, 4 sauces, edible gold &amp; a cherry on top.',img:'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=90',p:'₹599',old:'₹849',rib:'🏆 Signature',rc:'var(--blue)',ac:'linear-gradient(135deg,var(--blue),var(--rasp))',stars:5,cnt:176},
+  {f:'coffee',n:'Nitro Cold Brew',d:'18-hour cold steep, nitrogen-infused cascade pour.',img:'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=90',p:'₹219',old:'',rib:'❄️ Cold',rc:'var(--blue)',ac:'linear-gradient(135deg,var(--espresso),var(--mocha))',stars:5,cnt:280},
+  {f:'coffee',n:'Affogato Royale',d:'Two scoops vanilla pozzetti drowned in a ristretto shot.',img:'https://images.unsplash.com/photo-1573227895018-51a503e94e45?w=600&q=90',p:'₹249',old:'',rib:'☕ Classic',rc:'var(--mocha)',ac:'linear-gradient(135deg,var(--choco2),var(--mango))',stars:5,cnt:156},
+  {f:'waffle',n:'Belgian Dream Waffle',d:'Crispy golden waffle, two scoops &amp; maple syrup.',img:'https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=600&q=90',p:'₹349',old:'₹399',rib:'🧇 Classic',rc:'var(--mango)',ac:'linear-gradient(135deg,var(--mango),var(--lemon))',stars:5,cnt:340},
+];
+
+function buildMenu(f){
+  const g=document.getElementById('menuGrid');
+  const data=f==='all'?products:products.filter(p=>p.f.includes(f));
+  g.innerHTML=data.map(p=>`
+    <div class="mcard">
+      <div class="mcard-img">
+        <img src="${p.img}" alt="${p.n}" loading="lazy"/>
+        <div class="mcard-drip" style="background:${p.rc};"></div>
+        <div class="mcard-drip-drops">
+          <div class="mdd" style="height:22px;background:${p.rc};animation-delay:0s;"></div>
+          <div class="mdd" style="height:32px;background:${p.rc};animation-delay:.8s;"></div>
+          <div class="mdd" style="height:18px;background:${p.rc};animation-delay:1.6s;"></div>
+        </div>
+        <div class="mcard-ribbon" style="background:${p.rc};">${p.rib}</div>
+        <div class="mcard-fav" onclick="this.classList.toggle('on');this.innerHTML=this.classList.contains('on')?'<i class=\\'fa-solid fa-heart\\'></i>':'<i class=\\'fa-regular fa-heart\\'></i>'">
+          <i class="fa-regular fa-heart"></i>
+        </div>
+      </div>
+      <div class="mcard-body">
+        <div class="mcard-flavor" style="color:${p.rc};">${p.f}</div>
+        <div class="mcard-name">${p.n}</div>
+        <p class="mcard-desc">${p.d}</p>
+        <div class="mcard-stars">
+          ${'★'.repeat(p.stars)}${'☆'.repeat(5-p.stars)}
+          <span>(${p.cnt})</span>
+        </div>
+      </div>
+      <div class="mcard-foot">
+        <div class="mcard-price">${p.p} ${p.old?`<s>${p.old}</s>`:''}</div>
+        <button class="mcard-add" style="background:${p.ac};box-shadow:0 4px 14px rgba(0,0,0,.2);" onclick="addM(this)"><i class="fa-solid fa-plus"></i></button>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.mcard').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+  });
+}
+buildMenu('all');
+function addM(btn){btn.innerHTML='<i class="fa-solid fa-check"></i>';setTimeout(()=>btn.innerHTML='<i class="fa-solid fa-plus"></i>',1400);}
+document.querySelectorAll('.fpill').forEach(b=>{
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.fpill').forEach(x=>x.classList.remove('on'));
+    this.classList.add('on');buildMenu(this.dataset.f);
+  });
+});
+
+/* Specials Swiper */
+new Swiper('.sp-swiper',{
+  loop:true,speed:900,effect:'fade',fadeEffect:{crossFade:true},
+  autoplay:{delay:6000,disableOnInteraction:false},
+  navigation:{prevEl:'#spPrev',nextEl:'#spNext'},
+  pagination:{el:'#spPag',type:'bullets',clickable:true},
+});
+
+/* Reviews Swiper */
+new Swiper('.rev-swiper',{
+  slidesPerView:1,spaceBetween:20,
+  pagination:{el:'#revPag',clickable:true},
+  autoplay:{delay:4500,disableOnInteraction:false},
+  breakpoints:{640:{slidesPerView:2},1024:{slidesPerView:3}},
+});
+
+/* Zone tabs */
+document.querySelectorAll('.ztab').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.ztab').forEach(b=>b.classList.remove('on'));
+    this.classList.add('on');
+    document.querySelectorAll('.zone-panel').forEach(p=>p.classList.remove('on'));
+    document.getElementById('zp-'+this.dataset.z).classList.add('on');
+  });
+});
+
+/* Count-up */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,t=parseFloat(el.dataset.count);
+    let c=0;const s=t/55;
+    const ti=setInterval(()=>{c+=s;if(c>=t){c=t;clearInterval(ti);}el.textContent=String(t).includes('.')?c.toFixed(1):Math.floor(c);},22);
+    obs.unobserve(el);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>obs.observe(el));
+
+/* Parallax */
+window.addEventListener('scroll',()=>{
+  const o=document.getElementById('offer');
+  if(o){const r=o.getBoundingClientRect();if(r.bottom>0&&r.top<window.innerHeight)o.style.backgroundPositionY=(window.scrollY*.2)+'px';}
+});
+
+/* Newsletter */
+document.getElementById('nlBtn').addEventListener('click',function(){
+  const i=document.getElementById('nlInp');
+  if(i.value.includes('@')){
+    this.innerHTML='<i class="fa-solid fa-check"></i> You\'re in!';
+    this.style.background='var(--mint)';i.value='';
+    setTimeout(()=>{this.innerHTML='<i class="fa-solid fa-paper-plane"></i> Subscribe';this.style.background='';},3000);
+  }
+});
+</script>
+</body>
+</html>

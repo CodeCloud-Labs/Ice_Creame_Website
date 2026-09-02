@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Velato — Artisan Gelateria & Café</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Jost:wght@200;300;400;500;600&family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css"/>
+
+<style>
+/* ════════════════════════════════════════
+   TOKENS — Ivory Light × Muted Jewel Accents
+════════════════════════════════════════ */
+:root{
+  /* Base */
+  --ivory:   #faf7f2;
+  --paper:   #f3ede3;
+  --linen:   #e8ddd0;
+  --warm:    #d4c4b0;
+  --ink:     #1e1612;
+  --charcoal:#2d2520;
+  --text:    #4a3b30;
+  --muted:   #8a7568;
+  --hairline:rgba(30,22,18,.1);
+
+  /* Flavor accents — deep, muted, serious */
+  --fig:     #7a3b5c;   /* fig / berry */
+  --fig-t:   rgba(122,59,92,.08);
+  --fig-lt:  #f7f0f4;
+
+  --saffron: #c4823a;   /* saffron / caramel */
+  --saf-t:   rgba(196,130,58,.08);
+  --saf-lt:  #fdf5ec;
+
+  --sage:    #5a7a5c;   /* pistachio / matcha */
+  --sage-t:  rgba(90,122,92,.08);
+  --sage-lt: #f1f6f1;
+
+  --slate:   #4a6275;   /* blueberry / earl grey */
+  --sla-t:   rgba(74,98,117,.08);
+  --sla-lt:  #f0f4f7;
+
+  --terra:   #8c4a3a;   /* chocolate / espresso */
+  --ter-t:   rgba(140,74,58,.08);
+  --ter-lt:  #fdf3f1;
+
+  --rose-d:  #9e5060;   /* raspberry / rose */
+  --ros-t:   rgba(158,80,96,.08);
+  --ros-lt:  #fdf2f4;
+
+  /* Layout */
+  --r1: 4px; --r2: 12px; --r3: 24px; --r4: 48px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --spring: cubic-bezier(.34,1.56,.64,1);
+  --sh-xs: 0 2px 12px rgba(30,22,18,.06);
+  --sh-sm: 0 6px 28px rgba(30,22,18,.09);
+  --sh-md: 0 16px 56px rgba(30,22,18,.12);
+  --sh-lg: 0 32px 96px rgba(30,22,18,.16);
+}
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  font-family:'Jost',sans-serif;
+  background:var(--ivory);
+  color:var(--text);
+  overflow-x:hidden;
+  cursor:none;
+  font-weight:300;
+}
+img{display:block;width:100%;}
+a{text-decoration:none;color:inherit;}
+
+/* ════════════════════════════════════════
+   CURSOR — Minimal, precise
+════════════════════════════════════════ */
+#cd,#cr{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%);}
+#cd{width:5px;height:5px;background:var(--fig);transition:background .4s;}
+#cr{
+  width:28px;height:28px;
+  border:1px solid rgba(122,59,92,.35);
+  transition:width .4s var(--ease),height .4s var(--ease),border-color .4s;
+}
+.ch #cr{width:52px;height:52px;border-color:var(--fig);}
+
+/* ════════════════════════════════════════
+   PRELOADER — Editorial
+════════════════════════════════════════ */
+#pl{
+  position:fixed;inset:0;z-index:99999;
+  background:var(--ivory);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .9s var(--ease),visibility .9s;
+}
+#pl.out{opacity:0;visibility:hidden;}
+.pl-word{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:clamp(3rem,8vw,7rem);
+  color:var(--ink);letter-spacing:-2px;line-height:1;
+  opacity:0;animation:plWord 1.2s 0.3s var(--ease) forwards;
+}
+.pl-rule{
+  width:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--fig),var(--saffron),transparent);
+  margin-top:1.4rem;animation:plRule 1.4s 0.8s var(--ease) forwards;
+}
+.pl-sub{
+  margin-top:.8rem;font-size:.68rem;letter-spacing:5px;
+  text-transform:uppercase;color:var(--muted);
+  opacity:0;animation:plSub .8s 1.4s var(--ease) forwards;
+}
+@keyframes plWord{0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);}}
+@keyframes plRule{to{width:200px;}}
+@keyframes plSub{to{opacity:1;}}
+
+/* ════════════════════════════════════════
+   NAVBAR — Razor thin, architectural
+════════════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:2rem 5rem;
+  transition:all .6s var(--ease);
+}
+#nav.pinned{
+  padding:1.2rem 5rem;
+  background:rgba(250,247,242,.96);
+  backdrop-filter:blur(24px) saturate(160%);
+  border-bottom:1px solid var(--hairline);
+}
+.nav-logo{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:1.9rem;color:var(--ink);letter-spacing:1px;
+}
+.nav-logo span{
+  font-family:'Jost',sans-serif;font-style:normal;
+  font-size:.58rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);display:block;margin-top:2px;font-weight:400;
+}
+.nav-mid{display:flex;gap:2.5rem;list-style:none;}
+.nav-mid a{
+  font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);font-weight:400;transition:color .35s;
+  position:relative;
+}
+.nav-mid a::after{
+  content:'';position:absolute;bottom:-2px;left:0;
+  width:0;height:1px;background:var(--fig);
+  transition:width .4s var(--ease);
+}
+.nav-mid a:hover{color:var(--ink);}
+.nav-mid a:hover::after{width:100%;}
+.nav-end{display:flex;align-items:center;gap:1.5rem;}
+.nav-reserve{
+  font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--ivory);background:var(--ink);
+  padding:.6rem 1.6rem;border-radius:var(--r1);
+  font-weight:400;transition:all .4s var(--ease);border:1px solid var(--ink);
+}
+.nav-reserve:hover{background:var(--fig);border-color:var(--fig);}
+
+/* ════════════════════════════════════════
+   HERO — Full viewport, editorial split
+════════════════════════════════════════ */
+#hero{
+  min-height:100vh;
+  display:grid;grid-template-columns:1fr 1fr;
+  position:relative;overflow:hidden;
+}
+.hero-left{
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:10rem 4rem 5rem 5rem;
+  background:var(--ivory);
+  position:relative;z-index:2;
+}
+/* Decorative large number */
+.hero-bg-num{
+  position:absolute;top:5rem;left:3rem;
+  font-family:'Bodoni Moda',serif;
+  font-size:clamp(10rem,18vw,22rem);
+  font-weight:700;font-style:italic;
+  color:var(--paper);line-height:1;
+  user-select:none;pointer-events:none;
+  z-index:0;letter-spacing:-8px;
+}
+.hero-kicker{
+  font-size:.65rem;letter-spacing:5px;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:.8rem;
+  margin-bottom:2rem;position:relative;z-index:1;
+  opacity:0;animation:slideUp .8s .6s var(--ease) forwards;
+}
+.hero-kicker::before{content:'';width:28px;height:1px;background:var(--fig);}
+.hero-h1{
+  font-family:'Bodoni Moda',serif;
+  font-size:clamp(3.2rem,5.5vw,6.5rem);
+  font-weight:400;line-height:1;
+  letter-spacing:-2px;color:var(--ink);
+  margin-bottom:2rem;position:relative;z-index:1;
+  opacity:0;animation:slideUp .9s .8s var(--ease) forwards;
+}
+.hero-h1 em{font-style:italic;color:var(--fig);}
+.hero-desc{
+  font-size:1rem;line-height:1.9;color:var(--muted);
+  max-width:400px;margin-bottom:3rem;
+  font-weight:300;position:relative;z-index:1;
+  opacity:0;animation:slideUp .8s 1s var(--ease) forwards;
+}
+.hero-actions{
+  display:flex;align-items:center;gap:2rem;
+  position:relative;z-index:1;margin-bottom:4rem;
+  opacity:0;animation:slideUp .8s 1.2s var(--ease) forwards;
+}
+.btn-primary{
+  font-size:.7rem;letter-spacing:3px;text-transform:uppercase;
+  background:var(--ink);color:var(--ivory);
+  padding:.9rem 2.2rem;border:1px solid var(--ink);
+  transition:all .4s var(--ease);cursor:pointer;font-weight:400;
+  display:inline-flex;align-items:center;gap:.8rem;
+}
+.btn-primary:hover{background:var(--fig);border-color:var(--fig);}
+.btn-text{
+  font-size:.7rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);transition:color .35s;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.6rem;
+  border-bottom:1px solid transparent;padding-bottom:2px;
+  transition:all .35s;
+}
+.btn-text:hover{color:var(--ink);border-color:var(--ink);}
+/* Hero metrics row */
+.hero-metrics{
+  display:flex;gap:3rem;border-top:1px solid var(--hairline);
+  padding-top:2rem;position:relative;z-index:1;
+  opacity:0;animation:slideUp .8s 1.4s var(--ease) forwards;
+}
+.hm-val{
+  font-family:'Bodoni Moda',serif;font-size:2.2rem;
+  font-weight:400;color:var(--ink);line-height:1;
+}
+.hm-lab{
+  font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);margin-top:.3rem;
+}
+/* Hero right — image panel */
+.hero-right{position:relative;overflow:hidden;}
+.hero-img-main{
+  position:absolute;inset:0;
+}
+.hero-img-main img{
+  width:100%;height:100%;object-fit:cover;
+  transform:scale(1.06);
+  animation:heroZoom 18s var(--ease) forwards;
+  filter:saturate(.9) brightness(.92);
+}
+@keyframes heroZoom{to{transform:scale(1);}}
+/* Flavor label strip on right */
+.hero-flavor-label{
+  position:absolute;bottom:3rem;left:0;right:0;
+  display:flex;justify-content:center;gap:1rem;
+  padding:0 2rem;
+}
+.hfl{
+  background:rgba(250,247,242,.88);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(30,22,18,.1);
+  padding:.6rem 1.2rem;font-size:.65rem;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--text);display:flex;align-items:center;gap:.5rem;
+  transition:background .3s;
+}
+.hfl:hover{background:rgba(250,247,242,1);}
+.hfl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+/* Scroll line */
+.hero-scroll{
+  position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  z-index:10;
+}
+.hs-line{
+  width:1px;height:60px;
+  background:linear-gradient(to bottom,var(--fig),transparent);
+  animation:hsLine 2s ease-in-out infinite;
+}
+@keyframes hsLine{0%,100%{height:40px;opacity:.4;}50%{height:70px;opacity:1;}}
+.hs-text{
+  font-size:.58rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);writing-mode:vertical-lr;margin-bottom:.4rem;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+/* ════════════════════════════════════════
+   BAND — Flavor identity ribbon
+════════════════════════════════════════ */
+#flavor-band{
+  background:var(--ink);padding:1.2rem 0;
+  overflow:hidden;
+}
+.fb-track{
+  display:flex;width:max-content;
+  animation:fbScroll 30s linear infinite;
+}
+.fb-item{
+  display:inline-flex;align-items:center;gap:1.5rem;
+  padding:0 3rem;white-space:nowrap;
+  font-size:.65rem;letter-spacing:3.5px;text-transform:uppercase;
+  color:rgba(250,247,242,.45);font-weight:400;
+}
+.fb-item strong{color:rgba(250,247,242,.85);font-weight:400;}
+.fb-sep{width:3px;height:3px;border-radius:50%;background:rgba(250,247,242,.2);}
+@keyframes fbScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ════════════════════════════════════════
+   SHARED LAYOUT
+════════════════════════════════════════ */
+.w{max-width:1300px;margin:0 auto;padding:0 5rem;}
+.w-sm{max-width:880px;margin:0 auto;padding:0 3rem;}
+.pad{padding:9rem 0;}
+.pad-sm{padding:6rem 0;}
+
+.eyebrow{
+  font-size:.62rem;letter-spacing:5px;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:.7rem;
+  margin-bottom:1rem;font-weight:400;
+}
+.eyebrow-accent{width:20px;height:1px;flex-shrink:0;}
+.display{
+  font-family:'Bodoni Moda',serif;
+  font-size:clamp(2rem,4vw,4rem);
+  font-weight:400;line-height:1.05;
+  letter-spacing:-1px;color:var(--ink);
+}
+.display em{font-style:italic;}
+.rule{width:40px;height:1px;margin:1.6rem 0;}
+.body{font-size:.97rem;line-height:1.95;color:var(--muted);font-weight:300;}
+
+/* ════════════════════════════════════════
+   PHILOSOPHY — 3-col manifesto
+════════════════════════════════════════ */
+#philosophy{background:var(--paper);padding:7rem 0;border-top:1px solid var(--hairline);}
+.phil-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;border:1px solid var(--hairline);
+}
+.phil-cell{
+  padding:3.5rem 2.8rem;border-right:1px solid var(--hairline);
+  position:relative;overflow:hidden;transition:background .4s;
+}
+.phil-cell:last-child{border-right:none;}
+.phil-cell:hover{background:var(--ivory);}
+.phil-num{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:5rem;color:var(--linen);line-height:1;
+  position:absolute;top:1rem;right:1.5rem;user-select:none;
+  transition:color .4s;
+}
+.phil-cell:hover .phil-num{color:var(--warm);}
+.phil-icon{
+  width:44px;height:44px;border:1px solid var(--hairline);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;margin-bottom:1.4rem;
+  transition:border-color .4s,background .4s;
+}
+.phil-cell:hover .phil-icon{border-color:var(--fig);color:var(--fig);}
+.phil-title{
+  font-family:'Bodoni Moda',serif;font-size:1.4rem;
+  font-weight:400;color:var(--ink);margin-bottom:.7rem;letter-spacing:-.3px;
+}
+.phil-body{font-size:.85rem;line-height:1.85;color:var(--muted);font-weight:300;}
+
+/* ════════════════════════════════════════
+   ABOUT — Asymmetric, editorial
+════════════════════════════════════════ */
+#about{background:var(--ivory);}
+.about-layout{
+  display:grid;grid-template-columns:5fr 7fr;
+  gap:0;min-height:700px;
+}
+.about-img-col{
+  position:relative;overflow:hidden;
+}
+.about-img-col img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;filter:saturate(.85) brightness(.9);
+  transition:transform 8s var(--ease),filter 1s;
+}
+.about-img-col:hover img{transform:scale(1.03);filter:saturate(.95) brightness(.85);}
+.about-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(30,22,18,.15),transparent);
+}
+/* Floating year badge */
+.about-yr{
+  position:absolute;bottom:3rem;right:-2rem;
+  background:var(--ivory);
+  border:1px solid var(--hairline);
+  padding:1.5rem 2rem;text-align:center;
+  box-shadow:var(--sh-md);z-index:2;
+}
+.about-yr-num{
+  font-family:'Bodoni Moda',serif;font-size:3.5rem;
+  font-weight:400;color:var(--ink);line-height:1;font-style:italic;
+}
+.about-yr-lab{
+  font-size:.58rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);margin-top:.3rem;
+}
+.about-text-col{
+  padding:6rem 5rem;display:flex;flex-direction:column;justify-content:center;
+  background:var(--paper);
+}
+.about-pullquote{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:1.3rem;line-height:1.65;color:var(--text);
+  border-left:2px solid var(--fig);
+  padding-left:1.5rem;margin:2rem 0;
+}
+.attr-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:.5rem;margin:2rem 0;
+}
+.attr{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.7rem .9rem;border:1px solid var(--hairline);
+  background:var(--ivory);
+  font-size:.78rem;color:var(--text);font-weight:400;
+  transition:all .3s;
+}
+.attr:hover{border-color:var(--fig);background:#fff;}
+.attr i{font-size:.75rem;color:var(--muted);transition:color .3s;width:14px;}
+.attr:hover i{color:var(--fig);}
+
+/* ════════════════════════════════════════
+   NUMBERS — Horizontal cells, ivory bg
+════════════════════════════════════════ */
+#numbers{
+  background:var(--ivory);
+  border-top:1px solid var(--hairline);
+  border-bottom:1px solid var(--hairline);
+}
+.num-row{display:grid;grid-template-columns:repeat(4,1fr);}
+.num-cell{
+  padding:4rem 3rem;border-right:1px solid var(--hairline);
+  position:relative;transition:background .4s;
+}
+.num-cell:last-child{border-right:none;}
+.num-cell:hover{background:var(--paper);}
+.nc-rule{width:28px;height:1px;margin-bottom:1.5rem;}
+.nc-val{
+  font-family:'Bodoni Moda',serif;font-size:4rem;
+  font-weight:400;color:var(--ink);line-height:1;
+  display:flex;align-items:flex-start;gap:.1rem;
+}
+.nc-val sup,.nc-val sub{font-size:1.4rem;margin-top:.5rem;}
+.nc-lab{
+  font-size:.62rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);margin-top:.7rem;font-weight:400;
+}
+
+/* ════════════════════════════════════════
+   MENU — Flavor-coded, editorial cards
+════════════════════════════════════════ */
+#menu{background:var(--ivory);}
+.menu-header{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  border-bottom:1px solid var(--hairline);
+  padding-bottom:2rem;margin-bottom:3rem;gap:2rem;flex-wrap:wrap;
+}
+/* Filter tabs — understated */
+.mf-row{display:flex;gap:0;overflow-x:auto;}
+.mf-tab{
+  font-size:.65rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--muted);padding:.6rem 1.4rem;cursor:pointer;
+  border:1px solid transparent;border-bottom:none;
+  margin-bottom:-1px;background:transparent;
+  transition:all .3s;display:flex;align-items:center;gap:.5rem;white-space:nowrap;
+}
+.mf-tab:hover{color:var(--ink);}
+.mf-tab.on{
+  color:var(--ink);background:var(--ivory);
+  border-color:var(--hairline);border-bottom-color:var(--ivory);
+}
+/* Card grid */
+.menu-grid{
+  display:grid;grid-template-columns:repeat(12,1fr);
+  grid-auto-rows:360px;gap:1px;background:var(--hairline);
+}
+.mc{
+  background:var(--ivory);position:relative;
+  overflow:hidden;cursor:pointer;
+  transition:background .4s;
+}
+.mc-img{
+  position:absolute;inset:0;overflow:hidden;
+}
+.mc-img img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .7s var(--ease),filter .5s;
+  filter:saturate(.8) brightness(.85);
+}
+.mc:hover .mc-img img{transform:scale(1.06);filter:saturate(.95) brightness(.75);}
+/* Flavor color stripe at top */
+.mc-stripe{
+  position:absolute;top:0;left:0;right:0;height:3px;z-index:2;
+}
+.mc-body{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(30,22,18,.92) 0%,rgba(30,22,18,.25) 50%,transparent 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:1.8rem;
+}
+.mc-cat{
+  font-size:.6rem;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(250,247,242,.5);margin-bottom:.4rem;
+}
+.mc-name{
+  font-family:'Bodoni Moda',serif;font-size:1.3rem;
+  color:var(--ivory);line-height:1.15;
+  font-style:italic;
+}
+.mc-desc{
+  font-size:.78rem;color:rgba(250,247,242,.55);
+  margin-top:.3rem;line-height:1.5;font-weight:300;
+  max-height:0;overflow:hidden;
+  transition:max-height .5s var(--ease);
+}
+.mc:hover .mc-desc{max-height:60px;}
+.mc-price{
+  font-family:'Bodoni Moda',serif;
+  font-size:1.1rem;color:var(--ivory);
+  margin-top:.6rem;font-style:italic;
+}
+.mc-add{
+  position:absolute;top:1.2rem;right:1.2rem;
+  width:36px;height:36px;
+  border:1px solid rgba(250,247,242,.25);
+  background:rgba(30,22,18,.4);backdrop-filter:blur(8px);
+  color:rgba(250,247,242,.7);font-size:.85rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;opacity:0;transform:translateY(-6px);
+  transition:all .35s var(--ease);
+}
+.mc:hover .mc-add{opacity:1;transform:translateY(0);}
+.mc-add:hover{background:var(--fig);border-color:var(--fig);color:#fff;}
+/* Grid spans */
+.ms-a{grid-column:span 5;grid-row:span 2;}
+.ms-b{grid-column:span 4;}
+.ms-c{grid-column:span 3;}
+.ms-d{grid-column:span 3;}
+.ms-e{grid-column:span 4;}
+.ms-f{grid-column:span 5;}
+.ms-g{grid-column:span 7;}
+
+/* ════════════════════════════════════════
+   SPECIALS — Cinematic full-bleed swiper
+════════════════════════════════════════ */
+#specials{height:88vh;min-height:600px;position:relative;}
+.sp-swiper{width:100%;height:100%;}
+.sp-slide{display:flex;align-items:flex-end;position:relative;overflow:hidden;}
+.sp-bg{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transform:scale(1.05);
+  transition:transform 6s var(--ease);
+  filter:saturate(.75) brightness(.65);
+}
+.swiper-slide-active .sp-bg{transform:scale(1);}
+.sp-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(30,22,18,.9) 0%,rgba(30,22,18,.3) 45%,rgba(30,22,18,.1) 100%);
+}
+.sp-content{
+  position:relative;z-index:2;
+  padding:0 8% 5rem;max-width:820px;
+}
+.sp-flavor-line{
+  display:flex;align-items:center;gap:.8rem;
+  margin-bottom:1.5rem;
+}
+.sp-fl-dot{width:10px;height:10px;border-radius:50%;}
+.sp-fl-name{
+  font-size:.65rem;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(250,247,242,.6);
+}
+.sp-title{
+  font-family:'Bodoni Moda',serif;
+  font-size:clamp(2.8rem,6vw,6rem);
+  font-weight:400;font-style:italic;
+  color:var(--ivory);line-height:.95;letter-spacing:-2px;
+  margin-bottom:1.2rem;
+}
+.sp-desc{
+  font-size:.97rem;color:rgba(250,247,242,.65);
+  line-height:1.9;max-width:480px;margin-bottom:2rem;font-weight:300;
+}
+.sp-price-row{
+  display:flex;align-items:baseline;gap:1.2rem;margin-bottom:2.5rem;
+}
+.sp-price{
+  font-family:'Bodoni Moda',serif;font-size:3.2rem;
+  color:var(--ivory);font-style:italic;line-height:1;
+}
+.sp-old{font-size:1.2rem;color:rgba(250,247,242,.3);text-decoration:line-through;}
+.sp-save{
+  font-size:.62rem;letter-spacing:2px;text-transform:uppercase;
+  padding:.3rem .8rem;border:1px solid;
+}
+.sp-btns{display:flex;gap:1rem;align-items:center;}
+.sp-btn-primary{
+  font-size:.68rem;letter-spacing:3px;text-transform:uppercase;
+  background:var(--ivory);color:var(--ink);
+  padding:.85rem 2rem;border:none;cursor:pointer;
+  transition:all .4s var(--ease);
+  display:inline-flex;align-items:center;gap:.7rem;font-weight:400;
+}
+.sp-btn-primary:hover{background:var(--fig);color:#fff;}
+.sp-btn-ghost{
+  font-size:.68rem;letter-spacing:3px;text-transform:uppercase;
+  background:transparent;color:rgba(250,247,242,.6);
+  padding:.83rem 1.8rem;
+  border:1px solid rgba(250,247,242,.2);cursor:pointer;
+  transition:all .3s;font-weight:400;
+  display:inline-flex;align-items:center;gap:.7rem;
+}
+.sp-btn-ghost:hover{border-color:rgba(250,247,242,.5);color:var(--ivory);}
+/* Slide counter */
+.sp-counter{
+  position:absolute;right:5%;bottom:5rem;z-index:10;
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  color:rgba(250,247,242,.3);font-size:1rem;letter-spacing:2px;
+}
+.sp-counter strong{font-size:2.5rem;color:rgba(250,247,242,.6);font-weight:400;}
+/* Pagination */
+.sp-pag .swiper-pagination-bullet{
+  width:24px;height:1px;border-radius:0;
+  background:rgba(250,247,242,.3);opacity:1;
+  transition:all .4s;margin:0 4px;
+}
+.sp-pag .swiper-pagination-bullet-active{background:var(--ivory);width:48px;}
+/* Nav */
+.sp-prev,.sp-next{
+  position:absolute;bottom:5rem;z-index:10;
+  width:44px;height:44px;border:1px solid rgba(250,247,242,.2);
+  background:transparent;color:rgba(250,247,242,.6);font-size:.85rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .3s;
+}
+.sp-prev{right:calc(5% + 56px);}
+.sp-next{right:5%;}
+.sp-prev:hover,.sp-next:hover{border-color:var(--ivory);color:var(--ivory);}
+
+/* ════════════════════════════════════════
+   FLAVOR CHAPTERS — The hero ingredient sections
+   Each flavor gets a full-width chapter
+════════════════════════════════════════ */
+.flavor-chapter{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:600px;border-top:1px solid var(--hairline);
+}
+.flavor-chapter.reverse{direction:rtl;}
+.flavor-chapter.reverse > *{direction:ltr;}
+.fc-img{position:relative;overflow:hidden;}
+.fc-img img{
+  width:100%;height:100%;object-fit:cover;min-height:500px;
+  filter:saturate(.8) brightness(.88);
+  transition:transform 8s var(--ease),filter 1s;
+}
+.fc-img:hover img{transform:scale(1.03);filter:saturate(.9) brightness(.8);}
+.fc-img-label{
+  position:absolute;bottom:2rem;left:2rem;
+  background:rgba(250,247,242,.92);backdrop-filter:blur(12px);
+  padding:.8rem 1.2rem;border:1px solid var(--hairline);
+}
+.fc-img-label-name{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:1rem;color:var(--ink);
+}
+.fc-img-label-note{
+  font-size:.62rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-top:.2rem;
+}
+.fc-text{
+  padding:5rem 5rem;display:flex;flex-direction:column;justify-content:center;
+}
+.fc-flavor-pill{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.62rem;letter-spacing:3px;text-transform:uppercase;
+  padding:.35rem .9rem;border:1px solid;
+  margin-bottom:1.5rem;width:fit-content;font-weight:400;
+}
+.fc-flavor-dot{width:6px;height:6px;border-radius:50%;}
+.fc-h{
+  font-family:'Bodoni Moda',serif;
+  font-size:clamp(1.8rem,3vw,3rem);font-weight:400;
+  font-style:italic;color:var(--ink);line-height:1.1;
+  letter-spacing:-1px;margin-bottom:1rem;
+}
+.fc-origin{
+  font-size:.65rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.fc-origin i{font-size:.6rem;}
+.fc-body{font-size:.9rem;line-height:1.9;color:var(--muted);margin-bottom:1.8rem;font-weight:300;}
+.fc-taste-notes{
+  display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem;
+}
+.fc-note{
+  font-size:.62rem;letter-spacing:2px;text-transform:uppercase;
+  background:var(--paper);border:1px solid var(--hairline);
+  padding:.3rem .8rem;color:var(--text);font-weight:400;
+  transition:all .3s;
+}
+.fc-note:hover{border-color:currentColor;}
+.fc-price-row{
+  display:flex;align-items:baseline;gap:1rem;
+  padding-top:1.5rem;border-top:1px solid var(--hairline);
+  margin-top:auto;
+}
+.fc-price{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:1.8rem;color:var(--ink);
+}
+.fc-price-lab{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.fc-btn{
+  margin-left:auto;font-size:.65rem;letter-spacing:2.5px;text-transform:uppercase;
+  background:transparent;color:var(--ink);
+  border:1px solid var(--hairline);
+  padding:.7rem 1.4rem;cursor:pointer;
+  transition:all .35s;display:flex;align-items:center;gap:.5rem;
+}
+.fc-btn:hover{background:var(--ink);color:var(--ivory);border-color:var(--ink);}
+
+/* ════════════════════════════════════════
+   INTERIOR — Tab navigation, architectural
+════════════════════════════════════════ */
+#interior{background:var(--paper);}
+.int-layout{
+  display:grid;grid-template-columns:200px 1fr;
+  gap:0;border:1px solid var(--hairline);
+}
+.int-nav{
+  border-right:1px solid var(--hairline);
+  display:flex;flex-direction:column;
+}
+.int-nav-btn{
+  padding:1.6rem 1.8rem;border-bottom:1px solid var(--hairline);
+  cursor:pointer;background:transparent;border-left:2px solid transparent;
+  text-align:left;transition:all .3s;
+}
+.int-nav-btn:last-child{border-bottom:none;}
+.int-nav-btn:hover{background:var(--ivory);}
+.int-nav-btn.on{background:var(--ivory);border-left-color:var(--fig);}
+.int-nav-btn .inb-title{
+  font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--ink);font-weight:400;margin-bottom:.2rem;
+}
+.int-nav-btn .inb-cap{font-size:.65rem;color:var(--muted);font-weight:300;}
+.int-panel{display:none;}
+.int-panel.on{display:grid;grid-template-columns:1.2fr 1fr;}
+.ip-img{position:relative;overflow:hidden;min-height:520px;}
+.ip-img img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;filter:saturate(.8) brightness(.88);
+  transition:transform 7s var(--ease);
+}
+.ip-img:hover img{transform:scale(1.03);}
+.ip-cap{
+  position:absolute;bottom:2rem;right:2rem;
+  background:rgba(250,247,242,.9);backdrop-filter:blur(10px);
+  border:1px solid var(--hairline);
+  padding:1rem 1.2rem;text-align:center;
+}
+.ip-cap-num{font-family:'Bodoni Moda',serif;font-size:2.5rem;font-style:italic;color:var(--ink);line-height:1;}
+.ip-cap-lab{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.ip-text{padding:3.5rem 3.5rem;display:flex;flex-direction:column;justify-content:center;background:var(--ivory);}
+.ip-feats{list-style:none;display:flex;flex-direction:column;gap:.6rem;margin:1.4rem 0 2rem;}
+.ip-feat{
+  display:flex;align-items:center;gap:.8rem;
+  font-size:.82rem;color:var(--text);
+  padding:.5rem 0;border-bottom:1px solid var(--hairline);
+  font-weight:300;
+}
+.ip-feat i{font-size:.7rem;color:var(--muted);width:14px;}
+.ip-feat:last-child{border-bottom:none;}
+
+/* ════════════════════════════════════════
+   TESTIMONIALS — Minimal quote style
+════════════════════════════════════════ */
+#testimonials{background:var(--ivory);border-top:1px solid var(--hairline);}
+.test-layout{
+  display:grid;grid-template-columns:280px 1fr;
+  gap:5rem;align-items:start;
+}
+.test-left{padding-top:1rem;}
+.test-rating-big{
+  font-family:'Bodoni Moda',serif;font-size:6rem;
+  font-style:italic;color:var(--ink);line-height:1;
+  margin-bottom:.3rem;
+}
+.test-stars{color:var(--saffron);font-size:.85rem;letter-spacing:3px;margin-bottom:.5rem;}
+.test-count{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.test-swiper{overflow:visible;}
+.test-card{
+  background:var(--paper);border:1px solid var(--hairline);
+  padding:2.5rem;height:100%;
+  display:flex;flex-direction:column;
+  transition:all .4s;
+}
+.test-card:hover{background:var(--ivory);border-color:var(--linen);}
+.tc-mark{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:4rem;color:var(--linen);line-height:1;
+  margin-bottom:-.3rem;
+}
+.tc-body{
+  font-size:.88rem;line-height:1.9;color:var(--text);
+  flex:1;margin-bottom:1.8rem;font-weight:300;
+}
+.tc-person{display:flex;align-items:center;gap:.9rem;padding-top:1.2rem;border-top:1px solid var(--hairline);}
+.tc-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;filter:saturate(.7);}
+.tc-name{font-size:.82rem;font-weight:500;color:var(--ink);}
+.tc-role{font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:.15rem;}
+.tc-stars{color:var(--saffron);font-size:.72rem;margin-bottom:.2rem;}
+.test-pag .swiper-pagination-bullet{
+  background:var(--linen);opacity:1;
+  width:20px;height:1px;border-radius:0;margin:0 3px;transition:all .4s;
+}
+.test-pag .swiper-pagination-bullet-active{background:var(--fig);width:40px;}
+
+/* ════════════════════════════════════════
+   GALLERY — Tightly packed, editorial grid
+════════════════════════════════════════ */
+#gallery{background:var(--paper);border-top:1px solid var(--hairline);}
+.gal-header{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  padding-bottom:2rem;border-bottom:1px solid var(--hairline);
+  margin-bottom:1px;gap:2rem;flex-wrap:wrap;
+}
+.gal-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  grid-auto-rows:240px;
+  gap:1px;background:var(--hairline);
+}
+.gi{position:relative;overflow:hidden;cursor:pointer;}
+.gi img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .6s var(--ease),filter .4s;
+  filter:saturate(.75) brightness(.88);
+}
+.gi:hover img{transform:scale(1.07);filter:saturate(.9) brightness(.75);}
+.gi-over{
+  position:absolute;inset:0;
+  background:rgba(30,22,18,.6);
+  opacity:0;transition:opacity .4s;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;
+}
+.gi:hover .gi-over{opacity:1;}
+.gi-over i{color:rgba(250,247,242,.7);font-size:1.2rem;}
+.gi-over span{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:rgba(250,247,242,.5);}
+.ga{grid-column:span 2;grid-row:span 2;}
+.gb{grid-column:span 2;}
+.gc{grid-column:span 1;}
+.gd{grid-column:span 1;}
+.ge{grid-column:span 2;}
+.gf{grid-column:span 3;}
+.gg{grid-column:span 2;}
+
+/* ════════════════════════════════════════
+   OFFER PARALLAX — Restrained luxury
+════════════════════════════════════════ */
+#offer{
+  background-image:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1800&q=90');
+  background-size:cover;background-position:center;
+  background-attachment:fixed;padding:10rem 0;
+  border-top:1px solid var(--hairline);
+}
+#offer::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(30,22,18,.88) 0%,rgba(30,22,18,.72) 100%);
+}
+.offer-inner{position:relative;z-index:1;}
+.offer-overline{
+  font-size:.62rem;letter-spacing:5px;text-transform:uppercase;
+  color:rgba(250,247,242,.4);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:.8rem;
+}
+.offer-overline::before{content:'';width:24px;height:1px;background:var(--saffron);}
+.offer-h{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:clamp(3rem,8vw,8rem);
+  font-weight:400;color:var(--ivory);line-height:.9;
+  letter-spacing:-3px;margin-bottom:1.5rem;
+}
+.offer-sub{
+  font-size:1rem;color:rgba(250,247,242,.55);
+  font-weight:300;line-height:1.9;max-width:460px;margin-bottom:3rem;
+}
+.offer-details{
+  display:flex;gap:3rem;margin-bottom:3rem;flex-wrap:wrap;
+}
+.od{padding-left:1.2rem;border-left:1px solid rgba(250,247,242,.15);}
+.od-val{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:1.5rem;color:var(--ivory);margin-bottom:.2rem;
+}
+.od-lab{font-size:.6rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(250,247,242,.35);}
+
+/* ════════════════════════════════════════
+   NEWSLETTER — Clean, editorial
+════════════════════════════════════════ */
+#newsletter{
+  background:var(--paper);
+  border-top:1px solid var(--hairline);
+  border-bottom:1px solid var(--hairline);
+}
+.nl-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;border:1px solid var(--hairline);
+}
+.nl-left{
+  padding:5rem;border-right:1px solid var(--hairline);
+  background:var(--ink);
+}
+.nl-left .eyebrow{color:rgba(250,247,242,.35);}
+.nl-left .eyebrow-accent{background:var(--saffron);}
+.nl-title{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:clamp(2rem,3.5vw,3.2rem);
+  color:var(--ivory);line-height:1.1;letter-spacing:-.5px;
+}
+.nl-body{
+  font-size:.88rem;line-height:1.85;
+  color:rgba(250,247,242,.45);margin-top:1.2rem;font-weight:300;
+}
+.nl-right{
+  padding:5rem;display:flex;flex-direction:column;justify-content:center;
+  background:var(--paper);
+}
+.nl-form{
+  display:flex;flex-direction:column;gap:1rem;
+}
+.nl-inp{
+  background:var(--ivory);border:1px solid var(--hairline);
+  outline:none;padding:1rem 1.4rem;
+  font-size:.88rem;font-family:'Jost',sans-serif;
+  color:var(--ink);font-weight:300;
+  transition:border-color .3s;
+}
+.nl-inp:focus{border-color:var(--fig);}
+.nl-inp::placeholder{color:var(--muted);}
+.nl-submit{
+  font-size:.68rem;letter-spacing:3px;text-transform:uppercase;
+  background:var(--ink);color:var(--ivory);
+  border:1px solid var(--ink);padding:1rem;
+  cursor:pointer;transition:all .4s;
+  display:flex;align-items:center;justify-content:center;gap:.7rem;
+}
+.nl-submit:hover{background:var(--fig);border-color:var(--fig);}
+.nl-note{font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:.5rem;}
+.nl-perks{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem;}
+.nl-perk{display:flex;align-items:center;gap:.7rem;font-size:.8rem;color:var(--muted);}
+.nl-perk i{font-size:.65rem;color:var(--saffron);}
+
+/* ════════════════════════════════════════
+   CONTACT
+════════════════════════════════════════ */
+#contact{background:var(--ivory);}
+.contact-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;border:1px solid var(--hairline);
+}
+.cl-info{padding:5rem;border-right:1px solid var(--hairline);}
+.ci-block{margin-bottom:2.5rem;}
+.ci-label{
+  font-size:.6rem;letter-spacing:4px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:.6rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.ci-label i{font-size:.55rem;}
+.ci-val{font-size:.95rem;color:var(--text);line-height:1.75;font-weight:300;}
+.ci-val a{color:var(--text);transition:color .3s;border-bottom:1px solid transparent;}
+.ci-val a:hover{color:var(--fig);border-color:var(--fig);}
+.hours-rows{display:flex;flex-direction:column;gap:0;}
+.hr-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.7rem 0;border-bottom:1px solid var(--hairline);
+  font-size:.85rem;font-weight:300;
+}
+.hr-row:last-child{border-bottom:none;}
+.hr-day{color:var(--muted);}
+.hr-time{color:var(--text);}
+.hr-time.sp{color:var(--fig);}
+.socials{display:flex;gap:.5rem;margin-top:1.5rem;}
+.soc-btn{
+  width:36px;height:36px;border:1px solid var(--hairline);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;color:var(--muted);transition:all .3s;
+}
+.soc-btn:hover{border-color:var(--fig);color:var(--fig);}
+.cl-map{
+  position:relative;overflow:hidden;background:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  min-height:500px;
+}
+.cl-map-bg{
+  position:absolute;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=900&q=80');
+  background-size:cover;background-position:center;
+  opacity:.2;filter:saturate(0);
+}
+.cl-map-dots{
+  position:absolute;inset:0;
+  background-image:radial-gradient(var(--linen) 1px,transparent 1px);
+  background-size:20px 20px;
+}
+.cl-map-inner{position:relative;z-index:2;text-align:center;padding:3rem;}
+.cl-pin-icon{
+  width:52px;height:52px;border:1px solid var(--hairline);
+  background:var(--ivory);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;color:var(--fig);margin:0 auto 1.2rem;
+}
+.cl-name{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:1.6rem;color:var(--ink);margin-bottom:.4rem;
+}
+.cl-addr{font-size:.82rem;color:var(--muted);line-height:1.7;margin-bottom:1.8rem;font-weight:300;}
+.cl-dir{
+  font-size:.65rem;letter-spacing:3px;text-transform:uppercase;
+  border:1px solid var(--hairline);color:var(--text);
+  padding:.7rem 1.6rem;transition:all .35s;cursor:pointer;background:var(--ivory);
+  display:inline-flex;align-items:center;gap:.6rem;
+}
+.cl-dir:hover{background:var(--ink);color:var(--ivory);border-color:var(--ink);}
+.cl-amenities{
+  display:flex;gap:1.2rem;justify-content:center;
+  margin-top:1.2rem;flex-wrap:wrap;
+}
+.cl-amenity{font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.cl-amenity i{margin-right:.3rem;color:var(--saffron);font-size:.6rem;}
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+footer{
+  background:var(--ink);
+  border-top:1px solid rgba(250,247,242,.08);
+}
+.foot-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:4rem;padding:5rem 0 4rem;
+  border-bottom:1px solid rgba(250,247,242,.06);
+}
+.foot-brand{
+  font-family:'Bodoni Moda',serif;font-style:italic;
+  font-size:2.4rem;color:rgba(250,247,242,.7);letter-spacing:-.5px;
+  margin-bottom:.8rem;
+}
+.foot-tagline{
+  font-size:.82rem;color:rgba(250,247,242,.25);
+  line-height:1.9;max-width:280px;font-weight:300;
+}
+.foot-socials{display:flex;gap:.5rem;margin-top:1.6rem;}
+.f-soc{
+  width:34px;height:34px;border:1px solid rgba(250,247,242,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;color:rgba(250,247,242,.25);
+  transition:all .3s;
+}
+.f-soc:hover{border-color:var(--saffron);color:var(--saffron);}
+.foot-col-head{
+  font-size:.6rem;letter-spacing:3.5px;text-transform:uppercase;
+  color:rgba(250,247,242,.3);margin-bottom:1.4rem;font-weight:400;
+}
+.foot-link{
+  display:block;font-size:.82rem;
+  color:rgba(250,247,242,.25);margin-bottom:.6rem;
+  transition:color .3s;font-weight:300;
+}
+.foot-link:hover{color:rgba(250,247,242,.7);}
+.foot-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.6rem 0;flex-wrap:wrap;gap:1rem;
+}
+.foot-copy{font-size:.68rem;color:rgba(250,247,242,.18);letter-spacing:.5px;}
+.foot-copy span{color:rgba(250,247,242,.35);}
+.foot-pay{display:flex;gap:.8rem;font-size:1.4rem;color:rgba(250,247,242,.15);}
+
+/* ── Back to top ── */
+#btt{
+  position:fixed;bottom:2.5rem;right:2.5rem;z-index:990;
+  width:44px;height:44px;
+  border:1px solid var(--hairline);background:var(--ivory);
+  color:var(--muted);font-size:.85rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(12px);
+  transition:all .4s var(--ease);
+  box-shadow:var(--sh-sm);
+}
+#btt.show{opacity:1;transform:translateY(0);}
+#btt:hover{background:var(--ink);color:var(--ivory);border-color:var(--ink);}
+
+/* ══ Responsive ══ */
+@media(max-width:1199px){
+  .w{padding:0 3rem;}
+  #hero{grid-template-columns:1fr;}
+  .hero-right{min-height:55vh;}
+  .hero-left{padding:8rem 3rem 4rem;}
+  .about-layout{grid-template-columns:1fr;}
+  .about-img-col{height:400px;}
+  .about-img-col img{position:relative;height:100%;}
+  .about-yr{right:2rem;}
+  .contact-layout{grid-template-columns:1fr;}
+  .cl-map{min-height:340px;}
+  .nl-layout{grid-template-columns:1fr;}
+  .nl-left{border-right:none;border-bottom:1px solid rgba(250,247,242,.08);}
+  .foot-top{grid-template-columns:1fr 1fr;gap:2.5rem;}
+  .menu-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:300px;}
+  .ms-a,.ms-b,.ms-c,.ms-d,.ms-e,.ms-f,.ms-g{grid-column:span 1;grid-row:span 1;}
+  .ms-a{grid-column:span 2;}
+}
+@media(max-width:991px){
+  #nav{padding:1.2rem 2rem;}#nav.pinned{padding:.9rem 2rem;}
+  .nav-mid{display:none;}
+  .pad{padding:6rem 0;}
+  .w{padding:0 2rem;}
+  .phil-grid{grid-template-columns:1fr;}
+  .phil-cell{border-right:none;border-bottom:1px solid var(--hairline);}
+  .num-row{grid-template-columns:repeat(2,1fr);}
+  .num-cell{border-right:none;border-bottom:1px solid var(--hairline);}
+  .flavor-chapter,.flavor-chapter.reverse{grid-template-columns:1fr;}
+  .fc-img{height:340px;}
+  .int-layout{grid-template-columns:1fr;}
+  .int-nav{flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid var(--hairline);}
+  .int-nav-btn{border-bottom:none;border-left:none;border-top:2px solid transparent;min-width:130px;}
+  .int-nav-btn.on{border-top-color:var(--fig);border-left:none;}
+  .int-panel.on{grid-template-columns:1fr;}
+  .ip-img{min-height:300px;}
+  .test-layout{grid-template-columns:1fr;gap:3rem;}
+  .gal-grid{grid-template-columns:repeat(3,1fr);}
+  .ga,.gb,.gc,.gd,.ge,.gf,.gg{grid-column:span 1;grid-row:span 1;}
+  .ga{grid-column:span 2;}
+  .about-text-col{padding:3rem 2.5rem;}
+}
+@media(max-width:767px){
+  .w{padding:0 1.5rem;}
+  .pad{padding:4rem 0;}
+  .hero-left{padding:7rem 1.5rem 3rem;}
+  .hero-metrics{gap:2rem;}
+  .menu-grid{grid-template-columns:1fr;grid-auto-rows:280px;}
+  .ms-a{grid-column:span 1;}
+  .gal-grid{grid-template-columns:repeat(2,1fr);}
+  .ga{grid-column:span 2;}
+  .foot-top{grid-template-columns:1fr;gap:2rem;}
+  .foot-bottom{flex-direction:column;text-align:center;}
+  .nl-left,.nl-right{padding:3rem 2rem;}
+  .cl-info{padding:3rem 2rem;}
+  .offer-details{gap:2rem;}
+  .test-rating-big{font-size:4rem;}
+  .sp-content{padding:0 5% 4rem;}
+  .about-text-col{padding:3rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="pl">
+  <div class="pl-word">Velato</div>
+  <div class="pl-rule"></div>
+  <div class="pl-sub">Artisan Gelateria &amp; Café · Est. 2010</div>
+</div>
+
+<!-- CURSOR -->
+<div id="cd"></div>
+<div id="cr"></div>
+
+<!-- ══════════════════ NAVBAR ══════════════════ -->
+<nav id="nav">
+  <div class="nav-logo">
+    Velato
+    <span>Artisan Gelateria</span>
+  </div>
+  <ul class="nav-mid">
+    <li><a href="#about">About</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#specials">Specials</a></li>
+    <li><a href="#interior">The Space</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+  </ul>
+  <div class="nav-end">
+    <a href="#contact" class="nav-reserve">Reserve a Table</a>
+  </div>
+</nav>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-bg-num">V</div>
+    <div class="hero-kicker">Handcrafted · Seasonal · Lucknow</div>
+    <h1 class="hero-h1">Pure Craft.<br/><em>Rare</em><br/>Flavour.</h1>
+    <p class="hero-desc">Sixty artisan gelato flavours and single-origin café selections — made fresh each morning with ingredients sourced from the world's finest growing regions.</p>
+    <div class="hero-actions">
+      <a href="#menu" class="btn-primary"><i class="fa-solid fa-utensils"></i> Explore Menu</a>
+      <a href="#specials" class="btn-text">Today's specials <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+    </div>
+    <div class="hero-metrics">
+      <div>
+        <div class="hm-val">60<sup style="font-size:1.2rem;">+</sup></div>
+        <div class="hm-lab">Flavours</div>
+      </div>
+      <div>
+        <div class="hm-val">4.9</div>
+        <div class="hm-lab">Google Rating</div>
+      </div>
+      <div>
+        <div class="hm-val">15</div>
+        <div class="hm-lab">Years</div>
+      </div>
+      <div>
+        <div class="hm-val">14</div>
+        <div class="hm-lab">Awards</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-main">
+      <img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=1400&q=90" alt="Artisan gelato"/>
+    </div>
+    <div class="hero-flavor-label">
+      <div class="hfl"><span class="hfl-dot" style="background:var(--fig);"></span>Fig & Rose</div>
+      <div class="hfl"><span class="hfl-dot" style="background:var(--saffron);"></span>Saffron Caramel</div>
+      <div class="hfl"><span class="hfl-dot" style="background:var(--sage);"></span>Pistachio Matcha</div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hs-text">Scroll</div>
+      <div class="hs-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FLAVOR BAND -->
+<div id="flavor-band">
+  <div class="fb-track">
+    <div class="fb-item"><strong>Strawberry &amp; Cream</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Alphonso Mango Sorbet</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Pistachio Rose</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Triple Belgian Chocolate</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Saffron &amp; Cardamom</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Cold Brew Affogato</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Salted Caramel</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Earl Grey &amp; Lavender</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Strawberry &amp; Cream</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Alphonso Mango Sorbet</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Pistachio Rose</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Triple Belgian Chocolate</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Saffron &amp; Cardamom</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Cold Brew Affogato</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Salted Caramel</strong><span class="fb-sep"></span></div>
+    <div class="fb-item"><strong>Earl Grey &amp; Lavender</strong><span class="fb-sep"></span></div>
+  </div>
+</div>
+
+<!-- ══════════════════ PHILOSOPHY ══════════════════ -->
+<section id="philosophy">
+  <div class="w">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:2rem;">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-accent" style="background:var(--fig);"></span>Our Philosophy</div>
+        <h2 class="display">Why Velato is<br/><em>Different</em></h2>
+      </div>
+      <p class="body" style="max-width:360px;">Three principles guide every batch we churn, every cup we pour, every space we design.</p>
+    </div>
+    <div class="phil-grid">
+      <div class="phil-cell">
+        <div class="phil-num">I</div>
+        <div class="phil-icon"><i class="fa-solid fa-globe fa-sm"></i></div>
+        <div class="phil-title">Origin Matters</div>
+        <p class="phil-body">We travel to the source — Ratnagiri for Alphonso mangoes, Belgium for couverture chocolate, Iran for pistachios. Each ingredient carries provenance. We carry that story into every scoop.</p>
+      </div>
+      <div class="phil-cell">
+        <div class="phil-num">II</div>
+        <div class="phil-icon"><i class="fa-solid fa-hand fa-sm"></i></div>
+        <div class="phil-title">Made by Hand</div>
+        <p class="phil-body">No automated churners. No factory extracts. Our gelato artisans prepare every batch using traditional Italian pozzetti methods — slow-frozen, dense, and intensely flavoured.</p>
+      </div>
+      <div class="phil-cell">
+        <div class="phil-num">III</div>
+        <div class="phil-icon"><i class="fa-solid fa-leaf fa-sm"></i></div>
+        <div class="phil-title">Seasonal Honesty</div>
+        <p class="phil-body">Our menu changes with the harvest calendar. When strawberries peak, we feature them. When they're gone, they're gone — until next season. Honest flavour needs no shortcuts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ABOUT ══════════════════ -->
+<section id="about">
+  <div class="about-layout">
+    <div class="about-img-col">
+      <img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=1000&q=90" alt="Our artisan process"/>
+      <div class="about-img-overlay"></div>
+      <div class="about-yr">
+        <div class="about-yr-num">15</div>
+        <div class="about-yr-lab">Years in Lucknow</div>
+      </div>
+    </div>
+    <div class="about-text-col">
+      <div class="eyebrow"><span class="eyebrow-accent" style="background:var(--saffron);"></span>Our Story</div>
+      <h2 class="display" style="margin-bottom:.5rem;">From a Family<br/><em>Kitchen to the City</em></h2>
+      <div class="rule" style="background:var(--saffron);"></div>
+      <div class="about-pullquote">"We don't sell dessert. We sell the feeling of a perfect moment — held in a small ceramic cup, at exactly the right temperature."</div>
+      <p class="body" style="margin-bottom:1.2rem;">Velato began in 2010 as a single counter in old Hazratganj — three generations of recipes, finally shared with the world. Today we operate three locations and serve 50,000+ guests a year, but the kitchen process has not changed by a single step.</p>
+      <p class="body" style="margin-bottom:2rem;">Every flavour is still tasted by our founder before it goes out. Every coffee is still pulled by hand. Every surface in our cafeteria is still chosen with obsessive care.</p>
+      <div class="attr-grid">
+        <div class="attr"><i class="fa-solid fa-leaf"></i><span>100% Natural Ingredients</span></div>
+        <div class="attr"><i class="fa-solid fa-seedling"></i><span>Vegan-Friendly Options</span></div>
+        <div class="attr"><i class="fa-solid fa-rotate-left"></i><span>Fresh Small Batches Daily</span></div>
+        <div class="attr"><i class="fa-solid fa-flask"></i><span>Lab Quality Tested</span></div>
+        <div class="attr"><i class="fa-solid fa-wheat-awn-circle-exclamation"></i><span>Gluten-Free Available</span></div>
+        <div class="attr"><i class="fa-solid fa-award"></i><span>14 Industry Awards</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ NUMBERS ══════════════════ -->
+<section id="numbers">
+  <div class="num-row">
+    <div class="num-cell">
+      <div class="nc-rule" style="background:var(--fig);"></div>
+      <div class="nc-val"><span data-count="60">0</span><sup>+</sup></div>
+      <div class="nc-lab">Artisan Flavours</div>
+    </div>
+    <div class="num-cell">
+      <div class="nc-rule" style="background:var(--saffron);"></div>
+      <div class="nc-val"><span data-count="50">0</span><sub>K</sub></div>
+      <div class="nc-lab">Annual Guests</div>
+    </div>
+    <div class="num-cell">
+      <div class="nc-rule" style="background:var(--sage);"></div>
+      <div class="nc-val"><span data-count="14">0</span></div>
+      <div class="nc-lab">Awards Won</div>
+    </div>
+    <div class="num-cell">
+      <div class="nc-rule" style="background:var(--slate);"></div>
+      <div class="nc-val">4.<span data-count="9">0</span></div>
+      <div class="nc-lab">Google Rating</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ MENU ══════════════════ -->
+<section id="menu" class="pad">
+  <div class="w">
+    <div class="menu-header">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-accent" style="background:var(--slate);"></span>The Menu</div>
+        <h2 class="display">Signature <em>Selections</em></h2>
+      </div>
+      <div class="mf-row" id="mfRow">
+        <button class="mf-tab on" data-f="all"><i class="fa-solid fa-border-all fa-xs me-1"></i>All</button>
+        <button class="mf-tab" data-f="gelato"><i class="fa-solid fa-ice-cream fa-xs me-1"></i>Gelato</button>
+        <button class="mf-tab" data-f="sundae"><i class="fa-solid fa-bowl-food fa-xs me-1"></i>Sundaes</button>
+        <button class="mf-tab" data-f="coffee"><i class="fa-solid fa-mug-hot fa-xs me-1"></i>Coffee</button>
+        <button class="mf-tab" data-f="waffle"><i class="fa-solid fa-bread-slice fa-xs me-1"></i>Waffles</button>
+      </div>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+</section>
+
+<!-- ══════════════════ SPECIALS — Full-bleed swiper ══════════════════ -->
+<section id="specials">
+  <div class="swiper sp-swiper" id="spSw">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide sp-slide">
+        <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=1800&q=90');"></div>
+        <div class="sp-overlay"></div>
+        <div class="sp-content">
+          <div class="sp-flavor-line"><div class="sp-fl-dot" style="background:var(--fig);"></div><span class="sp-fl-name">Fig & Berry — Weekend Feature</span></div>
+          <h2 class="sp-title">The Galaxy<br/>Sundae</h2>
+          <p class="sp-desc">Five pozzetti scoops, four house-made sauces, torched meringue and a shimmer of 24K edible gold — composed for two.</p>
+          <div class="sp-price-row"><span class="sp-price">₹599</span><span class="sp-old">₹849</span><span class="sp-save" style="border-color:var(--fig);color:var(--fig);">Save ₹250</span></div>
+          <div class="sp-btns"><button class="sp-btn-primary"><i class="fa-solid fa-bag-shopping"></i> Order Now</button><button class="sp-btn-ghost"><i class="fa-regular fa-heart"></i> Save for Later</button></div>
+        </div>
+        <div class="sp-counter"><strong id="spNum">01</strong> / 03</div>
+      </div>
+      <div class="swiper-slide sp-slide">
+        <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=1800&q=90');"></div>
+        <div class="sp-overlay"></div>
+        <div class="sp-content">
+          <div class="sp-flavor-line"><div class="sp-fl-dot" style="background:var(--terra);"></div><span class="sp-fl-name">Espresso — Coffee Selection</span></div>
+          <h2 class="sp-title">Cold Brew<br/>Affogato Flight</h2>
+          <p class="sp-desc">Three mini affogatos — Colombian ristretto, Ethiopian cold brew and a rose-infused single origin. A quiet meditation in coffee.</p>
+          <div class="sp-price-row"><span class="sp-price">₹449</span><span class="sp-old">₹620</span><span class="sp-save" style="border-color:var(--saffron);color:var(--saffron);">Save ₹171</span></div>
+          <div class="sp-btns"><button class="sp-btn-primary"><i class="fa-solid fa-bag-shopping"></i> Order Now</button><button class="sp-btn-ghost"><i class="fa-solid fa-share-nodes"></i> Share</button></div>
+        </div>
+      </div>
+      <div class="swiper-slide sp-slide">
+        <div class="sp-bg" style="background-image:url('https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=1800&q=90');"></div>
+        <div class="sp-overlay"></div>
+        <div class="sp-content">
+          <div class="sp-flavor-line"><div class="sp-fl-dot" style="background:var(--saffron);"></div><span class="sp-fl-name">Caramel — Chef's Table</span></div>
+          <h2 class="sp-title">Golden Waffle<br/>Royale</h2>
+          <p class="sp-desc">Our Belgian waffle pressed in clarified butter, finished with edible 24K gold leaf, a quenelle of truffle gelato and hand-drawn caramel ribbons.</p>
+          <div class="sp-price-row"><span class="sp-price">₹699</span><span class="sp-old">₹950</span><span class="sp-save" style="border-color:var(--sage);color:var(--sage);">Save ₹251</span></div>
+          <div class="sp-btns"><button class="sp-btn-primary"><i class="fa-solid fa-bag-shopping"></i> Order Now</button><button class="sp-btn-ghost"><i class="fa-regular fa-calendar"></i> Reserve a Table</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="sp-prev" id="spPrev"><i class="fa-solid fa-arrow-left fa-xs"></i></div>
+    <div class="sp-next" id="spNext"><i class="fa-solid fa-arrow-right fa-xs"></i></div>
+    <div class="swiper-pagination sp-pag" id="spPag" style="position:absolute;left:8%;bottom:3rem;width:auto;"></div>
+  </div>
+</section>
+
+<!-- ══════════════════ FLAVOR CHAPTERS ══════════════════ -->
+<div id="flavor-chapters">
+  <!-- Strawberry & Fig -->
+  <div class="flavor-chapter">
+    <div class="fc-img">
+      <img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=900&q=90" alt="Strawberry"/>
+      <div class="fc-img-label">
+        <div class="fc-img-label-name">Strawberry & Wild Rose</div>
+        <div class="fc-img-label-note">Mahabaleshwar · Seasonal</div>
+      </div>
+    </div>
+    <div class="fc-text">
+      <div class="fc-flavor-pill" style="border-color:var(--fig);color:var(--fig);">
+        <span class="fc-flavor-dot" style="background:var(--fig);"></span>Fig Collection
+      </div>
+      <h3 class="fc-h">Strawberry &<br/>Wild Rose Gelato</h3>
+      <div class="fc-origin"><i class="fa-solid fa-location-dot"></i>Origin: Mahabaleshwar, Maharashtra · Peak Season</div>
+      <p class="fc-body">Fresh Mahabaleshwar strawberries, macerated overnight with foraged wild rose petals, slow-churned into a dense pozzetti gelato. The flavour is bright and floral — nothing like the extract-laden imitations you have tasted elsewhere.</p>
+      <div class="fc-taste-notes">
+        <span class="fc-note" style="border-color:var(--fig);">Fresh Strawberry</span>
+        <span class="fc-note" style="border-color:var(--fig);">Wild Rose</span>
+        <span class="fc-note" style="border-color:var(--fig);">Light Acidity</span>
+        <span class="fc-note" style="border-color:var(--fig);">Floral Finish</span>
+      </div>
+      <div class="fc-price-row">
+        <div><div class="fc-price">₹149</div><div class="fc-price-lab">Single Scoop</div></div>
+        <button class="fc-btn" onclick="this.textContent='Added ✓';setTimeout(()=>this.textContent='Add to Order',1400);">Add to Order <i class="fa-solid fa-arrow-right fa-xs"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pistachio — reversed -->
+  <div class="flavor-chapter reverse">
+    <div class="fc-img">
+      <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=900&q=90" alt="Pistachio"/>
+      <div class="fc-img-label">
+        <div class="fc-img-label-name">Pistachio Matcha</div>
+        <div class="fc-img-label-note">Rayen, Iran · Ceremonial Grade</div>
+      </div>
+    </div>
+    <div class="fc-text">
+      <div class="fc-flavor-pill" style="border-color:var(--sage);color:var(--sage);">
+        <span class="fc-flavor-dot" style="background:var(--sage);"></span>Sage Collection
+      </div>
+      <h3 class="fc-h">Pistachio &<br/>Ceremonial Matcha</h3>
+      <div class="fc-origin"><i class="fa-solid fa-location-dot"></i>Origin: Rayen, Iran &amp; Kyoto Prefecture, Japan</div>
+      <p class="fc-body">Blanched and roasted Iranian pistachios from the Rayen highlands are folded with ceremonial-grade Uji matcha into a gelato of extraordinary depth. Nutty, grassy, sweet and slightly bitter — it finishes long and clean.</p>
+      <div class="fc-taste-notes">
+        <span class="fc-note" style="border-color:var(--sage);">Roasted Pistachio</span>
+        <span class="fc-note" style="border-color:var(--sage);">Umami</span>
+        <span class="fc-note" style="border-color:var(--sage);">Green Tea</span>
+        <span class="fc-note" style="border-color:var(--sage);">Clean Finish</span>
+      </div>
+      <div class="fc-price-row">
+        <div><div class="fc-price">₹199</div><div class="fc-price-lab">Single Scoop</div></div>
+        <button class="fc-btn" onclick="this.textContent='Added ✓';setTimeout(()=>this.textContent='Add to Order',1400);">Add to Order <i class="fa-solid fa-arrow-right fa-xs"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Saffron Caramel -->
+  <div class="flavor-chapter">
+    <div class="fc-img">
+      <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=900&q=90" alt="Caramel"/>
+      <div class="fc-img-label">
+        <div class="fc-img-label-name">Saffron Caramel</div>
+        <div class="fc-img-label-note">Kashmir Grade-A Saffron</div>
+      </div>
+    </div>
+    <div class="fc-text">
+      <div class="fc-flavor-pill" style="border-color:var(--saffron);color:var(--saffron);">
+        <span class="fc-flavor-dot" style="background:var(--saffron);"></span>Saffron Collection
+      </div>
+      <h3 class="fc-h">Kashmiri Saffron<br/>&amp; Burnt Caramel</h3>
+      <div class="fc-origin"><i class="fa-solid fa-location-dot"></i>Origin: Pampore, Kashmir · Grade-A Kesar</div>
+      <p class="fc-body">Grade-A Kashmiri kesar threads, steeped for 48 hours, are folded into a dark-caramelised cream base. The bitterness of the burnt caramel is the perfect counterpoint to saffron's honeyed warmth. A flavour of rare complexity.</p>
+      <div class="fc-taste-notes">
+        <span class="fc-note" style="border-color:var(--saffron);">Kashmiri Kesar</span>
+        <span class="fc-note" style="border-color:var(--saffron);">Dark Caramel</span>
+        <span class="fc-note" style="border-color:var(--saffron);">Honey Notes</span>
+        <span class="fc-note" style="border-color:var(--saffron);">Warm Finish</span>
+      </div>
+      <div class="fc-price-row">
+        <div><div class="fc-price">₹229</div><div class="fc-price-lab">Single Scoop</div></div>
+        <button class="fc-btn" onclick="this.textContent='Added ✓';setTimeout(()=>this.textContent='Add to Order',1400);">Add to Order <i class="fa-solid fa-arrow-right fa-xs"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ INTERIOR ══════════════════ -->
+<section id="interior" class="pad">
+  <div class="w" style="margin-bottom:3rem;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-accent" style="background:var(--slate);"></span>The Space</div>
+        <h2 class="display">Five Distinct<br/><em>Atmospheres</em></h2>
+      </div>
+      <p class="body" style="max-width:380px;">Each zone at Velato is designed with the same intentionality we apply to our flavours — nothing is accidental, everything is deliberate.</p>
+    </div>
+  </div>
+  <div class="w">
+    <div class="int-layout">
+      <div class="int-nav" id="intNav">
+        <button class="int-nav-btn on" data-z="main"><div class="inb-title">Grand Hall</div><div class="inb-cap">60 seats</div></button>
+        <button class="int-nav-btn" data-z="lounge"><div class="inb-title">Velvet Lounge</div><div class="inb-cap">30 seats</div></button>
+        <button class="int-nav-btn" data-z="terrace"><div class="inb-title">Garden Terrace</div><div class="inb-cap">40 seats</div></button>
+        <button class="int-nav-btn" data-z="private"><div class="inb-title">Private Suite</div><div class="inb-cap">18 seats</div></button>
+        <button class="int-nav-btn" data-z="bar"><div class="inb-title">Brew Bar</div><div class="inb-cap">12 stools</div></button>
+      </div>
+      <div>
+        <div class="int-panel on" id="iz-main">
+          <div class="ip-img"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1100&q=90" alt="Grand Hall"/><div class="ip-cap"><div class="ip-cap-num">60</div><div class="ip-cap-lab">Seats</div></div></div>
+          <div class="ip-text">
+            <div class="eyebrow" style="margin-bottom:.5rem;"><span class="eyebrow-accent" style="background:var(--fig);"></span>Ground Floor</div>
+            <h3 class="display" style="font-size:1.7rem;margin-bottom:.5rem;">The Grand Hall</h3>
+            <div class="rule" style="background:var(--fig);"></div>
+            <p class="body">Vaulted ceilings, hand-painted pastoral murals and Edison pendants set the tone. The Grand Hall is our most beloved space — warm, layered and full of quiet conversation.</p>
+            <ul class="ip-feats">
+              <li class="ip-feat"><i class="fa-solid fa-snowflake"></i>Zoned air-conditioning</li>
+              <li class="ip-feat"><i class="fa-solid fa-wifi"></i>300 Mbps dedicated Wi-Fi</li>
+              <li class="ip-feat"><i class="fa-solid fa-plug"></i>Power outlets at every table</li>
+              <li class="ip-feat"><i class="fa-solid fa-music"></i>Curated ambient sound design</li>
+              <li class="ip-feat"><i class="fa-solid fa-wheelchair"></i>Fully wheelchair accessible</li>
+            </ul>
+            <a href="#contact" class="btn-primary" style="display:inline-flex;width:fit-content;"><i class="fa-solid fa-calendar-plus"></i>Reserve a Table</a>
+          </div>
+        </div>
+        <div class="int-panel" id="iz-lounge">
+          <div class="ip-img"><img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=1100&q=90" alt="Lounge"/><div class="ip-cap"><div class="ip-cap-num">30</div><div class="ip-cap-lab">Seats</div></div></div>
+          <div class="ip-text"><div class="eyebrow" style="margin-bottom:.5rem;"><span class="eyebrow-accent" style="background:var(--slate);"></span>First Floor</div><h3 class="display" style="font-size:1.7rem;margin-bottom:.5rem;">Velvet Lounge</h3><div class="rule" style="background:var(--slate);"></div><p class="body">Deep velvet sofas, amber candlelight and curated bookshelves. The Lounge is for those who believe the best meals are the ones that last three hours.</p><ul class="ip-feats"><li class="ip-feat"><i class="fa-solid fa-couch"></i>Plush velvet sofas &amp; armchairs</li><li class="ip-feat"><i class="fa-solid fa-book-open"></i>Curated book &amp; magazine corner</li><li class="ip-feat"><i class="fa-solid fa-fire-flame-curved"></i>Decorative fireplace (winter)</li><li class="ip-feat"><i class="fa-solid fa-volume-low"></i>Low-volume acoustic playlist</li></ul><a href="#contact" class="btn-primary" style="display:inline-flex;width:fit-content;"><i class="fa-solid fa-calendar-plus"></i>Reserve a Sofa</a></div>
+        </div>
+        <div class="int-panel" id="iz-terrace">
+          <div class="ip-img"><img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=1100&q=90" alt="Terrace"/><div class="ip-cap"><div class="ip-cap-num">40</div><div class="ip-cap-lab">Seats</div></div></div>
+          <div class="ip-text"><div class="eyebrow" style="margin-bottom:.5rem;"><span class="eyebrow-accent" style="background:var(--sage);"></span>Rooftop</div><h3 class="display" style="font-size:1.7rem;margin-bottom:.5rem;">Garden Terrace</h3><div class="rule" style="background:var(--sage);"></div><p class="body">String lights, night-blooming jasmine and the Lucknow skyline. The Terrace turns every evening visit into a ritual worth repeating — especially at golden hour.</p><ul class="ip-feats"><li class="ip-feat"><i class="fa-solid fa-dog"></i>Pet friendly — water bowls provided</li><li class="ip-feat"><i class="fa-solid fa-guitar"></i>Live acoustic sets on weekends</li><li class="ip-feat"><i class="fa-solid fa-fan"></i>Retractable awning &amp; ceiling fans</li><li class="ip-feat"><i class="fa-solid fa-star"></i>Stargazing nights monthly</li></ul><a href="#contact" class="btn-primary" style="display:inline-flex;width:fit-content;"><i class="fa-solid fa-calendar-plus"></i>Book the Terrace</a></div>
+        </div>
+        <div class="int-panel" id="iz-private">
+          <div class="ip-img"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1100&q=90" alt="Suite"/><div class="ip-cap"><div class="ip-cap-num">18</div><div class="ip-cap-lab">Seats</div></div></div>
+          <div class="ip-text"><div class="eyebrow" style="margin-bottom:.5rem;"><span class="eyebrow-accent" style="background:var(--saffron);"></span>East Wing · Exclusive</div><h3 class="display" style="font-size:1.7rem;margin-bottom:.5rem;">Private Suite</h3><div class="rule" style="background:var(--saffron);"></div><p class="body">Fully bookable walnut-panelled room with custom gelato welcome platter, a dedicated server and optional photography. For celebrations that deserve to be remembered precisely as they happened.</p><ul class="ip-feats"><li class="ip-feat"><i class="fa-solid fa-lock"></i>Fully private, bookable by the hour</li><li class="ip-feat"><i class="fa-solid fa-champagne-glasses"></i>Custom welcome platter</li><li class="ip-feat"><i class="fa-solid fa-gifts"></i>Décor packages available</li><li class="ip-feat"><i class="fa-solid fa-camera"></i>In-house photography add-on</li></ul><a href="#contact" class="btn-primary" style="display:inline-flex;width:fit-content;"><i class="fa-solid fa-envelope"></i>Enquire Now</a></div>
+        </div>
+        <div class="int-panel" id="iz-bar">
+          <div class="ip-img"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=1100&q=90" alt="Bar"/><div class="ip-cap"><div class="ip-cap-num">12</div><div class="ip-cap-lab">Stools</div></div></div>
+          <div class="ip-text"><div class="eyebrow" style="margin-bottom:.5rem;"><span class="eyebrow-accent" style="background:var(--terra);"></span>Front Counter</div><h3 class="display" style="font-size:1.7rem;margin-bottom:.5rem;">The Brew Bar</h3><div class="rule" style="background:var(--terra);"></div><p class="body">Perch at the open counter and watch our baristas work — espresso pulled at precise pressure, milk steamed to texture, gelato plated with care. The most theatrical seat in the house, and the fastest service.</p><ul class="ip-feats"><li class="ip-feat"><i class="fa-solid fa-eye"></i>Full open-kitchen live view</li><li class="ip-feat"><i class="fa-solid fa-bolt"></i>Fastest service in the café</li><li class="ip-feat"><i class="fa-solid fa-plug"></i>Laptop-ready bar counter</li><li class="ip-feat"><i class="fa-solid fa-jar"></i>Retail single-origin beans</li></ul><a href="#contact" class="btn-primary" style="display:inline-flex;width:fit-content;"><i class="fa-solid fa-calendar-plus"></i>Reserve a Stool</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TESTIMONIALS ══════════════════ -->
+<section id="testimonials" class="pad">
+  <div class="w">
+    <div class="test-layout">
+      <div class="test-left">
+        <div class="eyebrow"><span class="eyebrow-accent" style="background:var(--saffron);"></span>Guest Words</div>
+        <div class="test-rating-big">4.9</div>
+        <div class="test-stars">★★★★★</div>
+        <div class="test-count">50,000+ Reviews · Google</div>
+        <div class="rule" style="background:var(--saffron);margin-top:2rem;"></div>
+        <p class="body" style="margin-top:1rem;">What our guests consistently say: the flavours are unlike anything they have tasted before. We consider that our highest achievement.</p>
+      </div>
+      <div>
+        <div class="swiper testSwiper test-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide" style="height:auto;"><div class="test-card"><div class="tc-stars">★★★★★</div><div class="tc-mark">"</div><p class="tc-body">The Pistachio Rose gelato transported me. I have tried gelato across Napoli, Rome and Florence — Velato rivals them all. The flavour complexity is extraordinary: floral, nutty, balanced. This is genuine artisanship.</p><div class="tc-person"><img src="https://i.pravatar.cc/100?img=47" class="tc-avatar" alt=""/><div><div class="tc-name">Priya Sharma</div><div class="tc-role">Food Writer · Lucknow</div></div></div></div></div>
+            <div class="swiper-slide" style="height:auto;"><div class="test-card"><div class="tc-stars">★★★★★</div><div class="tc-mark">"</div><p class="tc-body">We celebrated our tenth anniversary at Velato. The Private Suite was immaculate. The staff remembered my wife's name on our return visit two weeks later. That is the kind of detail that builds loyalty for life.</p><div class="tc-person"><img src="https://i.pravatar.cc/100?img=12" class="tc-avatar" alt=""/><div><div class="tc-name">Rahul Verma</div><div class="tc-role">Regular Guest</div></div></div></div></div>
+            <div class="swiper-slide" style="height:auto;"><div class="test-card"><div class="tc-stars">★★★★★</div><div class="tc-mark">"</div><p class="tc-body">I am a pastry chef with exacting standards. The Alphonso Mango Sorbet is the finest I have encountered in North India. No additives, no shortcuts — just the pure, concentrated essence of a perfect fruit. Remarkable.</p><div class="tc-person"><img src="https://i.pravatar.cc/100?img=28" class="tc-avatar" alt=""/><div><div class="tc-name">Chef Arjun Mehta</div><div class="tc-role">Pastry Chef · Verified Guest</div></div></div></div></div>
+            <div class="swiper-slide" style="height:auto;"><div class="test-card"><div class="tc-stars">★★★★★</div><div class="tc-mark">"</div><p class="tc-body">The Saffron Caramel gelato is one of the most sophisticated things I have ever eaten. The 48-hour saffron steep is evident in every spoonful — complex, warm, deeply considered. Velato thinks about flavour the way a sommelier thinks about wine.</p><div class="tc-person"><img src="https://i.pravatar.cc/100?img=60" class="tc-avatar" alt=""/><div><div class="tc-name">Vikram Tiwari</div><div class="tc-role">Food Critic · The Hindu</div></div></div></div></div>
+          </div>
+          <div class="swiper-pagination test-pag mt-4" id="testPag" style="position:relative;bottom:auto;text-align:left;margin-top:2rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ GALLERY ══════════════════ -->
+<section id="gallery" class="pad-sm">
+  <div class="w">
+    <div class="gal-header">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-accent" style="background:var(--fig);"></span>@velatolucknow</div>
+        <h2 class="display">Visually <em>Considered</em></h2>
+      </div>
+      <a href="#" style="font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--hairline);padding-bottom:2px;transition:all .3s;" onmouseover="this.style.color='var(--ink)';this.style.borderColor='var(--ink)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--hairline)'">View All <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+    </div>
+  </div>
+  <div style="padding:0 5rem;">
+    <div class="gal-grid">
+      <div class="gi ga"><img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=900&q=90" alt=""/><div class="gi-over"><i class="fa-brands fa-instagram"></i><span>Strawberry &amp; Rose</span></div></div>
+      <div class="gi gb"><img src="https://images.unsplash.com/photo-1580915411954-282cb1b0d780?w=700&q=90" alt=""/><div class="gi-over"><i class="fa-brands fa-instagram"></i><span>Chocolate</span></div></div>
+      <div class="gi gc"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=90" alt=""/><div class="gi-over"><i class="fa-brands fa-instagram"></i><span>Latte</span></div></div>
+      <div class="gi gd"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=90" alt=""/><div class="gi-over"><i class="fa-brands fa-instagram"></i><span>Galaxy Sundae</span></div></div>
+      <div class="gi ge"><img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=700&q=90" alt=""/><div class="gi-over"><i class="fa-brands fa-instagram"></i><span>Mango Sorbet</span></div></div>
+      <div class="gi gf"><img src="https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=900&q=90" alt=""/><div class="gi-over"><i class="fa-brands fa-instagram"></i><span>Waffle Royale</span></div></div>
+      <div class="gi gg"><img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=900&q=90" alt=""/><div class="gi-over"><i class="fa-brands fa-instagram"></i><span>Pistachio Matcha</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ OFFER PARALLAX ══════════════════ -->
+<section id="offer">
+  <div class="w offer-inner">
+    <div class="offer-overline">Limited Time Offer</div>
+    <h2 class="offer-h">Two<br/>Get One<br/><em>Free</em></h2>
+    <p class="offer-sub">Every Friday and Saturday from 4 PM — order any two scoops and receive a third on us. No code, no conditions. A standing invitation to return.</p>
+    <div class="offer-details">
+      <div class="od"><div class="od-val">Fri &amp; Sat</div><div class="od-lab">Available</div></div>
+      <div class="od"><div class="od-val">4 PM</div><div class="od-lab">From</div></div>
+      <div class="od"><div class="od-val">Dine-In</div><div class="od-lab">Valid at</div></div>
+      <div class="od"><div class="od-val">All Flavours</div><div class="od-lab">Applies to</div></div>
+    </div>
+    <a href="#contact" class="btn-primary"><i class="fa-solid fa-location-dot"></i>Find Our Locations</a>
+  </div>
+</section>
+
+<!-- ══════════════════ NEWSLETTER ══════════════════ -->
+<section id="newsletter">
+  <div class="w">
+    <div class="nl-layout">
+      <div class="nl-left">
+        <div class="eyebrow" style="color:rgba(250,247,242,.3);"><span class="eyebrow-accent" style="background:var(--saffron);"></span>Newsletter</div>
+        <h2 class="nl-title">The Velato<br/><em>Dispatch</em></h2>
+        <p class="nl-body">Weekly. Thoughtful. Occasionally beautiful. Flavour notes, seasonal arrivals, event announcements and exclusive offers — for guests who appreciate the details.</p>
+      </div>
+      <div class="nl-right">
+        <div class="eyebrow"><span class="eyebrow-accent" style="background:var(--fig);"></span>Subscribe</div>
+        <h3 class="display" style="font-size:1.5rem;margin-bottom:1.2rem;">Join 15,000 readers</h3>
+        <div class="nl-form">
+          <input class="nl-inp" type="email" placeholder="Your email address" id="nlInp"/>
+          <button class="nl-submit" id="nlBtn"><i class="fa-solid fa-paper-plane"></i>Subscribe to the Dispatch</button>
+        </div>
+        <div class="nl-note">No spam. Unsubscribe at any time.</div>
+        <div class="nl-perks">
+          <div class="nl-perk"><i class="fa-solid fa-check"></i>Welcome gift on signup</div>
+          <div class="nl-perk"><i class="fa-solid fa-check"></i>Early access to seasonal flavours</div>
+          <div class="nl-perk"><i class="fa-solid fa-check"></i>Exclusive member events</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ CONTACT ══════════════════ -->
+<section id="contact" class="pad">
+  <div class="w" style="margin-bottom:3rem;">
+    <div class="eyebrow"><span class="eyebrow-accent" style="background:var(--terra);"></span>Visit Us</div>
+    <h2 class="display">Come Find <em>Velato</em></h2>
+    <div class="rule" style="background:var(--terra);"></div>
+  </div>
+  <div class="w">
+    <div class="contact-layout">
+      <div class="cl-info">
+        <div class="ci-block">
+          <div class="ci-label"><i class="fa-solid fa-location-dot"></i>Address</div>
+          <div class="ci-val">12, Hazratganj Main Road<br/>Lucknow, Uttar Pradesh – 226001</div>
+        </div>
+        <div class="ci-block">
+          <div class="ci-label"><i class="fa-solid fa-clock"></i>Opening Hours</div>
+          <div class="hours-rows">
+            <div class="hr-row"><span class="hr-day">Monday – Thursday</span><span class="hr-time">11:00 AM – 10:30 PM</span></div>
+            <div class="hr-row"><span class="hr-day">Friday <span style="font-size:.65rem;color:var(--fig);letter-spacing:1px;text-transform:uppercase;margin-left:.4rem;">Live Music</span></span><span class="hr-time sp">10:00 AM – 11:30 PM</span></div>
+            <div class="hr-row"><span class="hr-day">Saturday <span style="font-size:.65rem;color:var(--fig);letter-spacing:1px;text-transform:uppercase;margin-left:.4rem;">Live Music</span></span><span class="hr-time sp">10:00 AM – 11:30 PM</span></div>
+            <div class="hr-row"><span class="hr-day">Sunday</span><span class="hr-time">10:00 AM – 10:00 PM</span></div>
+          </div>
+        </div>
+        <div class="ci-block">
+          <div class="ci-label"><i class="fa-solid fa-phone"></i>Contact</div>
+          <div class="ci-val"><a href="tel:+911234567890">+91 12345 67890</a><br/><a href="mailto:hello@velato.in">hello@velato.in</a></div>
+        </div>
+        <div class="socials">
+          <a href="#" class="soc-btn"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="soc-btn"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="soc-btn"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="soc-btn"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="cl-map">
+        <div class="cl-map-bg"></div>
+        <div class="cl-map-dots"></div>
+        <div class="cl-map-inner">
+          <div class="cl-pin-icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div class="cl-name">Velato Hazratganj</div>
+          <div class="cl-addr">12, Hazratganj Main Road<br/>Lucknow, Uttar Pradesh 226001</div>
+          <a href="https://maps.google.com" target="_blank" class="cl-dir"><i class="fa-solid fa-diamond-turn-right"></i>Get Directions</a>
+          <div class="cl-amenities" style="margin-top:1.2rem;">
+            <span class="cl-amenity"><i class="fa-solid fa-car"></i>Valet</span>
+            <span class="cl-amenity"><i class="fa-solid fa-wifi"></i>Wi-Fi</span>
+            <span class="cl-amenity"><i class="fa-solid fa-wheelchair"></i>Accessible</span>
+            <span class="cl-amenity"><i class="fa-solid fa-credit-card"></i>Cards</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+  <div class="w">
+    <div class="foot-top">
+      <div>
+        <div class="foot-brand">Velato</div>
+        <p class="foot-tagline">Artisan gelato, specialty coffee and café experiences crafted with uncommon care since 2010. Lucknow's most considered gelateria.</p>
+        <div class="foot-socials">
+          <a href="#" class="f-soc"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="f-soc"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="f-soc"><i class="fa-brands fa-youtube"></i></a>
+          <a href="#" class="f-soc"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-col-head">Menu</div>
+        <a href="#" class="foot-link">Gelato &amp; Sorbet</a>
+        <a href="#" class="foot-link">Sundaes</a>
+        <a href="#" class="foot-link">Waffles &amp; Crêpes</a>
+        <a href="#" class="foot-link">Coffee &amp; Drinks</a>
+        <a href="#" class="foot-link">Seasonal</a>
+      </div>
+      <div>
+        <div class="foot-col-head">Visit</div>
+        <a href="#" class="foot-link">The Space</a>
+        <a href="#" class="foot-link">Private Events</a>
+        <a href="#" class="foot-link">Reserve</a>
+        <a href="#" class="foot-link">Catering</a>
+        <a href="#" class="foot-link">Gallery</a>
+      </div>
+      <div>
+        <div class="foot-col-head">Company</div>
+        <a href="#" class="foot-link">Our Story</a>
+        <a href="#" class="foot-link">Sustainability</a>
+        <a href="#" class="foot-link">Careers</a>
+        <a href="#" class="foot-link">Franchise</a>
+        <a href="#" class="foot-link">Press</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2025 <span>Velato Gelateria</span>. Crafted with intent in Lucknow, India.</div>
+      <div class="foot-pay">
+        <i class="fa-brands fa-cc-visa"></i>
+        <i class="fa-brands fa-cc-mastercard"></i>
+        <i class="fa-brands fa-cc-paypal"></i>
+        <i class="fa-brands fa-google-pay"></i>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="btt" title="Top"><i class="fa-solid fa-arrow-up fa-xs"></i></button>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+<script>
+/* Preloader */
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('pl').classList.add('out'),2400));
+
+/* Cursor */
+let mx=0,my=0,rx=0,ry=0;
+const cd=document.getElementById('cd'),cr=document.getElementById('cr');
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.left=mx+'px';cd.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('a,button,.mc,.gi,.int-nav-btn,.mf-tab,.fc-btn,.mf-tab').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+});
+
+/* Navbar */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('pinned',window.scrollY>70);
+  document.getElementById('btt').classList.toggle('show',window.scrollY>600);
+});
+document.getElementById('btt').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+/* Menu data */
+const items=[
+  {f:'gelato',n:'Strawberry & Wild Rose',s:'Mahabaleshwar Seasonal',img:'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=700&q=90',p:'₹149',cat:'Gelato',stripe:'var(--fig)',sz:'ms-a'},
+  {f:'coffee',n:'Cold Brew Affogato',s:'Colombian Ristretto',img:'https://images.unsplash.com/photo-1573227895018-51a503e94e45?w=600&q=90',p:'₹249',cat:'Coffee',stripe:'var(--terra)',sz:'ms-b'},
+  {f:'gelato',n:'Pistachio Matcha',s:'Iranian × Uji Origin',img:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=500&q=90',p:'₹199',cat:'Gelato',stripe:'var(--sage)',sz:'ms-c'},
+  {f:'gelato',n:'Saffron Caramel',s:'Kashmiri Kesar Grade-A',img:'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=600&q=90',p:'₹229',cat:'Gelato',stripe:'var(--saffron)',sz:'ms-d'},
+  {f:'waffle',n:'Golden Waffle Royale',s:'24K Gold · Chef\'s Table',img:'https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=700&q=90',p:'₹699',cat:'Waffle',stripe:'var(--saffron)',sz:'ms-e'},
+  {f:'sundae',n:'The Galaxy Sundae',s:'Weekend Signature',img:'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&q=90',p:'₹599',cat:'Sundae',stripe:'var(--fig)',sz:'ms-f'},
+  {f:'coffee',n:'Nitro Cold Brew',s:'18-Hour Cold Steep',img:'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900&q=90',p:'₹219',cat:'Coffee',stripe:'var(--slate)',sz:'ms-g'},
+];
+const szCycle=['ms-a','ms-b','ms-c','ms-d','ms-e','ms-f','ms-g'];
+function buildMenu(f){
+  const g=document.getElementById('menuGrid');
+  const data=f==='all'?items:items.filter(i=>i.f===f);
+  g.innerHTML=data.map((d,i)=>`
+    <div class="mc ${szCycle[i%szCycle.length]}">
+      <div class="mc-img"><img src="${d.img}" alt="${d.n}" loading="lazy"/></div>
+      <div class="mc-stripe" style="background:${d.stripe};"></div>
+      <div class="mc-body">
+        <div class="mc-cat">${d.cat}</div>
+        <div class="mc-name">${d.n}</div>
+        <div class="mc-desc">${d.s}</div>
+        <div class="mc-price">${d.p}</div>
+      </div>
+      <div class="mc-add" onclick="mcAdd(this)"><i class="fa-solid fa-plus fa-xs"></i></div>
+    </div>`).join('');
+  document.querySelectorAll('.mc').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+  });
+}
+buildMenu('all');
+function mcAdd(btn){
+  btn.innerHTML='<i class="fa-solid fa-check fa-xs"></i>';
+  btn.style.background='var(--sage)';btn.style.borderColor='var(--sage)';
+  setTimeout(()=>{btn.innerHTML='<i class="fa-solid fa-plus fa-xs"></i>';btn.style.background='';btn.style.borderColor='';},1400);
+}
+document.querySelectorAll('.mf-tab').forEach(t=>{
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.mf-tab').forEach(x=>x.classList.remove('on'));
+    this.classList.add('on');
+    buildMenu(this.dataset.f);
+  });
+});
+
+/* Specials Swiper */
+const spSw=new Swiper('#spSw',{
+  loop:true,speed:900,effect:'fade',fadeEffect:{crossFade:true},
+  autoplay:{delay:6000,disableOnInteraction:false},
+  navigation:{prevEl:'#spPrev',nextEl:'#spNext'},
+  pagination:{el:'#spPag',type:'bullets',clickable:true},
+  on:{realIndexChange(s){
+    const el=document.getElementById('spNum');
+    if(el)el.textContent=String(s.realIndex+1).padStart(2,'0');
+  }}
+});
+
+/* Testimonials Swiper */
+new Swiper('.testSwiper',{
+  slidesPerView:1,spaceBetween:1,
+  pagination:{el:'#testPag',clickable:true},
+  autoplay:{delay:5000,disableOnInteraction:false},
+  breakpoints:{768:{slidesPerView:2,spaceBetween:1},1100:{slidesPerView:3,spaceBetween:1}},
+});
+
+/* Interior tabs */
+document.querySelectorAll('.int-nav-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.int-nav-btn').forEach(b=>b.classList.remove('on'));
+    this.classList.add('on');
+    document.querySelectorAll('.int-panel').forEach(p=>p.classList.remove('on'));
+    document.getElementById('iz-'+this.dataset.z).classList.add('on');
+  });
+});
+
+/* Count-up */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target,t=parseFloat(el.dataset.count);
+    let c=0;const st=t/55;
+    const ti=setInterval(()=>{c+=st;if(c>=t){c=t;clearInterval(ti);}el.textContent=String(t).includes('.')?c.toFixed(1):Math.floor(c);},22);
+    obs.unobserve(el);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>obs.observe(el));
+
+/* Parallax */
+window.addEventListener('scroll',()=>{
+  const o=document.getElementById('offer');
+  if(o){const r=o.getBoundingClientRect();if(r.bottom>0&&r.top<window.innerHeight)o.style.backgroundPositionY=(window.scrollY*.18)+'px';}
+});
+
+/* Newsletter */
+document.getElementById('nlBtn').addEventListener('click',function(){
+  const i=document.getElementById('nlInp');
+  if(i.value.includes('@')){
+    this.innerHTML='<i class="fa-solid fa-check"></i> Subscribed to the Dispatch';
+    this.style.background='var(--sage)';
+    i.value='';
+    setTimeout(()=>{this.innerHTML='<i class="fa-solid fa-paper-plane"></i> Subscribe to the Dispatch';this.style.background='';},3500);
+  }
+});
+</script>
+</body>
+</html>
